@@ -1,0 +1,19 @@
+{
+  "name": "strapi-plugin-ecommerce",
+  "version": "1.0.0",
+  "description": "",
+  "main": "strapi-admin.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sabotzh/strapi-plugin-ecommerce.git"
+  },
+  "author": "Yagor Shtonda",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sabotzh/strapi-plugin-ecommerce/issues"
+  },
+  "homepage": "https://github.com/Sabotzh/strapi-plugin-ecommerce#readme"
+}
