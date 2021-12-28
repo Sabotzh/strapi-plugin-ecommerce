@@ -1,0 +1,69 @@
+{
+  "kind": "collectionType",
+  "collectionName": "plural_tests",
+  "info": {
+    "singularName": "plural-test",
+    "pluralName": "plural-tests",
+    "displayName": "plural-test"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "stringgg": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "rich_text": {
+      "type": "richtext"
+    },
+    "password": {
+      "type": "password"
+    },
+    "number": {
+      "type": "integer"
+    },
+    "enum": {
+      "type": "enumeration",
+      "enum": [
+        "dfgdfg",
+        "ffffff"
+      ]
+    },
+    "date": {
+      "type": "date"
+    },
+    "media": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "boolean": {
+      "type": "boolean"
+    },
+    "json": {
+      "type": "json"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "admin::user"
+    },
+    "users": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "admin::user"
+    },
+    "uid": {
+      "type": "uid",
+      "targetField": "stringgg"
+    }
+  }
+}
