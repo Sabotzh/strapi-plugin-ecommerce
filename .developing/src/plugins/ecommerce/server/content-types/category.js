@@ -23,7 +23,7 @@ module.exports = {
     parent_category: {
       type: 'relation',
       relation: 'oneToOne',
-      target: 'plugin::ecommerce.category'
+      target: 'plugin::ecommerce.category',
     },
     name: {
       type: 'string',

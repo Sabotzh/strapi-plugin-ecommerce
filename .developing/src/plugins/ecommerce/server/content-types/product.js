@@ -56,7 +56,7 @@ module.exports = {
     types: {
       type: 'relation',
       relation: 'oneToMany',
-      target: 'plugin::ecommerce.category'
+      target: 'plugin::ecommerce.category',
     },
     price: {
       type: 'integer',
@@ -85,7 +85,7 @@ module.exports = {
     relative_products: {
       type: 'relation',
       relation: 'manyToMany',
-      target: 'plugin::ecommerce.product'
+      target: 'plugin::ecommerce.product',
     },
     meta_title: {
       type: 'string',

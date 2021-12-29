@@ -23,7 +23,7 @@ module.exports = {
     customer: {
       type: 'relation',
       relation: 'oneToOne',
-      target: 'plugin::ecommerce.customer'
+      target: 'plugin::ecommerce.customer',
     },
     products: {
       type: 'json',
