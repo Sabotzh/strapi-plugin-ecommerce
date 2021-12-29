@@ -1,12 +1,12 @@
-const user = require('./user');
-const type = require('./type');
+const customer = require('./customer');
+const category = require('./category');
 const product = require('./order');
 const order = require('./product');
 
 
 module.exports = {
-  'user': { schema: user },
-  'type': { schema: type },
+  'customer': { schema: customer },
+  'category': { schema: category },
   'product': { schema: product },
   'order': { schema: order },
 };

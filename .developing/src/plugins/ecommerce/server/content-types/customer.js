@@ -1,11 +1,11 @@
 module.exports = {
-  collectionName: 'ecommerce_users',
+  collectionName: 'ecommerce_customers',
   info: {
-    name: 'Users',
+    name: 'Customers',
     description: 'List of ecommerce users',
-    singularName: 'user',
-    pluralName: 'users',
-    displayName: 'Ecommerce Users',
+    singularName: 'customer',
+    pluralName: 'customers',
+    displayName: 'Ecommerce Customers',
     kind: 'collectionType',
   },
   options: {
@@ -26,10 +26,20 @@ module.exports = {
       max: 50,
       configurable: false,
     },
+    middlename: {
+      type: 'string',
+      min: 1,
+      max: 50,
+      configurable: false,
+    },
     lastname: {
       type: 'string',
       min: 1,
       max: 50,
+      configurable: false,
+    },
+    token: {
+      type: 'string',
       configurable: false,
     },
     is_shadow: {

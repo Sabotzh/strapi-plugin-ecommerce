@@ -31,7 +31,24 @@ module.exports = {
       targetField: 'name',
       configurable: false,
     },
-    images: {
+    sku: {
+      type: 'string',
+      configurable: false,
+    },
+    description: {
+      type: 'richtext',
+      configurable: false,
+    },
+    short_description: {
+      type: 'string',
+      configurable: false,
+    },
+    image: {
+      allowedTypes: [ 'images' ],
+      type: 'media',
+      multiple: false,
+    },
+    addition_images: {
       allowedTypes: [ 'images' ],
       type: 'media',
       multiple: true,
@@ -43,6 +60,43 @@ module.exports = {
     },
     price: {
       type: 'integer',
+      configurable: false,
+    },
+    quantity: {
+      type: 'integer',
+      configurable: false,
+    },
+    min_quantity: {
+      type: 'integer',
+      configurable: false,
+    },
+    date_available: {
+      type: 'date',
+      configurable: false,
+    },
+    status: {
+      type: 'enumeration',
+      enum: [
+        'enabled',
+        'disabled',
+      ],
+      configurable: false,
+    },
+    relative_products: {
+      type: 'relation',
+      relation: 'manyToMany',
+      target: 'plugin::ecommerce.product'
+    },
+    meta_title: {
+      type: 'string',
+      configurable: false,
+    },
+    meta_description: {
+      type: 'string',
+      configurable: false,
+    },
+    meta_keywords: {
+      type: 'string',
       configurable: false,
     },
   },

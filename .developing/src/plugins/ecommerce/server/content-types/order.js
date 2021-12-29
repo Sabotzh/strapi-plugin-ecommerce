@@ -20,10 +20,10 @@ module.exports = {
     },
   },
   attributes: {
-    user: {
+    customer: {
       type: 'relation',
       relation: 'oneToOne',
-      target: 'plugin::ecommerce.user'
+      target: 'plugin::ecommerce.customer'
     },
     products: {
       type: 'json',
