@@ -1,11 +1,11 @@
 module.exports = {
-  collectionName: 'ecommerce_categories',
+  collectionName: 'ecommerce_manufacturers',
   info: {
-    name: 'categories',
-    description: 'List of ecommerce categories',
-    singularName: 'category',
-    pluralName: 'categories',
-    displayName: 'Ecommerce categories',
+    name: 'manufacturers',
+    description: 'List of ecommerce manufacturers',
+    singularName: 'manufacturer',
+    pluralName: 'manufacturers',
+    displayName: 'Ecommerce manufacturers',
     kind: 'collectionType',
   },
   options: {
