@@ -1,5 +1,5 @@
-import PluginIcon from './components/PluginIcon'
-import pluginId from './pluginId'
+import PluginIcon from './components/PluginIcon';
+import pluginId from './pluginId';
 
 export default {
     register(app) {

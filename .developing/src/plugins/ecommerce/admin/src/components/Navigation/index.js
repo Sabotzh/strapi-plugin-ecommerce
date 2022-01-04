@@ -1,6 +1,9 @@
 import React from 'react';
-import ExclamationMarkCircle from '@strapi/icons/ExclamationMarkCircle'
-import Apps from '@strapi/icons/Apps'
+
+import pluginId from '../../pluginId'
+
+import ExclamationMarkCircle from '@strapi/icons/ExclamationMarkCircle';
+import Apps from '@strapi/icons/Apps';
 
 import {
   SubNav,
@@ -17,7 +20,8 @@ const Navigation = () => {
     { id: 3, label: 'Categories', link: 'categories', icon: <ExclamationMarkCircle /> },
     { id: 4, label: 'Customers', link: 'customers', icon: <Apps /> },
     { id: 5, label: 'Orders', link: 'orders', icon: <ExclamationMarkCircle /> },
-    { id: 6, label: 'Settings', link: 'settings', icon: <Apps /> }]
+    { id: 6, label: 'Settings', link: 'settings', icon: <Apps /> },
+  ];
 
   return (
     <nav style={{ height: '100vh', padding: '10px' }}>
@@ -27,7 +31,7 @@ const Navigation = () => {
             {
               links.map(link =>
                 <SubNavLink
-                  to={`/plugins/ecommerce/${link.link}`}
+                  to={`/plugins/${pluginId}/${link.link}`}
                   key={link.id} icon={link.icon}
                 >
                   {link.label}
