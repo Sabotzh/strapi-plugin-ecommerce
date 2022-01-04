@@ -15,7 +15,7 @@ module.exports = () => ({
   destroy,
 
   contentTypes,
-  routes,
+  // routes,
   controllers,
   services,
   policies,
