@@ -6,6 +6,7 @@ import { Helmet } from 'react-helmet';
 import { Layout, HeaderLayout } from '@strapi/design-system/Layout';
 import { Main } from '@strapi/design-system/Main';
 import getTrad from '../../utils/getTrad';
+import Navigation from "../../components/Navigation";
 
 const PluginPage = () => {
   useFocusWhenNavigate();
@@ -20,15 +21,17 @@ const PluginPage = () => {
   return (
     <Layout>
       <Helmet title={title} />
-      <Main>
-        <HeaderLayout
-          title={title}
-          subtitle={formatMessage({
-            id: getTrad('description'),
-            defaultMessage: 'Configure the ecommerce plugin',
-          })}
-        />
-      </Main>
+      <Layout sideNav={<Navigation/>}>
+        <div>
+          <HeaderLayout
+            title={title}
+            subtitle={formatMessage({
+              id: getTrad('description'),
+              defaultMessage: 'Configure the ecommerce plugin',
+            })}
+          />
+        </div>
+      </Layout>
     </Layout>
   );
 };
