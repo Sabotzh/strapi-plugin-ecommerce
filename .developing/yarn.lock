@@ -1194,6 +1194,11 @@
     "methods" "^1.1.2"
     "path-to-regexp" "^6.1.0"
 
+"@material-design-icons/svg@^0.10.4":
+  "integrity" "sha512-NLxE0H4zX/LEjPxJ+DRR/7FOUrY7cpPgW7DbK5Ux7KmJixN2y8q9oHR/3bS31KuLTt8/AEP8InycjViQGbb7cg=="
+  "resolved" "https://registry.npmjs.org/@material-design-icons/svg/-/svg-0.10.4.tgz"
+  "version" "0.10.4"
+
 "@material-ui/core@^4.12.3":
   "integrity" "sha512-sdpgI/PL56QVsEJldwEe4FFaFTLUqN+rd7sSZiRCdx2E/C7z5yK0y/khAWVBH24tXwto7I1hCzNWfJGZIYJKnw=="
   "resolved" "https://registry.npmjs.org/@material-ui/core/-/core-4.12.3.tgz"

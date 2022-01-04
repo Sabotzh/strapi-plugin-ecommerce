@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 import { useFocusWhenNavigate } from '@strapi/helper-plugin';
 import { Helmet } from 'react-helmet';
 import { Layout, HeaderLayout } from '@strapi/design-system/Layout';
-import { Main } from '@strapi/design-system/Main';
+
 import getTrad from '../../utils/getTrad';
 import Navigation from "../../components/Navigation";
 
@@ -22,7 +22,7 @@ const PluginPage = () => {
     <Layout>
       <Helmet title={title} />
       <Layout sideNav={<Navigation/>}>
-        <div>
+        <main>
           <HeaderLayout
             title={title}
             subtitle={formatMessage({
@@ -30,7 +30,7 @@ const PluginPage = () => {
               defaultMessage: 'Configure the ecommerce plugin',
             })}
           />
-        </div>
+        </main>
       </Layout>
     </Layout>
   );

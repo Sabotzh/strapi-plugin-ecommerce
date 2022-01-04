@@ -1,6 +1,7 @@
 import React from 'react';
 import ExclamationMarkCircle from '@strapi/icons/ExclamationMarkCircle'
 import Apps from '@strapi/icons/Apps'
+
 import {
   SubNav,
   SubNavHeader,
@@ -20,12 +21,15 @@ const Navigation = () => {
 
   return (
     <nav style={{ height: '100vh', padding: '10px' }}>
-      <SubNav>
+      <SubNav ariaLabel='Ecommerce'>
         <SubNavHeader label='Ecommerce' />
-        <SubNavSections>
+        <SubNavSections style={{ 'margin-left': '-8px' }}>
             {
               links.map(link =>
-                <SubNavLink to={`/plugins/ecommerce/${link.link}`} key={link.id} icon={link.icon}>
+                <SubNavLink
+                  to={`/plugins/ecommerce/${link.link}`}
+                  key={link.id} icon={link.icon}
+                >
                   {link.label}
                 </SubNavLink>)
             }
