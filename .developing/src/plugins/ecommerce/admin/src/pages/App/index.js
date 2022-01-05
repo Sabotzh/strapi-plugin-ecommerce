@@ -29,7 +29,7 @@ const App = () => {
   });
 
   return (
-    <Layout>
+    <>
       <Helmet title={title} />
       <Layout sideNav={<Navigation/>}>
         <Suspense fallback={<LoadingIndicatorPage />}>
@@ -61,7 +61,7 @@ const App = () => {
           </Switch>
         </Suspense>
       </Layout>
-    </Layout>
+    </>
   );
 };
 
