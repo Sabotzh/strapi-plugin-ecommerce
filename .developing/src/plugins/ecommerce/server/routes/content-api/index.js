@@ -1,16 +1,12 @@
-const customerRoutes = require('./customer');
+const baseRoutes = require('../baseRoutes');
 const cartRoutes = require('./cart');
 const wishlistRoutes = require('./wishlist');
-const ordersRoutes = require('./orders');
-const productsRoutes = require('./products');
 
 module.exports = {
   type: 'content-api',
   routes: [
+    ...baseRoutes,
     ...cartRoutes,
     ...wishlistRoutes,
-    ...customerRoutes,
-    ...ordersRoutes,
-    /*...productsRoutes,*/
   ],
 };

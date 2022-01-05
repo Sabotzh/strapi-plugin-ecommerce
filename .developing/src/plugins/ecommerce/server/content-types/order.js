@@ -24,6 +24,7 @@ module.exports = {
       type: 'relation',
       relation: 'oneToOne',
       target: 'plugin::ecommerce.customer',
+      configurable: false,
     },
     products: {
       type: 'json',
