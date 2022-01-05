@@ -1,0 +1,8 @@
+{
+  "menu.dashboard.name": "Dashboard",
+  "menu.products.name": "Products",
+  "menu.categories.name": "Categories",
+  "menu.customers.name": "Customers",
+  "menu.orders.name": "Orders",
+  "menu.settings.name": "Settings"
+}

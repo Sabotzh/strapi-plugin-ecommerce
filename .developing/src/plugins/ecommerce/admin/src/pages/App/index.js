@@ -19,7 +19,7 @@ const PluginPage = () => {
   });
 
   return (
-    <Layout>
+    <>
       <Helmet title={title} />
       <Layout sideNav={<Navigation/>}>
         <main>
@@ -32,7 +32,7 @@ const PluginPage = () => {
           />
         </main>
       </Layout>
-    </Layout>
+    </>
   );
 };
 

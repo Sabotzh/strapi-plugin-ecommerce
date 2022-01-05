@@ -13,12 +13,16 @@
   "dependencies": {
     "@material-design-icons/svg": "^0.10.4",
     "@material-ui/core": "^4.12.3",
+    "@material-ui/icons": "^4.11.2",
+    "@pxblue/icons-svg": "^1.8.0",
     "@strapi/design-system": "^0.0.1-alpha.71",
+    "@strapi/helper-plugin": "^4.0.2",
     "@strapi/icons": "^0.0.1-alpha.71",
     "@strapi/plugin-i18n": "4.0.2",
     "@strapi/plugin-users-permissions": "4.0.2",
     "@strapi/strapi": "4.0.2",
     "@types/tapable": "^2.2.2",
+    "path-to-regexp": "^6.2.0",
     "react-router-dom": "^5.3.0",
     "sqlite3": "5.0.2",
     "styled-components": "^5.3.3",
@@ -35,5 +39,8 @@
     "node": ">=12.x.x <=16.x.x",
     "npm": ">=6.0.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.6.0"
+  }
 }

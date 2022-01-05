@@ -1,6 +1,13 @@
 import React from 'react';
-import ExclamationMarkCircle from '@strapi/icons/ExclamationMarkCircle'
-import Apps from '@strapi/icons/Apps'
+import { LocalMall } from '@material-ui/icons';
+import { Dashboard } from '@material-ui/icons';
+import { Category } from '@material-ui/icons';
+import { RecentActors } from '@material-ui/icons';
+import { CardGiftcard } from '@material-ui/icons';
+import { Settings } from '@material-ui/icons';
+
+import getTrad from '../../utils/getTrad';
+import { FormattedMessage } from 'react-intl';
 
 import {
   SubNav,
@@ -12,30 +19,28 @@ import {
 
 const Navigation = () => {
   const links = [
-    { id: 1, label: 'Dashboard', link: 'dashboard', icon: <ExclamationMarkCircle /> },
-    { id: 2, label: 'Products', link: 'products', icon: <Apps /> },
-    { id: 3, label: 'Categories', link: 'categories', icon: <ExclamationMarkCircle /> },
-    { id: 4, label: 'Customers', link: 'customers', icon: <Apps /> },
-    { id: 5, label: 'Orders', link: 'orders', icon: <ExclamationMarkCircle /> },
-    { id: 6, label: 'Settings', link: 'settings', icon: <Apps /> }]
+    { id: 1, label: getTrad('menu.dashboard.name'), link: 'dashboard', icon: <Dashboard viewBox="0 0 26 18"/> },
+    { id: 2, label: getTrad('menu.products.name'), link: 'products', icon: <LocalMall viewBox="0 0 26 18"/> },
+    { id: 3, label: getTrad('menu.categories.name'), link: 'categories', icon: <Category viewBox="0 0 26 18"/> },
+    { id: 4, label: getTrad('menu.customers.name'), link: 'customers', icon: <RecentActors viewBox="0 0 26 18"/> },
+    { id: 5, label: getTrad('menu.orders.name'), link: 'orders', icon: <CardGiftcard viewBox="0 0 26 18"/> },
+    { id: 6, label: getTrad('menu.settings.name'), link: 'settings', icon: <Settings viewBox="0 0 26 18"/> }]
 
   return (
-    <nav style={{ height: '100vh', padding: '10px' }}>
-      <SubNav ariaLabel='Ecommerce'>
-        <SubNavHeader label='Ecommerce' />
-        <SubNavSections style={{ 'margin-left': '-8px' }}>
-            {
-              links.map(link =>
-                <SubNavLink
-                  to={`/plugins/ecommerce/${link.link}`}
-                  key={link.id} icon={link.icon}
-                >
-                  {link.label}
-                </SubNavLink>)
-            }
-        </SubNavSections>
-      </SubNav>
-    </nav>
+    <SubNav ariaLabel='Ecommerce'>
+      <SubNavHeader label='Ecommerce' />
+      <SubNavSections style={{ marginLeft: '-8px' }}>
+          {
+            links.map(link =>
+              <SubNavLink
+                to={`/plugins/ecommerce/${link.link}`}
+                key={link.id} icon={link.icon}
+              >
+                <FormattedMessage id={link.label}/>
+              </SubNavLink>)
+          }
+      </SubNavSections>
+    </SubNav>
   )
 };
 
