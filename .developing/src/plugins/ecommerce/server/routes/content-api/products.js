@@ -2,19 +2,19 @@ module.exports = [
   {
     method: 'GET',
     path: '/products',
-    handler: 'cart.find',
+    handler: 'products.find',
     config: {},
   },
   {
     method: 'GET',
     path: '/products/:id',
-    handler: 'cart.findOne',
+    handler: 'products.findOne',
     config: {},
   },
   {
     method: 'GET',
     path: '/products/:slug',
-    handler: 'cart.findOneBySlug',
+    handler: 'products.findOneBySlug',
     config: {},
   },
 ];
