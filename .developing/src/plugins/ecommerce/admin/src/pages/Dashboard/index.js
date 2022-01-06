@@ -81,103 +81,101 @@ const DashboardPage = () => {
   ];
 
   return (
-    <>
-      <main>
-        <HeaderLayout
-          title={title}
-          subtitle={formatMessage({
-            id: getTrad('dashboard.description'),
-            defaultMessage: 'Configure the ecommerce plugin',
-          })}
-        />
-        <ContentLayout>
-          <Stack size={7}>
-            <Grid gap={7}>
-              {statisticTopItem.map((el, id) => {
-                return (
-                  <GridItem col={3} key={id}>
-                    <StatisticItem padding={5} background={'neutral0'} shadow="filterShadow" hasRadius>
-                      <Flex>
-                        <Box style={{ backgroundColor: el.color, width: '39px', height: '39px' }} padding={2} hasRadius>{ el.img }</Box>
-                        <Flex paddingLeft={3} direction={'column'} alignItems={'start'}>
-                          <Box>
-                            <Typography style={{ fontSize: '10px', color: '#525267' }}>{ el.title }</Typography>
-                          </Box>
-                          <Box>
-                            <Typography variant={'alpha'} style={{ fontSize: '22px', color: '#32324D' }}>{ el.data }</Typography>
-                           </Box>
-                        </Flex>
+    <main>
+      <HeaderLayout
+        title={title}
+        subtitle={formatMessage({
+          id: getTrad('dashboard.description'),
+          defaultMessage: 'Configure the ecommerce plugin',
+        })}
+      />
+      <ContentLayout>
+        <Stack size={7}>
+          <Grid gap={7}>
+            {statisticTopItem.map((el, id) => {
+              return (
+                <GridItem col={3} key={id}>
+                  <StatisticItem padding={5} background={'neutral0'} shadow="filterShadow" hasRadius>
+                    <Flex>
+                      <Box style={{ backgroundColor: el.color, width: '39px', height: '39px' }} padding={2} hasRadius>{ el.img }</Box>
+                      <Flex paddingLeft={3} direction={'column'} alignItems={'start'}>
+                        <Box>
+                          <Typography style={{ fontSize: '10px', color: '#525267' }}>{ el.title }</Typography>
+                        </Box>
+                        <Box>
+                          <Typography variant={'alpha'} style={{ fontSize: '22px', color: '#32324D' }}>{ el.data }</Typography>
+                         </Box>
                       </Flex>
-                    </StatisticItem>
-                  </GridItem>
-                )
-              })}
-              <GridItem col={6}>
-                <Box padding={7} background={'neutral0'} shadow="filterShadow" hasRadius style={{ height: '320px' }}>SPACE</Box>
-              </GridItem>
-              <GridItem col={6}>
-                <Box padding={7} background={'neutral0'} shadow="filterShadow" hasRadius style={{ height: '320px' }}>SPACE</Box>
-              </GridItem>
-            </Grid>
-            <Table colCount={5} rowCount={8}>
-              <Thead>
-                <Tr>
-                  <Th>
-                    <Typography variant="sigma">ID</Typography>
-                  </Th>
-                  <Th>
-                    <Typography variant="sigma">Order Time</Typography>
-                  </Th>
-                  <Th>
-                    <Typography variant="sigma">Delivery Address</Typography>
-                  </Th>
-                  <Th>
-                    <Typography variant="sigma">Phone</Typography>
-                  </Th>
-                  <Th>
-                    <Typography variant="sigma">Payment Method</Typography>
-                  </Th>
-                  <Th>
-                    <Typography variant="sigma">Order Amount</Typography>
-                  </Th>
-                  <Th>
-                    <Typography variant="sigma">Status</Typography>
-                  </Th>
-                  <Th>
-                    {<VisuallyHidden>Actions</VisuallyHidden>}
-                  </Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {tableData.map((elem, id) => <Tr key={id++}>
-                  <Td>
-                    <Typography>{id++}</Typography>
-                  </Td>
-                  <Td>
-                    <Typography>{elem.orderTime}</Typography>
-                  </Td>
-                  <Td>
-                    <Typography>{elem.deliveryAddress}</Typography>
-                  </Td>
-                  <Td>
-                    <Typography>{elem.phone}</Typography>
-                  </Td>
-                  <Td>
-                    <Typography>{elem.paymentMethod}</Typography>
-                  </Td>
-                  <Td>
-                    <Typography>{elem.orderAmount}</Typography>
-                  </Td>
-                  <Td>
-                    <Typography>{elem.status}</Typography>
-                  </Td>
-                </Tr>)}
-              </Tbody>
-            </Table>
-          </Stack>
-        </ContentLayout>
-      </main>
-    </>
+                    </Flex>
+                  </StatisticItem>
+                </GridItem>
+              )
+            })}
+            <GridItem col={6}>
+              <Box padding={7} background={'neutral0'} shadow="filterShadow" hasRadius style={{ height: '320px' }}>SPACE</Box>
+            </GridItem>
+            <GridItem col={6}>
+              <Box padding={7} background={'neutral0'} shadow="filterShadow" hasRadius style={{ height: '320px' }}>SPACE</Box>
+            </GridItem>
+          </Grid>
+          <Table colCount={5} rowCount={8}>
+            <Thead>
+              <Tr>
+                <Th>
+                  <Typography variant="sigma">ID</Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">Order Time</Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">Delivery Address</Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">Phone</Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">Payment Method</Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">Order Amount</Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">Status</Typography>
+                </Th>
+                <Th>
+                  {<VisuallyHidden>Actions</VisuallyHidden>}
+                </Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {tableData.map((elem, id) => <Tr key={id++}>
+                <Td>
+                  <Typography>{id++}</Typography>
+                </Td>
+                <Td>
+                  <Typography>{elem.orderTime}</Typography>
+                </Td>
+                <Td>
+                  <Typography>{elem.deliveryAddress}</Typography>
+                </Td>
+                <Td>
+                  <Typography>{elem.phone}</Typography>
+                </Td>
+                <Td>
+                  <Typography>{elem.paymentMethod}</Typography>
+                </Td>
+                <Td>
+                  <Typography>{elem.orderAmount}</Typography>
+                </Td>
+                <Td>
+                  <Typography>{elem.status}</Typography>
+                </Td>
+              </Tr>)}
+            </Tbody>
+          </Table>
+        </Stack>
+      </ContentLayout>
+    </main>
   );
 };
 
