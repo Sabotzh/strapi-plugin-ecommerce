@@ -1,22 +1,22 @@
 module.exports = {
-  collectionName: 'ecommerce_orders',
+  collectionName: 'ecommerce_products',
   info: {
-    name: 'orders',
-    description: 'List of ecommerce orders',
-    singularName: 'order',
-    pluralName: 'orders',
-    displayName: 'Ecommerce orders',
+    name: 'products',
+    description: 'List of ecommerce products',
+    singularName: 'product',
+    pluralName: 'products',
+    displayName: 'Ecommerce products',
     kind: 'collectionType',
   },
   options: {
-    draftAndPublish: false,
+    draftAndPublish: true,
   },
   pluginOptions: {
     'content-manager': {
       visible: false,
     },
     'content-type-builder': {
-      visible: false,
+      visible: true,
     },
   },
   attributes: {
@@ -31,18 +31,76 @@ module.exports = {
       targetField: 'name',
       configurable: false,
     },
-    images: {
+    sku: {
+      type: 'string',
+      configurable: false,
+    },
+    description: {
+      type: 'richtext',
+      configurable: false,
+    },
+    short_description: {
+      type: 'string',
+      configurable: false,
+    },
+    image: {
+      allowedTypes: [ 'images' ],
+      type: 'media',
+      multiple: false,
+      configurable: false,
+    },
+    addition_images: {
       allowedTypes: [ 'images' ],
       type: 'media',
       multiple: true,
+      configurable: false,
     },
-    types: {
+    categories: {
       type: 'relation',
       relation: 'oneToMany',
-      target: 'plugin::ecommerce.type'
+      target: 'plugin::ecommerce.category',
+      configurable: false,
     },
     price: {
       type: 'integer',
+      configurable: false,
+    },
+    quantity: {
+      type: 'integer',
+      configurable: false,
+    },
+    min_quantity: {
+      type: 'integer',
+      configurable: false,
+    },
+    date_available: {
+      type: 'date',
+      configurable: false,
+    },
+    status: {
+      type: 'enumeration',
+      enum: [
+        'enabled',
+        'disabled',
+      ],
+      configurable: false,
+    },
+    relative_products: {
+      type: 'relation',
+      relation: 'manyToMany',
+      target: 'plugin::ecommerce.product',
+      configurable: false,
+    },
+    meta_title: {
+      type: 'string',
+      configurable: false,
+    },
+    meta_description: {
+      type: 'string',
+      configurable: false,
+    },
+    meta_keywords: {
+      type: 'string',
       configurable: false,
     },
   },

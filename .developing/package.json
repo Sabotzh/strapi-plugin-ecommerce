@@ -11,10 +11,7 @@
     "strapi": "strapi"
   },
   "dependencies": {
-    "@material-design-icons/svg": "^0.10.4",
-    "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
-    "@pxblue/icons-svg": "^1.8.0",
     "@strapi/design-system": "^0.0.1-alpha.71",
     "@strapi/helper-plugin": "^4.0.3",
     "@strapi/icons": "^0.0.1-alpha.71",

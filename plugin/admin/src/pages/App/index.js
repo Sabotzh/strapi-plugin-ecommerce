@@ -1,36 +1,68 @@
-import React from 'react';
+import React, { Suspense } from 'react';
+import { Switch, Route } from 'react-router-dom';
+
+import pluginId from '../../pluginId'
+
 import { useIntl } from 'react-intl';
-
-import { useFocusWhenNavigate } from '@strapi/helper-plugin';
 import { Helmet } from 'react-helmet';
-import { Layout, HeaderLayout } from '@strapi/design-system/Layout';
-import { Main } from '@strapi/design-system/Main';
+
+import { useFocusWhenNavigate, LoadingIndicatorPage } from '@strapi/helper-plugin';
+import { Layout } from '@strapi/design-system/Layout';
+
 import getTrad from '../../utils/getTrad';
+import Navigation from '../../components/Navigation';
 
-const PluginPage = () => {
+import Dashboard from '../Dashboard';
+import Products from '../Products';
+import Categories from '../Categories';
+import Customers from '../Customers';
+import Orders from '../Orders';
+import Settings from '../Settings';
+
+const App = () => {
   useFocusWhenNavigate();
+
   const { formatMessage } = useIntl();
-
-
   const title = formatMessage({
     id: getTrad('name'),
     defaultMessage: 'Ecommerce',
   });
 
   return (
-    <Layout>
+    <>
       <Helmet title={title} />
-      <Main>
-        <HeaderLayout
-          title={title}
-          subtitle={formatMessage({
-            id: getTrad('description'),
-            defaultMessage: 'Configure the ecommerce plugin',
-          })}
-        />
-      </Main>
-    </Layout>
+      <Layout sideNav={<Navigation/>}>
+        <Suspense fallback={<LoadingIndicatorPage />}>
+          <Switch>
+            <Route
+              path={`/plugins/${pluginId}/dashboard`}
+              component={Dashboard}
+            />
+            <Route
+              path={`/plugins/${pluginId}/products`}
+              component={Products}
+            />
+            <Route
+              path={`/plugins/${pluginId}/categories`}
+              component={Categories}
+            />
+            <Route
+              path={`/plugins/${pluginId}/customers`}
+              component={Customers}
+            />
+            <Route
+              path={`/plugins/${pluginId}/orders`}
+              component={Orders}
+            />
+            <Route
+              path={`/plugins/${pluginId}/settings`}
+              component={Settings}
+            />
+          </Switch>
+        </Suspense>
+      </Layout>
+    </>
   );
 };
 
-export default PluginPage;
+export default App;
