@@ -1,4 +1,4 @@
 # Strapi Ecommerce Plugin
 
 ### Plugin in development
-Approximate release date - 01.02.2022
+Approximate release date - 15.01.2022

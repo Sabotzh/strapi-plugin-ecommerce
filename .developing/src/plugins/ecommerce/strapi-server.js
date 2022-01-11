@@ -3,7 +3,7 @@ const bootstrap = require('./server/onBootstrap');
 const destroy = require('./server/onDestroy');
 
 const contentTypes = require('./server/content-types');
-const routes = require('./server/routes');
+const routes = require('./server/routes/content-api');
 const controllers = require('./server/controllers');
 const services = require('./server/services');
 const policies = require('./server/policies');
@@ -15,7 +15,7 @@ module.exports = () => ({
   destroy,
 
   contentTypes,
-  routes,
+  // routes,
   controllers,
   services,
   policies,
