@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useState, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import getTrad from '../../utils/getTrad';
 import RowTable from "./RowTable";
 import Create from "./Create";
@@ -28,8 +28,8 @@ const ProductsPage = () => {
   });
 
   const [ isVisible, setIsVisible ] = useState(false)
-  const [ sortByCategoriesValue, setSortByCategoriesValue ] = useState()
-  const [ sortByPrice, setSortByPrice ] = useState()
+  const [ sortByCategoriesValue, setSortByCategoriesValue ] = useState('')
+  const [ sortByPrice, setSortByPrice ] = useState('')
   const [ tableData, setTableData ] = useState([
       {
         sku: '1e2c47',
@@ -75,22 +75,26 @@ const ProductsPage = () => {
   const prices = ['Low to High', 'High to Low']
 
   const sort = () => {
-    // setTableData(tableData.sort((a, b) => {
-    //     if ((a.category === sortData.category && b.category === sortData.category) ||
-    //       (a.category !== sortData.category && b.category === sortData.category)) {
-    //       if (sortData.price) {
-    //         if (sortData.price === 'Low to High') return a.price - b.price
-    //         return b.price - a.price
-    //       }
-    //       return 0
-    //     }
-    //     if (a.category !== sortByCategoriesValue && b.category === sortByCategoriesValue) return 1
-    //     if (a.category === sortByCategoriesValue && b.category !== sortByCategoriesValue) return -1
-    //     return 0
-    //   })
-    // )
+    if (!sortByCategoriesValue && !sortByPrice) return
+    const copyTableData = JSON.parse(JSON.stringify(tableData))
+    const newTableData = copyTableData.sort((a, b) => {
+      if ((a.category === sortByCategoriesValue && b.category === sortByCategoriesValue) ||
+        (a.category !== sortByCategoriesValue && b.category !== sortByCategoriesValue)) {
+        if (sortByPrice) {
+          if (sortByPrice === 'Low to High') return a.price - b.price
+          return b.price - a.price
+        }
+        return 0
+      }
+      if (a.category !== sortByCategoriesValue && b.category === sortByCategoriesValue) return 1
+      if (a.category === sortByCategoriesValue && b.category !== sortByCategoriesValue) return -1
+      return 0
+    })
+
+    setTableData(newTableData)
   }
 
+  useEffect(() => sort(), [sortByPrice, sortByCategoriesValue])
 
   const tableDataUpdate = (updatedRow, idUpdatedRow) => {
     const updatedTableData = tableData.map(row => {
@@ -138,11 +142,9 @@ const ProductsPage = () => {
               value={ sortByCategoriesValue }
               onChange={ (value) => {
                 setSortByCategoriesValue(value)
-                sort()
               }}
               onClear={ () => {
                 setSortByCategoriesValue(null)
-                sort()
               } }
             >
               { categories.map((entry, id) => <Option value={entry} key={id}>{ entry }</Option>) }
@@ -152,11 +154,9 @@ const ProductsPage = () => {
               value={ sortByPrice }
               onChange={ (value) => {
                 setSortByPrice(value)
-                sort()
               } }
               onClear={ () => {
                 setSortByPrice(null)
-                sort()
               }}
             >
               { prices.map((entry, id) => <Option value={entry} key={id}>{ entry }</Option>) }
