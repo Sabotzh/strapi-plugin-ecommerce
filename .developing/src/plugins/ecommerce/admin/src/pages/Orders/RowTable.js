@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled from "styled-components"
 
 import { Td } from "@strapi/design-system/Table";
 import { Typography } from "@strapi/design-system/Typography";
