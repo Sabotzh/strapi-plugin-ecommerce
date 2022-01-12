@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from "styled-components";
+import 'segoe-fonts/segoe-fonts.css'
 
 import { LocalMall } from '@material-ui/icons';
 import { Dashboard } from '@material-ui/icons';
@@ -34,16 +35,18 @@ const SubNavHeaderStyled = styled.div`
       line-height: 1.22;
     }
     h2:first-child::after {
-      content: "Alpha";
+      content: '${props => props.stage}';
       position: absolute;
-      font-size: 0.85rem;
-      background-color: #EDBB99;
-      top: -15.5px;
-      right: -40px;
+      top: -21%;
+      left: 88px;
+      background-color: ${props => props.backgroundColor};
+      font-family: 'Segoe UI', 'Open Sans', Helvetica, sans-serif;
+      font-weight: 400;
+      color: #FFF;
+      font-size: 10px;
+      letter-spacing: 0.4px;
       padding: 2px 7.5px;
-      border-radius: 10px;
-      color: #DC7633;
-      font-weight: 500;
+      border-radius: 2px;
     }
   }
   
@@ -51,11 +54,6 @@ const SubNavHeaderStyled = styled.div`
     padding-top: 16px;
     hr {
       display: block;
-      unicode-bidi: isolate;
-      margin-block-start: 0.5em;
-      margin-block-end: 0.5em;
-      margin-inline-start: auto;
-      margin-inline-end: auto;
       overflow: hidden;
       width: 1.5rem;
       background-color: #dcdce4;
@@ -68,6 +66,19 @@ const SubNavHeaderStyled = styled.div`
 
 
 const Navigation = () => {
+  const stage = 'alpha'
+  let backgroundColor
+  switch (stage) {
+    case 'pro':
+      backgroundColor = '#5668A9'
+      break
+    case 'enterprise':
+      backgroundColor = '#000000'
+      break
+    default:
+      backgroundColor = '#56A977'
+  }
+
   const links = [
     { id: 1, label: getTrad('menu.dashboard.name'), link: 'dashboard', icon: <Dashboard viewBox="0 0 22 22"/> },
     { id: 2, label: getTrad('menu.products.name'), link: 'products', icon: <LocalMall viewBox="0 0 22 22"/> },
@@ -79,7 +90,7 @@ const Navigation = () => {
   return (
     <SubNav ariaLabel='Ecommerce'>
       {/*<SubNavHeader label='Ecommerce' />*/}
-      <SubNavHeaderStyled>
+      <SubNavHeaderStyled backgroundColor={backgroundColor} stage={stage}>
         <div>
           <h2>Ecommerce</h2>
         </div>
