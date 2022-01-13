@@ -24,6 +24,12 @@ module.exports = [
     config: {},
   },
   {
+    method: 'PUT',
+    path: '/categories/:id',
+    handler: 'categories.update',
+    config: {},
+  },
+  {
     method: 'DELETE',
     path: '/categories/:id',
     handler: 'categories.remove',
