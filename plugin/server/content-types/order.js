@@ -1,11 +1,11 @@
 module.exports = {
-  collectionName: 'ecommerce_orders',
+  collectionName: 'ecommerce_products',
   info: {
-    name: 'orders',
-    description: 'List of ecommerce orders',
-    singularName: 'order',
-    pluralName: 'orders',
-    displayName: 'Ecommerce orders',
+    name: 'products',
+    description: 'List of ecommerce products',
+    singularName: 'product',
+    pluralName: 'products',
+    displayName: 'Ecommerce products',
     kind: 'collectionType',
   },
   options: {
@@ -20,11 +20,10 @@ module.exports = {
     },
   },
   attributes: {
-    customer: {
+    user: {
       type: 'relation',
       relation: 'oneToOne',
-      target: 'plugin::ecommerce.customer',
-      configurable: false,
+      target: 'plugin::ecommerce.user'
     },
     products: {
       type: 'json',

@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 
 import { useFocusWhenNavigate } from '@strapi/helper-plugin';
 import { ContentLayout, HeaderLayout } from '@strapi/design-system/Layout';
-import { Table, Thead, Tbody, TFooter, Tr, Td, Th } from '@strapi/design-system/Table';
+import { Table, Thead, Tbody, Tr, Td, Th } from '@strapi/design-system/Table';
 import { Typography } from '@strapi/design-system/Typography';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
 import { Box } from '@strapi/design-system/Box';
@@ -13,7 +13,6 @@ import { Stack } from '@strapi/design-system/Stack';
 import { Flex } from '@strapi/design-system/Flex';
 
 import getTrad from '../../utils/getTrad';
-import StatisticItem from "./StatisticItem";
 import { Approve, Car, Card, Clock } from "./Icons";
 
 
@@ -95,7 +94,7 @@ const DashboardPage = () => {
             {statisticTopItem.map((el, id) => {
               return (
                 <GridItem col={3} key={id}>
-                  <StatisticItem padding={5} background={'neutral0'} shadow="filterShadow" hasRadius>
+                  <Box padding={5} background={'neutral0'} shadow="filterShadow" hasRadius>
                     <Flex>
                       <Box style={{ backgroundColor: el.color, width: '39px', height: '39px' }} padding={2} hasRadius>{ el.img }</Box>
                       <Flex paddingLeft={3} direction={'column'} alignItems={'start'}>
@@ -107,7 +106,7 @@ const DashboardPage = () => {
                          </Box>
                       </Flex>
                     </Flex>
-                  </StatisticItem>
+                  </Box>
                 </GridItem>
               )
             })}
@@ -121,56 +120,28 @@ const DashboardPage = () => {
           <Table colCount={5} rowCount={8}>
             <Thead>
               <Tr>
-                <Th>
-                  <Typography variant="sigma">ID</Typography>
-                </Th>
-                <Th>
-                  <Typography variant="sigma">Order Time</Typography>
-                </Th>
-                <Th>
-                  <Typography variant="sigma">Delivery Address</Typography>
-                </Th>
-                <Th>
-                  <Typography variant="sigma">Phone</Typography>
-                </Th>
-                <Th>
-                  <Typography variant="sigma">Payment Method</Typography>
-                </Th>
-                <Th>
-                  <Typography variant="sigma">Order Amount</Typography>
-                </Th>
-                <Th>
-                  <Typography variant="sigma">Status</Typography>
-                </Th>
-                <Th>
-                  {<VisuallyHidden>Actions</VisuallyHidden>}
-                </Th>
+                <Th><Typography variant="sigma">ID</Typography></Th>
+                <Th><Typography variant="sigma">Order Time</Typography></Th>
+                <Th><Typography variant="sigma">Delivery Address</Typography></Th>
+                <Th><Typography variant="sigma">Phone</Typography></Th>
+                <Th><Typography variant="sigma">Payment Method</Typography></Th>
+                <Th><Typography variant="sigma">Order Amount</Typography></Th>
+                <Th><Typography variant="sigma">Status</Typography></Th>
+                <Th><VisuallyHidden>Actions</VisuallyHidden></Th>
               </Tr>
             </Thead>
             <Tbody>
-              {tableData.map((elem, id) => <Tr key={id++}>
-                <Td>
-                  <Typography>{id++}</Typography>
-                </Td>
-                <Td>
-                  <Typography>{elem.orderTime}</Typography>
-                </Td>
-                <Td>
-                  <Typography>{elem.deliveryAddress}</Typography>
-                </Td>
-                <Td>
-                  <Typography>{elem.phone}</Typography>
-                </Td>
-                <Td>
-                  <Typography>{elem.paymentMethod}</Typography>
-                </Td>
-                <Td>
-                  <Typography>{elem.orderAmount}</Typography>
-                </Td>
-                <Td>
-                  <Typography>{elem.status}</Typography>
-                </Td>
-              </Tr>)}
+              { tableData.map((elem, id) => (
+                <Tr key={id++}>
+                  <Td><Typography>{id++}</Typography></Td>
+                  <Td><Typography>{elem.orderTime}</Typography></Td>
+                  <Td><Typography>{elem.deliveryAddress}</Typography></Td>
+                  <Td><Typography>{elem.phone}</Typography></Td>
+                  <Td><Typography>{elem.paymentMethod}</Typography></Td>
+                  <Td><Typography>{elem.orderAmount}</Typography></Td>
+                  <Td><Typography>{elem.status}</Typography></Td>
+                </Tr>)
+              )}
             </Tbody>
           </Table>
         </Stack>

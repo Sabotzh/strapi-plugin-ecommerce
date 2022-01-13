@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-ecommerce",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "",
   "main": "strapi-admin.js",
   "scripts": {
@@ -18,6 +18,6 @@
   "homepage": "https://github.com/Sabotzh/strapi-plugin-ecommerce#readme",
   "dependencies": {
     "@material-ui/icons": "^4.11.2",
-    "slugify": "^1.6.5"
+    "segoe-fonts": "^1.0.1"
   }
 }

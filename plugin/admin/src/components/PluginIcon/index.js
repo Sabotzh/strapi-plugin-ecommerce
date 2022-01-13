@@ -5,9 +5,8 @@
  */
 
 import React from 'react';
+import ShoppingCart from '@strapi/icons/ShoppingCart';
 
-import { MonetizationOn } from '@material-ui/icons';
-
-const PluginIcon = () => <MonetizationOn viewBox="0 0 26 18"/>;
+const PluginIcon = () => <ShoppingCart />;
 
 export default PluginIcon;

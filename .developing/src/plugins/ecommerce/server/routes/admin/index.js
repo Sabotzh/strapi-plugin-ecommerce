@@ -1,8 +1,13 @@
-const baseRoutes = require('../baseRoutes');
-
 module.exports = {
   type: 'admin',
   routes: [
-    ...baseRoutes,
+    {
+      method: "GET",
+      path: "/cart",
+      handler: "cart.get",
+      config: {
+        policies: [],
+      },
+    },
   ],
 };
