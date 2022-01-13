@@ -9,14 +9,14 @@ module.exports = {
     kind: 'collectionType',
   },
   options: {
-    draftAndPublish: false,
+    draftAndPublish: true,
   },
   pluginOptions: {
     'content-manager': {
       visible: false,
     },
     'content-type-builder': {
-      visible: false,
+      visible: true,
     },
   },
   attributes: {
@@ -24,6 +24,11 @@ module.exports = {
       type: 'relation',
       relation: 'oneToOne',
       target: 'plugin::ecommerce.category',
+      configurable: false,
+    },
+    category_level: {
+      type: 'integer',
+      configurable: false,
     },
     name: {
       type: 'string',
