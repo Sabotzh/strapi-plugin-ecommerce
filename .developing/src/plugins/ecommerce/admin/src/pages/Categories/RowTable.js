@@ -26,14 +26,23 @@ const RowTable = (props) => {
         <Edit
           closeHandler = { () => setIsVisible(false) }
           rowData = { rowData }
-          updateRowData = { (dataRow, idRow) => props.updateRowData(dataRow, idRow) }
         />
       }
-      <Td><Typography textColor="neutral800">{ rowData.id }</Typography></Td>
-      <Td><Typography textColor="neutral800">{ rowData.name }</Typography></Td>
-      <Td><Typography textColor="neutral800">{ rowData.parent }</Typography></Td>
-      <Td><Typography textColor="neutral800">{ rowData.type }</Typography></Td>
-      <Td><Typography textColor="neutral800">{ rowData.slug }</Typography></Td>
+      <Td>
+        <Typography textColor="neutral800">{ rowData.id }</Typography>
+      </Td>
+      <Td>
+        <Typography textColor="neutral800">{ rowData.name }</Typography>
+      </Td>
+      <Td>
+        <Typography textColor="neutral800">{ rowData.parent }</Typography>
+      </Td>
+      <Td>
+        <Typography textColor="neutral800">{ rowData.type }</Typography>
+      </Td>
+      <Td>
+        <Typography textColor="neutral800">{ rowData.slug }</Typography>
+      </Td>
       <Td>
         <Switch label="Published" selected={ issued } onChange={() => {
           setIssued(!issued)

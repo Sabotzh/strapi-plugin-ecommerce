@@ -48,7 +48,7 @@ const SubNavHeaderStyled = styled.div`
       border-radius: 2px;
     }
   }
-
+  
   div:nth-child(2) {
     padding-top: 16px;
     hr {
@@ -98,15 +98,15 @@ const Navigation = () => {
         </div>
       </SubNavHeaderStyled>
       <SubNavSections style={{ marginLeft: '-8px' }}>
-          {
-            links.map(link =>
-              <SubNavLink
-                to={`/plugins/ecommerce/${link.link}`}
-                key={link.id} icon={link.icon}
-              >
-                <FormattedMessage id={link.label}/>
-              </SubNavLink>)
-          }
+        {
+          links.map(link =>
+            <SubNavLink
+              to={`/plugins/ecommerce/${link.link}`}
+              key={link.id} icon={link.icon}
+            >
+              <FormattedMessage id={link.label}/>
+            </SubNavLink>)
+        }
       </SubNavSections>
     </SubNav>
   )

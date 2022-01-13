@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import Plus from "@strapi/icons/Plus";
 
 import getTrad from '../../utils/getTrad';
-import Create from "./Create";
+import Create from "../Products/Create";
 import RowTable from "./RowTable";
 
 import { useIntl } from 'react-intl';
@@ -26,7 +26,7 @@ const CategoriesPage = () => {
   });
 
   const [ isVisible, setIsVisible ] = useState(false)
-  const [ sortBy, setSortBy ] = useState()
+  const [ sortByCategoriesValue, setSortByCategoriesValue ] = useState()
   const categories = [
     'Fish & Meat', 'Fruits & Vegetable', 'Fresh Seafood', 'Cooking Essentials', 'Breakfast', 'Drinks',
     'Milk & Dairy', 'Organic Food', 'Honey', 'Sauces & Pickles', 'Jam & Jelly', 'Snacks & Instant',
@@ -44,7 +44,7 @@ const CategoriesPage = () => {
     {
       id: 5404,
       name: 'My Name?',
-      parent: 'Fish & Meat',
+      parent: 'Organic Food',
       type: 'Grocery',
       slug: 'slug-slug',
       published: false
@@ -52,7 +52,7 @@ const CategoriesPage = () => {
     {
       id: 5405,
       name: 'My Name?',
-      parent: 'Fresh Seafood',
+      parent: 'Organic Food',
       type: 'Grocery',
       slug: 'slug-slug',
       published: true
@@ -71,16 +71,6 @@ const CategoriesPage = () => {
 
   const deleteRow = (idRow) => {
     setTableData(tableData.filter((row) => row.id !== idRow))
-  }
-
-  const sort = (sortCategory) => {
-    setSortBy(sortCategory)
-    setTableData(tableData.sort((a, b) => {
-      console.log(a.parent, sortCategory)
-      if (a.parent === sortCategory && b.parent === sortCategory) return 0
-      if (a.parent === sortCategory && b.parent !== sortCategory) return -1
-      return 1
-    }))
   }
 
   return (
@@ -103,8 +93,6 @@ const CategoriesPage = () => {
       { isVisible &&
         <Create
           closeHandler = { () => setIsVisible(false) }
-          tableData = { tableData }
-          createField = { setTableData }
         />
       }
       <ContentLayout>
@@ -112,15 +100,9 @@ const CategoriesPage = () => {
           <Stack horizontal size={3}>
             <Select
               placeholder={'Sort by category'}
-              value={ sortBy }
-              onChange={ (value) => {
-                setSortBy(value)
-                sort(value)
-              } }
-              onClear={ () => {
-                setSortBy(null)
-                sort(null)
-              } }
+              value={ sortByCategoriesValue }
+              onChange={ setSortByCategoriesValue }
+              onClear={ () => setSortByCategoriesValue(null) }
             >
               { categories.map((entry, id) => <Option value={entry} key={id}>{ entry }</Option>) }
             </Select>
@@ -128,13 +110,27 @@ const CategoriesPage = () => {
           <Table colCount={6} rowCount={15}>
             <Thead>
               <Tr>
-                <Th><Typography variant="sigma">ID</Typography></Th>
-                <Th><Typography variant="sigma">Name</Typography></Th>
-                <Th><Typography variant="sigma">Parent</Typography></Th>
-                <Th><Typography variant="sigma">Type</Typography></Th>
-                <Th><Typography variant="sigma">Slug</Typography></Th>
-                <Th><Typography variant="sigma">Published</Typography></Th>
-                <Th><VisuallyHidden>Actions</VisuallyHidden></Th>
+                <Th>
+                  <Typography variant="sigma">ID</Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">Name</Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">Parent</Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">Type</Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">Slug</Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">Published</Typography>
+                </Th>
+                <Th>
+                  <VisuallyHidden>Actions</VisuallyHidden>
+                </Th>
               </Tr>
             </Thead>
             <Tbody>
