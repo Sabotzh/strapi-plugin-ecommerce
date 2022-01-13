@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from "styled-components";
-import 'segoe-fonts/segoe-fonts.css'
 
 import { LocalMall } from '@material-ui/icons';
 import { Dashboard } from '@material-ui/icons';
@@ -49,7 +48,7 @@ const SubNavHeaderStyled = styled.div`
       border-radius: 2px;
     }
   }
-  
+
   div:nth-child(2) {
     padding-top: 16px;
     hr {
