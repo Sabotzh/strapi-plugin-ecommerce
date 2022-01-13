@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from "styled-components";
-import 'segoe-fonts/segoe-fonts.css'
 
 import { LocalMall } from '@material-ui/icons';
 import { Dashboard } from '@material-ui/icons';
@@ -38,7 +37,7 @@ const SubNavHeaderStyled = styled.div`
       content: '${props => props.stage}';
       position: absolute;
       top: -21%;
-      left: 88px;
+      left: 90px;
       background-color: ${props => props.backgroundColor};
       font-family: 'Segoe UI', 'Open Sans', Helvetica, sans-serif;
       font-weight: 400;

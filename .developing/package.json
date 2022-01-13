@@ -22,8 +22,7 @@
     "react-router-dom": "^5.3.0",
     "sqlite3": "5.0.2",
     "styled-components": "^5.3.3",
-    "uuid": "^8.3.2",
-    "webpack": "^5.65.0"
+    "uuid": "^8.3.2"
   },
   "author": {
     "name": "A Strapi developer"
@@ -37,6 +36,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^8.6.0"
+    "eslint": "^8.6.0",
+    "webpack": "5.36"
   }
 }
