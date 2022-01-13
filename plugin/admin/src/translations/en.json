@@ -1,0 +1,27 @@
+{
+  "menu.dashboard.name": "Dashboard",
+  "menu.products.name": "Products",
+  "menu.categories.name": "Categories",
+  "menu.customers.name": "Customers",
+  "menu.orders.name": "Orders",
+  "menu.settings.name": "Settings",
+  "sort.category.fishMeat": "Fish & Meat",
+  "sort.category.fruitsVegetable": "Fruits & Vegetable",
+  "sort.category.Fresh Seafood": "Fresh Seafood",
+  "sort.category.Cooking Essentials": "Cooking Essentials",
+  "sort.category.Breakfast": "Breakfast",
+  "sort.category.Drinks": "Drinks",
+  "sort.category.Milk & Dairy": "Milk & Dairy",
+  "sort.category.Organic Food": "Organic Food",
+  "sort.category.Honey": "Honey",
+  "sort.category.Sauces & Pickles": "Sauces & Pickles",
+  "sort.category.Jam & Jelly": "Jam & Jelly",
+  "sort.category.Snacks & Instant": "Snacks & Instant",
+  "sort.category.biscuitsCakes": "Biscuits & Cakes",
+  "sort.category.householdTools": "Household Tools",
+  "sort.category.babyCare": "Baby Care",
+  "sort.category.petCare": "Pet Care",
+  "sort.category.beautyHealth": "Beauty & Health",
+  "sort.category.sportsFitness": "Sports & Fitness"
+}
+
