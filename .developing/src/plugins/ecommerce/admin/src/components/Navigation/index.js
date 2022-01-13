@@ -98,15 +98,15 @@ const Navigation = () => {
         </div>
       </SubNavHeaderStyled>
       <SubNavSections style={{ marginLeft: '-8px' }}>
-        {
-          links.map(link =>
-            <SubNavLink
-              to={`/plugins/ecommerce/${link.link}`}
-              key={link.id} icon={link.icon}
-            >
-              <FormattedMessage id={link.label}/>
-            </SubNavLink>)
-        }
+          {
+            links.map(link =>
+              <SubNavLink
+                to={`/plugins/ecommerce/${link.link}`}
+                key={link.id} icon={link.icon}
+              >
+                <FormattedMessage id={link.label}/>
+              </SubNavLink>)
+          }
       </SubNavSections>
     </SubNav>
   )

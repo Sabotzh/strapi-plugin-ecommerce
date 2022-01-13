@@ -26,32 +26,17 @@ const RowTable = (props) => {
         <Edit
           closeHandler = { () => setIsVisible(false) }
           rowData = { rowData }
+          updateRowData = { (dataRow, idRow) => props.updateRowData(dataRow, idRow) }
         />
       }
-      <Td>
-        <Typography textColor="neutral800">{ rowData.sku }</Typography>
-      </Td>
-      <Td>
-        <Avatar src = { rowData.icon } alt={''} />
-      </Td>
-      <Td>
-        <Typography textColor="neutral800">{ rowData.productName }</Typography>
-      </Td>
-      <Td>
-        <Typography textColor="neutral800">{ rowData.category }</Typography>
-      </Td>
-      <Td>
-        <Typography textColor="neutral800">{ rowData.price }</Typography>
-      </Td>
-      <Td>
-        <Typography textColor="neutral800">{ rowData.stock }</Typography>
-      </Td>
-      <Td>
-        <Typography textColor="neutral800">{ rowData.status }</Typography>
-      </Td>
-      <Td>
-        <Typography textColor="neutral800">{ rowData.discount }</Typography>
-      </Td>
+      <Td><Typography textColor="neutral800">{ rowData.sku }</Typography></Td>
+      <Td><Avatar src = { rowData.icon } alt={''} /></Td>
+      <Td><Typography textColor="neutral800">{ rowData.productName }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ rowData.category }</Typography></Td>
+      <Td><Typography textColor="neutral800">$ { rowData.price }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ rowData.stock }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ rowData.status }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ rowData.discount }</Typography></Td>
       <Td>
         <Switch label="Published" selected={ issued } onChange={() => {
           setIssued(!issued)

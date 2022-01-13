@@ -9,14 +9,14 @@ module.exports = {
     kind: 'collectionType',
   },
   options: {
-    draftAndPublish: true,
+    draftAndPublish: false,
   },
   pluginOptions: {
     'content-manager': {
       visible: false,
     },
     'content-type-builder': {
-      visible: true,
+      visible: false,
     },
   },
   attributes: {
@@ -47,19 +47,16 @@ module.exports = {
       allowedTypes: [ 'images' ],
       type: 'media',
       multiple: false,
-      configurable: false,
     },
     addition_images: {
       allowedTypes: [ 'images' ],
       type: 'media',
       multiple: true,
-      configurable: false,
     },
-    categories: {
+    types: {
       type: 'relation',
       relation: 'oneToMany',
       target: 'plugin::ecommerce.category',
-      configurable: false,
     },
     price: {
       type: 'integer',
@@ -89,7 +86,6 @@ module.exports = {
       type: 'relation',
       relation: 'manyToMany',
       target: 'plugin::ecommerce.product',
-      configurable: false,
     },
     meta_title: {
       type: 'string',
