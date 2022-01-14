@@ -30,5 +30,21 @@ module.exports = {
       type: 'json',
       configurable: false,
     },
+    shipping_address: {
+      type: "string",
+      configurable: false,
+    },
+    method: {
+      type: "string",
+      configurable: false,
+    },
+    status: {
+      type: "string",
+      configurable: false,
+    },
+    time: {
+      type: "datetime",
+      configurable: false,
+    }
   },
 };
