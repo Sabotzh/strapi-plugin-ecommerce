@@ -1,3 +1,6 @@
-module.exports = ({ strapi }) => (ctx) => {
-  ctx.body = { message: 'categories delete' };
+module.exports = ({ strapi }) => async(ctx) => {
+  const { id } = ctx.params
+  ctx.body = await strapi
+    .query('plugin::ecommerce.category')
+    .delete({ where: { id } });
 };

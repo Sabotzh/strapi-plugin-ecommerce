@@ -1,3 +1,7 @@
-module.exports = ({ strapi }) => (ctx) => {
-  ctx.body = { message: 'categories findOneBySlug' };
+module.exports = ({ strapi }) => async(ctx) => {
+  const { slug } = ctx.params
+
+  ctx.body = await strapi
+    .query('plugin::ecommerce.category')
+    .findOne({ where: { slug } });
 };
