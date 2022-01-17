@@ -31,6 +31,12 @@ module.exports = [
   },
   {
     method: 'PUT',
+    path: '/products/:id',
+    handler: 'products.update',
+    config: {},
+  },
+  {
+    method: 'PUT',
     path: '/products/:id/publish',
     handler: 'products.publish',
     config: {},
