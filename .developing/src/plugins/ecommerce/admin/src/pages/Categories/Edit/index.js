@@ -14,17 +14,11 @@ import { Option, Select } from "@strapi/design-system/Select";
 import { Button } from '@strapi/design-system/Button'
 
 
-const Edit = ({ rowData, closeHandler, updateRowData } ) => {
+const Edit = ({ rowData, closeHandler, updateRowData, tableData } ) => {
   const [ name, setName ] = useState(rowData.name)
-  const [ parent, setParent ] = useState(rowData.parent)
+  const [ selectParentName, setSelectParentName ] = useState(rowData.parent_category ? rowData.parent_category.name : null)
   const [ type, setType ] = useState(rowData.type)
   const [ slug, setSlug ] = useState(rowData.slug)
-
-  const categories = [
-    'Fish & Meat', 'Fruits & Vegetable', 'Fresh Seafood', 'Cooking Essentials', 'Breakfast', 'Drinks',
-    'Milk & Dairy', 'Organic Food', 'Honey', 'Sauces & Pickles', 'Jam & Jelly', 'Snacks & Instant',
-    'Biscuits & Cakes', 'Household Tools', 'Baby Care', 'Pet Care', 'Beauty & Health', 'Sports & Fitness'
-  ]
 
   return (
     <ModalLayout onClose={ () => closeHandler() } labelledBy="Edit">
@@ -56,10 +50,13 @@ const Edit = ({ rowData, closeHandler, updateRowData } ) => {
               <Select
                 label={'Parent'}
                 placeholder={'Parent'}
-                value={ parent }
-                onChange={ setParent }
+                value={ selectParentName }
+                onChange={ setSelectParentName }
+                onClear={() => setSelectParentName(null)}
               >
-                { categories.map((entry, id) => <Option value={entry} key={id}>{ entry }</Option>) }
+                { tableData.map((entry, id) => {
+                  return <Option value={entry.name} key={entry.id}>{ entry.name }</Option>
+                })}
               </Select>
             </GridItem>
             <GridItem col={6}>
@@ -87,7 +84,7 @@ const Edit = ({ rowData, closeHandler, updateRowData } ) => {
         startActions = { <Button onClick = { () => closeHandler() } variant="tertiary"> Cancel </Button> }
         endActions = { <Button onClick = { () => {
           closeHandler()
-          updateRowData(rowData.id, { name })
+          updateRowData(rowData.id, { name, slug, type, parent_category: parent ? tableData.parentId.id : null })
         }
         }> Finish </Button> }
       />

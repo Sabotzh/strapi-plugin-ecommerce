@@ -14,8 +14,7 @@ import {Box} from "@strapi/design-system/Box";
 import Edit from "./Edit";
 
 
-const RowTable = (props) => {
-  const rowData = props.rowData
+const RowTable = ({ rowData, tableData, updateRowData, deleteRow }) => {
   const [ issued, setIssued ] = useState(rowData.published)
   const [ isVisible, setIsVisible ] = useState(false)
 
@@ -25,7 +24,8 @@ const RowTable = (props) => {
         <Edit
           closeHandler = { () => setIsVisible(false) }
           rowData = { rowData }
-          updateRowData = { (dataRow, idRow) => props.updateRowData(dataRow, idRow) }
+          tableData = { tableData }
+          updateRowData = { (dataRow, idRow) => updateRowData(dataRow, idRow) }
         />
       }
       <Td><Typography textColor="neutral800">{ rowData.id }</Typography></Td>
@@ -36,7 +36,7 @@ const RowTable = (props) => {
       <Td>
         <Switch label="Published" selected={ true } onChange={() => {
           setIssued(!issued)
-          props.updateRowData({...rowData, published: !issued}, rowData.id)
+          updateRowData({...rowData, published: !issued}, rowData.id)
         }} />
       </Td>
       <Td>
@@ -47,7 +47,7 @@ const RowTable = (props) => {
               label="Delete"
               noBorder
               icon={ <Trash/> }
-              onClick={ () => props.deleteRow(rowData.id) }
+              onClick={ () => deleteRow(rowData.id) }
             />
           </Box>
         </Flex>

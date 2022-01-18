@@ -63,7 +63,6 @@ const CategoriesPage = () => {
   const sort = (sortCategory) => {
     setSortBy(sortCategory)
     setTableData(tableData.sort((a, b) => {
-      console.log(a.parent, sortCategory)
       if (a.parent === sortCategory && b.parent === sortCategory) return 0
       if (a.parent === sortCategory && b.parent !== sortCategory) return -1
       return 1
@@ -129,7 +128,8 @@ const CategoriesPage = () => {
                 tableData.map(entry => {
                   return <Tr key={entry.id}>
                     <RowTable
-                      rowData={{ ...entry }}
+                      tableData = { tableData }
+                      rowData={ entry }
                       updateRowData={(dataRow, idRow) => updateTableData(dataRow, idRow)}
                       deleteRow={(idRow) => deleteRow(idRow)}
                     />
