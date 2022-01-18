@@ -11,8 +11,8 @@ import { Divider } from '@strapi/design-system/Divider';
 import { TextInput } from '@strapi/design-system/TextInput';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
 import { Option, Select } from "@strapi/design-system/Select";
-import { NumberInput } from '@strapi/design-system/NumberInput';
 import { Button } from '@strapi/design-system/Button'
+
 
 const Edit = ({ rowData, closeHandler, updateRowData } ) => {
   const [ name, setName ] = useState(rowData.name)
@@ -87,7 +87,7 @@ const Edit = ({ rowData, closeHandler, updateRowData } ) => {
         startActions = { <Button onClick = { () => closeHandler() } variant="tertiary"> Cancel </Button> }
         endActions = { <Button onClick = { () => {
           closeHandler()
-          updateRowData({ name, parent, type, slug, id: rowData.id }, rowData.id)
+          updateRowData(rowData.id, { name })
         }
         }> Finish </Button> }
       />

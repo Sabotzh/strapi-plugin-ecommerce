@@ -1,5 +1,5 @@
 module.exports = ({ strapi }) => async(ctx) => {
   ctx.body = await strapi
     .query('plugin::ecommerce.category')
-    .findMany();
+    .findMany({ populate: { parent_category: true } });
 };

@@ -1,12 +1,13 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import Plus from "@strapi/icons/Plus";
 
 import getTrad from '../../utils/getTrad';
 import Create from "./Create";
 import RowTable from "./RowTable";
 
+
 import { useIntl } from 'react-intl';
-import { useFocusWhenNavigate } from '@strapi/helper-plugin';
+import { useFocusWhenNavigate, request  } from '@strapi/helper-plugin';
 import { ContentLayout, HeaderLayout } from '@strapi/design-system/Layout';
 import { Stack } from "@strapi/design-system/Stack";
 import { Option, Select } from "@strapi/design-system/Select";
@@ -27,47 +28,33 @@ const CategoriesPage = () => {
 
   const [ isVisible, setIsVisible ] = useState(false)
   const [ sortBy, setSortBy ] = useState()
+  const [ tableData, setTableData] = useState([])
   const categories = [
     'Fish & Meat', 'Fruits & Vegetable', 'Fresh Seafood', 'Cooking Essentials', 'Breakfast', 'Drinks',
     'Milk & Dairy', 'Organic Food', 'Honey', 'Sauces & Pickles', 'Jam & Jelly', 'Snacks & Instant',
     'Biscuits & Cakes', 'Household Tools', 'Baby Care', 'Pet Care', 'Beauty & Health', 'Sports & Fitness'
   ]
-  const [ tableData, setTableData] = useState([
-    {
-      id: 5403,
-      name: 'My Name?',
-      parent: 'Organic Food',
-      type: 'Grocery',
-      slug: 'slug-slug',
-      published: true
-    },
-    {
-      id: 5404,
-      name: 'My Name?',
-      parent: 'Fish & Meat',
-      type: 'Grocery',
-      slug: 'slug-slug',
-      published: false
-    },
-    {
-      id: 5405,
-      name: 'My Name?',
-      parent: 'Fresh Seafood',
-      type: 'Grocery',
-      slug: 'slug-slug',
-      published: true
-    }
-  ])
 
-  const tableDataUpdate = (updatedRow, idUpdatedRow) => {
-    const updatedTableData = tableData.map(row => {
-      if (row.id === idUpdatedRow) {
-        return updatedRow
-      }
-      return row
-    })
-    setTableData(updatedTableData)
+  const getTableData = async () => {
+    await request(`/ecommerce/categories`)
+      .then((res) => {
+        setTableData(res);
+    });
   }
+
+  const updateTableData = async (id, updateData) => {
+    await request(`/ecommerce/categories/${id}`, {
+      method: 'PUT',
+      body: updateData
+    })
+      .then(() => {
+        getTableData()
+      })
+  }
+
+  useEffect(async () => {
+    await getTableData()
+  }, [])
 
   const deleteRow = (idRow) => {
     setTableData(tableData.filter((row) => row.id !== idRow))
@@ -139,15 +126,15 @@ const CategoriesPage = () => {
             </Thead>
             <Tbody>
               {
-                tableData.map(entry =>
-                  <Tr key={entry.id}>
+                tableData.map(entry => {
+                  return <Tr key={entry.id}>
                     <RowTable
-                      rowData = { entry }
-                      updateRowData = { (dataRow, idRow) => tableDataUpdate(dataRow, idRow) }
-                      deleteRow = { (idRow) => deleteRow(idRow) }
+                      rowData={{ ...entry }}
+                      updateRowData={(dataRow, idRow) => updateTableData(dataRow, idRow)}
+                      deleteRow={(idRow) => deleteRow(idRow)}
                     />
                   </Tr>
-                )
+                })
               }
             </Tbody>
           </Table>

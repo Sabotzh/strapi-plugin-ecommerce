@@ -16,7 +16,6 @@ import Edit from "./Edit";
 
 const RowTable = (props) => {
   const rowData = props.rowData
-
   const [ issued, setIssued ] = useState(rowData.published)
   const [ isVisible, setIsVisible ] = useState(false)
 
@@ -31,11 +30,11 @@ const RowTable = (props) => {
       }
       <Td><Typography textColor="neutral800">{ rowData.id }</Typography></Td>
       <Td><Typography textColor="neutral800">{ rowData.name }</Typography></Td>
-      <Td><Typography textColor="neutral800">{ rowData.parent }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ rowData.parent_category ? rowData.parent_category.name : null }</Typography></Td>
       <Td><Typography textColor="neutral800">{ rowData.type }</Typography></Td>
       <Td><Typography textColor="neutral800">{ rowData.slug }</Typography></Td>
       <Td>
-        <Switch label="Published" selected={ issued } onChange={() => {
+        <Switch label="Published" selected={ true } onChange={() => {
           setIssued(!issued)
           props.updateRowData({...rowData, published: !issued}, rowData.id)
         }} />
