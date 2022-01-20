@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Sabotzh/strapi-plugin-ecommerce#readme",
   "dependencies": {
     "@material-ui/icons": "^4.11.2",
+    "axios": "^0.24.0",
     "slugify": "^1.6.5"
   }
 }

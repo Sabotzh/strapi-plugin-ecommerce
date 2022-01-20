@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
+
 import Plus from "@strapi/icons/Plus";
 
 import getTrad from '../../utils/getTrad';
@@ -6,14 +7,15 @@ import Create from "./Create";
 import RowTable from "./RowTable";
 
 import { useIntl } from 'react-intl';
-import { useFocusWhenNavigate } from '@strapi/helper-plugin';
+import { useFocusWhenNavigate, request  } from '@strapi/helper-plugin';
 import { ContentLayout, HeaderLayout } from '@strapi/design-system/Layout';
 import { Stack } from "@strapi/design-system/Stack";
 import { Option, Select } from "@strapi/design-system/Select";
 import { Table, Tbody, Th, Thead, Tr } from "@strapi/design-system/Table";
 import { Typography } from "@strapi/design-system/Typography";
 import { VisuallyHidden } from "@strapi/design-system/VisuallyHidden";
-import { Button } from "@strapi/design-system/Button";
+import { Grid, GridItem } from '@strapi/design-system/Grid';
+import { Button } from "@strapi/design-system/Button"
 
 
 const CategoriesPage = () => {
@@ -25,62 +27,58 @@ const CategoriesPage = () => {
     defaultMessage: 'Categories',
   });
 
-  const [ isVisible, setIsVisible ] = useState(false)
-  const [ sortBy, setSortBy ] = useState()
-  const categories = [
-    'Fish & Meat', 'Fruits & Vegetable', 'Fresh Seafood', 'Cooking Essentials', 'Breakfast', 'Drinks',
-    'Milk & Dairy', 'Organic Food', 'Honey', 'Sauces & Pickles', 'Jam & Jelly', 'Snacks & Instant',
-    'Biscuits & Cakes', 'Household Tools', 'Baby Care', 'Pet Care', 'Beauty & Health', 'Sports & Fitness'
-  ]
-  const [ tableData, setTableData] = useState([
-    {
-      id: 5403,
-      name: 'My Name?',
-      parent: 'Organic Food',
-      type: 'Grocery',
-      slug: 'slug-slug',
-      published: true
-    },
-    {
-      id: 5404,
-      name: 'My Name?',
-      parent: 'Fish & Meat',
-      type: 'Grocery',
-      slug: 'slug-slug',
-      published: false
-    },
-    {
-      id: 5405,
-      name: 'My Name?',
-      parent: 'Fresh Seafood',
-      type: 'Grocery',
-      slug: 'slug-slug',
-      published: true
-    }
-  ])
+  const [ isCreateVisible, setIsCreateVisible ] = useState(false)
+  const [ sortBy, setSortBy ] = useState(null)
+  const [ tableData, setTableData] = useState([])
+  // const categories = [
+  //   'Fish & Meat', 'Fruits & Vegetable', 'Fresh Seafood', 'Cooking Essentials', 'Breakfast', 'Drinks',
+  //   'Milk & Dairy', 'Organic Food', 'Honey', 'Sauces & Pickles', 'Jam & Jelly', 'Snacks & Instant',
+  //   'Biscuits & Cakes', 'Household Tools', 'Baby Care', 'Pet Care', 'Beauty & Health', 'Sports & Fitness'
+  // ]
 
-  const tableDataUpdate = (updatedRow, idUpdatedRow) => {
-    const updatedTableData = tableData.map(row => {
-      if (row.id === idUpdatedRow) {
-        return updatedRow
-      }
-      return row
-    })
-    setTableData(updatedTableData)
+  const getTableData = async () => {
+    await request(`/ecommerce/categories`)
+      .then((res) => sort(sortBy, res))
   }
 
-  const deleteRow = (idRow) => {
-    setTableData(tableData.filter((row) => row.id !== idRow))
+  const updateTableData = async (id, updateData) => {
+    await request(`/ecommerce/categories/${id}`, {
+      method: 'PUT',
+      body: updateData
+    }).then(() => getTableData())
   }
 
-  const sort = (sortCategory) => {
+  const createCategory = async (data) => {
+    console.log(data)
+    await request(`/ecommerce/categories`, {
+      method: 'POST',
+      body: data
+    }).then(() => getTableData())
+  }
+
+  useEffect(async () => {
+    await getTableData()
+  }, [])
+
+  const deleteRow = async(id) => {
+    await request(`/ecommerce/categories/${id}`, {
+      method: 'DELETE',
+    }).then(() => getTableData())
+  }
+
+  const sort = (sortCategory, sortData = tableData) => {
     setSortBy(sortCategory)
-    setTableData(tableData.sort((a, b) => {
-      console.log(a.parent, sortCategory)
-      if (a.parent === sortCategory && b.parent === sortCategory) return 0
-      if (a.parent === sortCategory && b.parent !== sortCategory) return -1
-      return 1
-    }))
+    if (!sortCategory) {
+      setTableData(sortData.sort((a, b) => {
+        return Date.parse(a.createdAt) - Date.parse(b.createdAt)
+      }))
+    } else {
+      setTableData(sortData.sort((a, b) => {
+        if (a.name === sortCategory && b.name === sortCategory) return 0
+        if (a.name === sortCategory && b.name !== sortCategory) return -1
+        return 1
+      }))
+    }
   }
 
   return (
@@ -89,7 +87,7 @@ const CategoriesPage = () => {
         primaryAction={
           <Button
             startIcon={ <Plus/> }
-            onClick={ () => setIsVisible(true) }
+            onClick={ () => setIsCreateVisible(true) }
           >
             Add product
           </Button>
@@ -100,32 +98,36 @@ const CategoriesPage = () => {
           defaultMessage: 'Configure the ecommerce plugin',
         })}
       />
-      { isVisible &&
+      { isCreateVisible &&
         <Create
-          closeHandler = { () => setIsVisible(false) }
+          closeHandler = { () => setIsCreateVisible(false) }
           tableData = { tableData }
-          createField = { setTableData }
+          createCategory = { createCategory }
         />
       }
       <ContentLayout>
         <Stack size={7}>
-          <Stack horizontal size={3}>
-            <Select
-              placeholder={'Sort by category'}
-              value={ sortBy }
-              onChange={ (value) => {
-                setSortBy(value)
-                sort(value)
-              } }
-              onClear={ () => {
-                setSortBy(null)
-                sort(null)
-              } }
-            >
-              { categories.map((entry, id) => <Option value={entry} key={id}>{ entry }</Option>) }
-            </Select>
+          <Stack size={3}>
+            <Grid>
+              <GridItem col={3}>
+                <Select
+                  placeholder={'Sort by category'}
+                  value={ sortBy }
+                  onChange={ (value) => {
+                    setSortBy(value)
+                    sort(value)
+                  }}
+                  onClear={ () => {
+                    setSortBy(null)
+                    sort(null)
+                  }}
+                  >
+                  { tableData.map((entry, id) => <Option value={ entry.name } key={id}>{ entry.name }</Option>) }
+                </Select>
+              </GridItem>
+            </Grid>
           </Stack>
-          <Table colCount={6} rowCount={15}>
+          <Table rowCount={10} colCount={7}>
             <Thead>
               <Tr>
                 <Th><Typography variant="sigma">ID</Typography></Th>
@@ -139,15 +141,16 @@ const CategoriesPage = () => {
             </Thead>
             <Tbody>
               {
-                tableData.map(entry =>
-                  <Tr key={entry.id}>
+                tableData.map(entry => {
+                  return <Tr key={entry.id}>
                     <RowTable
-                      rowData = { entry }
-                      updateRowData = { (dataRow, idRow) => tableDataUpdate(dataRow, idRow) }
-                      deleteRow = { (idRow) => deleteRow(idRow) }
+                      tableData = { tableData }
+                      rowData={ entry }
+                      updateRowData={(id, data) => updateTableData(id, data)}
+                      deleteRow={(idRow) => deleteRow(idRow)}
                     />
                   </Tr>
-                )
+                })
               }
             </Tbody>
           </Table>
