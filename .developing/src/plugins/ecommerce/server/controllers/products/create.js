@@ -10,6 +10,12 @@ module.exports = ({ strapi }) => async (ctx) => {
     return
   }
 
+  delete data.id;
+  delete data.category_level;
+  delete data.createdAt;
+  delete data.updatedAt;
+  delete data.publishedAt;
+
   if (data.slug) {
     data.slug = slugify(data.slug)
   } else {
