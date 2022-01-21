@@ -15,7 +15,7 @@ import { IconButton } from "@strapi/design-system/IconButton";
 import { Box } from "@strapi/design-system/Box";
 import { Popover } from '@strapi/design-system/Popover';
 import { Badge } from '@strapi/design-system/Badge';
-import { SortIcon, stopPropagation } from '@strapi/helper-plugin';
+import { SortIcon, stopPropagation, request } from '@strapi/helper-plugin';
 
 
 const BadgeStyled = styled(Typography)`
@@ -37,10 +37,8 @@ const ActionWrapper = styled.span`
 `;
 
 
-const RowTable = (props) => {
-  const rowData = props.rowData
-
-  const [ issued, setIssued ] = useState(rowData.published)
+const RowTable = ({ rowData, updateRowData, deleteRow, allCategories }) => {
+  const [ toggleSwitch, setToggleSwitch ] = useState(!!rowData.publishedAt)
   const [ editOpen, setEditOpen ] = useState(false)
   const [ visible, setVisible ] = useState(false);
   const buttonRef = useRef();
@@ -69,13 +67,26 @@ const RowTable = (props) => {
 
   const handleTogglePopover = () => setVisible(prev => !prev);
 
+  const publishUpdate = async () => {
+    await request(`/ecommerce/products/${rowData.id}/publish`, {
+      method: 'PUT',
+    })
+  }
+
+  const unPublishUpdate = async () => {
+    await request(`/ecommerce/products/${rowData.id}/un-publish`, {
+      method: 'PUT',
+    })
+  }
+
   return (
     <>
       { editOpen &&
         <Edit
           closeHandler = { () => setEditOpen(false) }
           rowData = { rowData }
-          updateRowData = { (dataRow, idRow) => props.updateRowData(dataRow, idRow) }
+          allCategories = { allCategories }
+          updateRowData = { (id, data) => updateRowData(id, data) }
         />
       }
       <Td><Typography textColor="neutral800">{ rowData.sku }</Typography></Td>
@@ -96,7 +107,7 @@ const RowTable = (props) => {
               />
               { visible && (
                 <Popover source={ buttonRef } spacing={16} centered>
-                  <ul style={{ width: '200px' }}>
+                  <ul style={{ width: '150px' }}>
                     { rowData.categories.map((el, id) => {
                       return (
                       <Box key={id} padding={3} as="li">
@@ -109,13 +120,21 @@ const RowTable = (props) => {
       </Td>
       <Td><Typography textColor="neutral800" fontWeight="bold">$ { rowData.price }</Typography></Td>
       <Td><Typography textColor="neutral800">{ rowData.quantity }</Typography></Td>
-      <Td><BadgeStyled color={ badgeColor } backgroundColor={ badgeBackgroundColor}>{ status() }</BadgeStyled></Td>
-      <Td><Typography textColor="neutral800">{ rowData.discount }%</Typography></Td>
+      <Td><BadgeStyled color={ badgeColor } backgroundColor={ badgeBackgroundColor }>{ status() }</BadgeStyled></Td>
+      <Td><Typography textColor="neutral800" fontWeight="bold">{ rowData.discount }%</Typography></Td>
       <Td>
-        <Switch label="Published" selected={ issued } onChange={() => {
-          setIssued(!issued)
-          props.updateRowData({...rowData, published: !issued}, rowData.sku)
-        }} />
+        <Switch label="Published" selected={ toggleSwitch }
+          onChange = {
+            () => {
+              if (toggleSwitch) {
+                unPublishUpdate()
+              } else {
+                publishUpdate()
+              }
+              setToggleSwitch(!toggleSwitch)
+            }
+          }
+        />
       </Td>
       <Td>
         <Flex>
@@ -125,7 +144,7 @@ const RowTable = (props) => {
               label="Delete"
               noBorder
               icon={ <Trash/> }
-              onClick={ () => props.deleteRow(rowData.sku) }
+              onClick={ () => deleteRow(rowData.id) }
             />
           </Box>
         </Flex>

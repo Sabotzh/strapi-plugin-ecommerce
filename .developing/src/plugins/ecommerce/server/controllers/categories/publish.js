@@ -1,3 +1,7 @@
-module.exports = ({ strapi }) => (ctx) => {
-  ctx.body = { message: 'categories publish' };
-};
+module.exports = ({ strapi }) => async(ctx) => {
+  const { id } = ctx.params
+
+  ctx.body = await strapi
+    .query('plugin::ecommerce.category')
+    .update({ where: { id }, data: { publishedAt: Date.now() } });
+}

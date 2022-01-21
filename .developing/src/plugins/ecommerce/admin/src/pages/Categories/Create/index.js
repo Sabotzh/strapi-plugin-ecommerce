@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useState } from "react";
 
 import CollectionType from '@strapi/icons/CollectionType';
 
@@ -27,15 +27,35 @@ const Create = ({ tableData, createCategory, closeHandler }) => {
   const [ metaTitle, setMetaTitle ] = useState('')
   const [ metaKeywords, setMetaKeywords ] = useState('')
   const [ metaDescription, setMetaDescription ] = useState('')
-
   const [ errors, setErrors] = useState({})
 
+  const submitButtonHandler = () => {
+    let { success, validateErrors } = validateCategories({ name, description, metaTitle, metaKeywords, metaDescription }, errors, setErrors)
 
-  // const categories = [
-  //   'Fish & Meat', 'Fruits & Vegetable', 'Fresh Seafood', 'Cooking Essentials', 'Breakfast', 'Drinks',
-  //   'Milk & Dairy', 'Organic Food', 'Honey', 'Sauces & Pickles', 'Jam & Jelly', 'Snacks & Instant',
-  //   'Biscuits & Cakes', 'Household Tools', 'Baby Care', 'Pet Care', 'Beauty & Health', 'Sports & Fitness'
-  // ]
+    tableData.forEach(el => {
+      if (el.name === name) {
+        success = false
+        validateErrors = ( { ...validateErrors, name: 'This name is used'} )
+      }
+    })
+
+    if (success) {
+      closeHandler()
+      createCategory({
+        name,
+        parent_category: selectParent,
+        type,
+        slug,
+        description,
+        meta_title: metaTitle,
+        meta_description: metaDescription,
+        meta_keywords: metaKeywords,
+        publishedAt: published ? Date.now() : null,
+      })
+    } else {
+      setErrors({ ...errors, ...validateErrors})
+    }
+  }
 
   return (
     <ModalLayout onClose={ () => closeHandler() } labelledBy="Create">
@@ -138,28 +158,7 @@ const Create = ({ tableData, createCategory, closeHandler }) => {
       </ModalBody>
       <ModalFooter
         startActions = { <Button onClick = { () => closeHandler() } variant="tertiary"> Cancel </Button> }
-        endActions = {
-          <Button onClick = { () => {
-            const { success, validateErrors } = validateCategories({ name, description, metaTitle, metaKeywords, metaDescription }, errors, setErrors)
-            if (success) {
-              closeHandler()
-              createCategory({
-                name,
-                parent_category: selectParent,
-                type,
-                slug,
-                description,
-                meta_title: metaTitle,
-                meta_description: metaDescription,
-                meta_keywords: metaKeywords,
-                publishedAt: published ? Date.now() : null,
-              })
-            } else {
-              setErrors(validateErrors)
-            }
-            }}> Finish
-          </Button>
-          }
+        endActions = { <Button onClick = { submitButtonHandler }> Finish </Button> }
       />
     </ModalLayout>
   )

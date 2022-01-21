@@ -1,3 +1,7 @@
-module.exports = ({ strapi }) => (ctx) => {
-  ctx.body = { message: 'products unPublish' };
-};
+module.exports = ({ strapi }) => async(ctx) => {
+  const { id } = ctx.params
+
+  ctx.body = await strapi
+    .query('plugin::ecommerce.product')
+    .update({ where: { id }, data: { publishedAt: null } });
+}

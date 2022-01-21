@@ -10,6 +10,15 @@ module.exports = ({ strapi }) => async (ctx) => {
     return
   }
 
+  const categoryWithTheSameName = await strapi
+    .query('plugin::ecommerce.category')
+    .findOne({ where: { name: { $contains: data.name } }});
+  if (categoryWithTheSameName) {
+    ctx.status = 400;
+    ctx.body = `Field "name" must be unique`
+    return
+  }
+
   delete data.id;
   delete data.category_level;
   delete data.createdAt;
@@ -24,7 +33,7 @@ module.exports = ({ strapi }) => async (ctx) => {
   const categoryWithTheSameSlug = await strapi
     .query('plugin::ecommerce.category')
     .findOne({ where: { slug: data.slug } });
-  console.log(categoryWithTheSameSlug)
+  // console.log(categoryWithTheSameSlug)
   if (categoryWithTheSameSlug) {
     data.slug = data.slug + '-' + randomIntFromInterval(1000, 9999);
   }
