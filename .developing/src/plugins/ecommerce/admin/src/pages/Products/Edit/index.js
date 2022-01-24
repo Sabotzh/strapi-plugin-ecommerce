@@ -27,12 +27,12 @@ const Edit = ({ rowData, closeHandler, updateRowData, allCategories } ) => {
   const [ sku, setSku ] = useState(rowData.sku)
   const [ icon, setIcon ] = useState(rowData.icon)
   const [ categories, setCategories ] = useState(rowData.categories.map(el => el.id))
-  const [ price, setPrice ] = useState(rowData.price)
+  const [ price, setPrice ] = useState(rowData.price || undefined)
   const [ dateAvailable, setDateAvailable ] = useState()
-  const [ quantity, setQuantity ] = useState(rowData.quantity)
-  const [ minQuantity, setMinQuantity ] = useState(rowData.min_quantity)
+  const [ quantity, setQuantity ] = useState(rowData.quantity || undefined)
+  const [ minQuantity, setMinQuantity ] = useState(rowData.min_quantity || undefined)
   const [ status, setStatus ] = useState(rowData.status)
-  const [ discount, setDiscount ] = useState(rowData.discount)
+  const [ discount, setDiscount ] = useState(rowData.discount || undefined)
   const [ description, setDescription ] = useState(rowData.description)
   const [ shortDescription, setShortDescription ] = useState(rowData.short_description)
   const [ metaTitle, setMetaTitle ] = useState(rowData.meta_title)
@@ -49,18 +49,17 @@ const Edit = ({ rowData, closeHandler, updateRowData, allCategories } ) => {
     let slugError = {}
     if (slug !== rowData.slug) {
       const categoryWithTheSameSlug = await request(`/ecommerce/products/by-slug/${slug}`).catch(() => {})
-      console.log(categoryWithTheSameSlug)
       if (categoryWithTheSameSlug) {
         success = false
         slugError = { slug: 'This name is taken' }
       }
     }
 
-    console.log({ success, validateErrors })
     if (success) {
       updateRowData(rowData.id, {
-        name, slug, sku, icon, categories, price, dateAvailable, quantity, minQuantity,
-        status, discount, description, shortDescription, metaTitle, metaKeywords, metaDescription
+        name, slug, sku, icon, categories, price, dateAvailable, quantity, min_quantity: minQuantity,
+        status, discount, description, short_description: shortDescription,
+        meta_description: metaDescription, meta_title: metaTitle, meta_keywords: metaKeywords
       })
       closeHandler()
     } else {
@@ -118,19 +117,19 @@ const Edit = ({ rowData, closeHandler, updateRowData, allCategories } ) => {
             </GridItem>
             <GridItem col={3}>
               <TextInput
-                name="icon"
-                label="Icon"
-                value={icon}
-                onChange={ e => setIcon(e.target.value) }
-              />
-            </GridItem>
-            <GridItem col={2}>
-              <TextInput
                 name="sku"
                 label="SKU"
                 value={sku}
                 onChange={ e => setSku(e.target.value) }
                 error={ errors.sku }
+              />
+            </GridItem>
+            <GridItem col={3}>
+              <TextInput
+                name="icon"
+                label="Icon"
+                value={icon}
+                onChange={ e => setIcon(e.target.value) }
               />
             </GridItem>
             <GridItem col={6}>
@@ -147,17 +146,17 @@ const Edit = ({ rowData, closeHandler, updateRowData, allCategories } ) => {
               <NumberInput
                 name="price"
                 label="Price"
-                value={price}
-                onValueChange={value => setPrice(value)}
+                value={ price }
+                onValueChange={ value => setPrice(value) }
                 error={ errors.price }
               />
             </GridItem>
-            <GridItem col={2}>
+            <GridItem col={3}>
               <NumberInput
                 name="discount"
                 label="Discount %"
-                value={discount}
-                onValueChange={ e => setDiscount(e.target.value) }
+                value={ discount }
+                onValueChange={ value => setDiscount(value) }
               />
             </GridItem>
             <GridItem col={3}>
@@ -165,7 +164,7 @@ const Edit = ({ rowData, closeHandler, updateRowData, allCategories } ) => {
                 name="quantity"
                 label="Quantity"
                 value={quantity}
-                onValueChange={value => setQuantity(value)}
+                onValueChange={ value => setQuantity(value) }
                 />
             </GridItem>
             <GridItem col={3}>
