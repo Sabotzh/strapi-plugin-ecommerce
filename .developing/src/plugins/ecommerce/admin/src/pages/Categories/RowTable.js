@@ -47,7 +47,7 @@ const RowTable = ({ rowData, tableData, updateRowData, deleteRow }) => {
           updateRowData = { (id, data) => updateRowData(id, data) }
         />
       }
-      <Dialog onClose={() => setIsDeleteVisible(false)} title="Confirmation" isOpen={isDeleteVisible}>
+      <Dialog onClose={ () => setIsDeleteVisible(false) } title="Confirmation" isOpen={ isDeleteVisible }>
         <DialogBody icon={<ExclamationMarkCircle />}>
           <Stack size={2}>
             <Flex justifyContent="center">
@@ -55,11 +55,14 @@ const RowTable = ({ rowData, tableData, updateRowData, deleteRow }) => {
             </Flex>
           </Stack>
         </DialogBody>
-        <DialogFooter startAction={<Button onClick={() => setIsDeleteVisible(false)} variant="tertiary">
-          Cancel
-        </Button>} endAction={<Button onClick={() => deleteRow(rowData.id)} variant="danger-light" startIcon={<Trash />}>
-          Confirm
-        </Button>} />
+        <DialogFooter
+          startAction = {
+            <Button onClick= { () => setIsDeleteVisible(false) } variant="tertiary">Cancel</Button>
+          }
+          endAction = {
+            <Button onClick={ () => deleteRow(rowData.id) } variant="danger-light" startIcon={<Trash/>}>Confirm</Button>
+          }
+        />
       </Dialog>
       <Td><Typography textColor="neutral800">{ rowData.id }</Typography></Td>
       <Td><Typography textColor="neutral800">{ rowData.name }</Typography></Td>

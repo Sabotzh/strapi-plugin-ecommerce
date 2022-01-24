@@ -101,6 +101,13 @@ const ProductsPage = () => {
     }).then(() => getTableData())
   }
 
+  const postProduct = async(data) => {
+    await request(`/ecommerce/products`, {
+      method: 'POST',
+      body: data
+    }).then(() => getTableData())
+  }
+
   return (
     <main>
       <HeaderLayout
@@ -121,8 +128,8 @@ const ProductsPage = () => {
       { isVisible &&
         <Create
           closeHandler = { () => setIsVisible(false) }
-          tableData = { tableData }
-          createField = { setTableData }
+          allCategories={ categories }
+          postProduct= { postProduct }
         />
       }
       <ContentLayout>

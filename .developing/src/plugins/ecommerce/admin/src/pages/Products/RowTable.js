@@ -2,6 +2,7 @@ import React from 'react'
 import Pencil from "@strapi/icons/Pencil";
 import Trash from "@strapi/icons/Trash";
 import styled from "styled-components"
+import ExclamationMarkCircle from "@strapi/icons/ExclamationMarkCircle";
 
 import { useState, useRef } from 'react'
 import Edit from "./Edit";
@@ -16,6 +17,9 @@ import { Box } from "@strapi/design-system/Box";
 import { Popover } from '@strapi/design-system/Popover';
 import { Badge } from '@strapi/design-system/Badge';
 import { SortIcon, stopPropagation, request } from '@strapi/helper-plugin';
+import { Dialog, DialogBody, DialogFooter } from "@strapi/design-system/Dialog";
+import { Stack } from "@strapi/design-system/Stack";
+import { Button } from "@strapi/design-system/Button";
 
 
 const BadgeStyled = styled(Typography)`
@@ -40,7 +44,9 @@ const ActionWrapper = styled.span`
 const RowTable = ({ rowData, updateRowData, deleteRow, allCategories }) => {
   const [ toggleSwitch, setToggleSwitch ] = useState(!!rowData.publishedAt)
   const [ editOpen, setEditOpen ] = useState(false)
-  const [ visible, setVisible ] = useState(false);
+  const [ visible, setVisible ] = useState(false)
+  const [ isDeleteVisible, setIsDeleteVisible ] = useState(false)
+
   const buttonRef = useRef();
 
   let badgeColor
@@ -89,18 +95,35 @@ const RowTable = ({ rowData, updateRowData, deleteRow, allCategories }) => {
           updateRowData = { (id, data) => updateRowData(id, data) }
         />
       }
+      <Dialog onClose={ () => setIsDeleteVisible(false) } title="Confirmation" isOpen={ isDeleteVisible }>
+        <DialogBody icon={<ExclamationMarkCircle />}>
+          <Stack size={2}>
+            <Flex justifyContent="center">
+              <Typography id="confirm-description">Are you sure you want to delete this?</Typography>
+            </Flex>
+          </Stack>
+        </DialogBody>
+        <DialogFooter
+          startAction = {
+            <Button onClick= { () => setIsDeleteVisible(false) } variant="tertiary">Cancel</Button>
+          }
+          endAction = {
+            <Button onClick={ () => deleteRow(rowData.id) } variant="danger-light" startIcon={<Trash/>}>Confirm</Button>
+          }
+        />
+      </Dialog>
       <Td><Typography textColor="neutral800">{ rowData.sku }</Typography></Td>
       <Td><Avatar src = { rowData.icon } alt={''} /></Td>
       <Td><Typography textColor="neutral800">{ rowData.name }</Typography></Td>
       <Td>
-        <Flex {...stopPropagation}>
+        <Flex { ...stopPropagation }>
           <RelationCountBadge>{ rowData.categories.length }</RelationCountBadge>
           <Typography>items</Typography>
           { rowData.categories.length > 0 && (
             <ActionWrapper>
               <IconButton
-                onClick={handleTogglePopover}
-                ref={buttonRef}
+                onClick={ handleTogglePopover }
+                ref={ buttonRef }
                 noBorder
                 label='Display categories'
                 icon={ <SortIcon isUp={visible} /> }
@@ -119,9 +142,9 @@ const RowTable = ({ rowData, updateRowData, deleteRow, allCategories }) => {
         </Flex>
       </Td>
       <Td><Typography textColor="neutral800" fontWeight="bold">$ { rowData.price }</Typography></Td>
-      <Td><Typography textColor="neutral800">{ rowData.quantity }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ rowData.quantity || 0 }</Typography></Td>
       <Td><BadgeStyled color={ badgeColor } backgroundColor={ badgeBackgroundColor }>{ status() }</BadgeStyled></Td>
-      <Td><Typography textColor="neutral800" fontWeight="bold">{ rowData.discount }%</Typography></Td>
+      <Td><Typography textColor="neutral800" fontWeight="bold">{ rowData.discount || 0  }%</Typography></Td>
       <Td>
         <Switch label="Published" selected={ toggleSwitch }
           onChange = {
@@ -144,7 +167,7 @@ const RowTable = ({ rowData, updateRowData, deleteRow, allCategories }) => {
               label="Delete"
               noBorder
               icon={ <Trash/> }
-              onClick={ () => deleteRow(rowData.id) }
+              onClick={ () => setIsDeleteVisible(true) }
             />
           </Box>
         </Flex>

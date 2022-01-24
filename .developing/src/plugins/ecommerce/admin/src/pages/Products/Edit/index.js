@@ -42,16 +42,16 @@ const Edit = ({ rowData, closeHandler, updateRowData, allCategories } ) => {
 
   const submitButtonHandler = async() => {
     setErrors({})
+
     let { success, validateErrors } = validate({
       name, sku, slug, price, shortDescription, description, metaTitle, metaKeywords, metaDescription
     }, errors, setErrors)
 
-    let slugError = {}
     if (slug !== rowData.slug) {
       const categoryWithTheSameSlug = await request(`/ecommerce/products/by-slug/${slug}`).catch(() => {})
       if (categoryWithTheSameSlug) {
         success = false
-        slugError = { slug: 'This name is taken' }
+        setErrors({ ...validateErrors, slug: 'This name is taken'})
       }
     }
 
@@ -63,7 +63,7 @@ const Edit = ({ rowData, closeHandler, updateRowData, allCategories } ) => {
       })
       closeHandler()
     } else {
-      setErrors({ ...validateErrors, ...slugError })
+      setErrors(validateErrors)
     }
   }
 
