@@ -55,7 +55,6 @@ const ProductsPage = () => {
 
   const sort = (sortData = tableData) => {
     const copyTableData = JSON.parse(JSON.stringify(sortData))
-
     if (!sortByCategoriesValue && !sortByPrice) {
       setTableData(sortData.sort((a, b) => {
         return Date.parse(a.createdAt) - Date.parse(b.createdAt)
@@ -63,16 +62,24 @@ const ProductsPage = () => {
     } else {
       setTableData(
         copyTableData.sort((a, b) => {
-          if ((a.category === sortByCategoriesValue && b.category === sortByCategoriesValue) ||
-            (a.category !== sortByCategoriesValue && b.category !== sortByCategoriesValue)) {
+          let aInclude = false
+          let bInclude = false
+          a.categories.forEach(el => {
+            console.log(sortByCategoriesValue, el.name)
+            if (el.name === sortByCategoriesValue) aInclude = true
+          })
+          b.categories.forEach(el => {
+            if (el.name === sortByCategoriesValue) bInclude = true
+          })
+          if ((aInclude && bInclude) || (!aInclude && !bInclude)) {
             if (sortByPrice) {
               if (sortByPrice === 'Low to High') return a.price - b.price
               return b.price - a.price
             }
             return 0
           }
-          if (a.category !== sortByCategoriesValue && b.category === sortByCategoriesValue) return 1
-          if (a.category === sortByCategoriesValue && b.category !== sortByCategoriesValue) return -1
+          if (!aInclude && bInclude) return 1
+          if (aInclude && !bInclude) return -1
           return 0
         })
       )
@@ -125,14 +132,10 @@ const ProductsPage = () => {
               <Select
                 placeholder={'Sort by category'}
                 value={ sortByCategoriesValue }
-                onChange={ (value) => {
-                  setSortByCategoriesValue(value)
-                }}
-                onClear={ () => {
-                  setSortByCategoriesValue(null)
-                } }
+                onChange={ setSortByCategoriesValue }
+                onClear={ () => setSortByCategoriesValue(null) }
               >
-                { categories.map((entry, id) => <Option value={entry.id} key={entry.id}>{ entry.name }</Option>) }
+                { categories.map((entry, id) => <Option value={entry.name} key={entry.id}>{ entry.name }</Option>) }
               </Select>
             </GridItem>
             <GridItem col={2}>
