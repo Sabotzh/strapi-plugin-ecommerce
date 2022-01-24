@@ -46,11 +46,13 @@ const Edit = ({ rowData, closeHandler, updateRowData, allCategories } ) => {
       name, sku, slug, price, shortDescription, description, metaTitle, metaKeywords, metaDescription
     }, errors, setErrors)
 
-    if (!slug || slug !== rowData.slug) {
+    let slugError = {}
+    if (slug !== rowData.slug) {
       const categoryWithTheSameSlug = await request(`/ecommerce/products/by-slug/${slug}`).catch(() => {})
+      console.log(categoryWithTheSameSlug)
       if (categoryWithTheSameSlug) {
         success = false
-        setErrors({slug: 'This name is taken'})
+        slugError = { slug: 'This name is taken' }
       }
     }
 
@@ -62,7 +64,7 @@ const Edit = ({ rowData, closeHandler, updateRowData, allCategories } ) => {
       })
       closeHandler()
     } else {
-      setErrors({ ...errors, ...validateErrors})
+      setErrors({ ...validateErrors, ...slugError })
     }
   }
 
