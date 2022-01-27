@@ -21,14 +21,20 @@ jobs:
 
       - name: Write .env
         run: |
-          echo DATABASE_HOST=${{ secrets.DATABASE_HOST }} >> ./.developing/.env
-          echo DATABASE_NAME=${{ secrets.DATABASE_NAME }} >> ./.developing/.env
-          echo DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }} >> ./.developing/.env
-          echo DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} >> ./.developing/.env
-          echo AWS_REGION=${{ secrets.AWS_REGION }} >> ./.developing/.env
-          echo AWS_BUCKET=${{ secrets.AWS_BUCKET }} >> ./.developing/.env
-          echo AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} >> ./.developing/.env
-          echo AWS_ACCESS_SECRET=${{ secrets.AWS_ACCESS_SECRET }} >> ./.developing/.env
+          echo DATABASE_HOST=${{ secrets.DATABASE_HOST }} >> ./.env
+          echo DATABASE_NAME=${{ secrets.DATABASE_NAME }} >> ./.env
+          echo DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }} >> ./.env
+          echo DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} >> ./.env
+          echo AWS_REGION=${{ secrets.AWS_REGION }} >> ./.env
+          echo AWS_BUCKET=${{ secrets.AWS_BUCKET }} >> ./.env
+          echo AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} >> ./.env
+          echo AWS_ACCESS_SECRET=${{ secrets.AWS_ACCESS_SECRET }} >> ./.env
+
+      - name: Build strapi
+        run: |
+          cd ./.developing
+          npm i --force
+          npm run build
 
       - name: Deleted potential conflict files
         uses: appleboy/ssh-action@master
@@ -49,7 +55,7 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
           port: ${{ secrets.SERVER_PORT }}
-          source: ".developing/*,!.developing/node_modules,!.developing/package-lock.json"
+          source: ".developing/*,.env,!.developing/node_modules,!.developing/package-lock.json"
           target: "apps/${{ secrets.PROJECT_FOLDER_NAME }}"
 
       - name: Move files from .developing to root
