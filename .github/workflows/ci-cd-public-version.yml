@@ -1,0 +1,75 @@
+name: CI-CD-PUBLIC-VERSION
+
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - '.developing/**'
+      - '.github/workflows/ci-cd-public-version.yml'
+
+  workflow_dispatch:
+
+
+jobs:
+  ci_cd-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v2
+
+      - name: Write .env
+        run: |
+          echo DATABASE_HOST=${{ secrets.DATABASE_HOST }} >> ./.developing/.env
+          echo DATABASE_NAME=${{ secrets.DATABASE_NAME_PUBLIC }} >> ./.developing/.env
+          echo DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }} >> ./.developing/.env
+          echo DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} >> ./.developing/.env
+          echo AWS_REGION=${{ secrets.AWS_REGION }} >> ./.developing/.env
+          echo AWS_BUCKET=${{ secrets.AWS_BUCKET_PUBLIC }} >> ./.developing/.env
+          echo AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} >> ./.developing/.env
+          echo AWS_ACCESS_SECRET=${{ secrets.AWS_ACCESS_SECRET }} >> ./.developing/.env
+
+      - name: Deleted potential conflict files
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            cd ./apps/${{ secrets.PROJECT_FOLDER_NAME_PUBLIC }}
+            rm -rf src
+            rm -rf config
+
+      - name: Copy files to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: ${{ secrets.SERVER_PORT }}
+          source: ".developing/*,!.developing/node_modules,!.developing/package-lock.json"
+          target: "apps/${{ secrets.PROJECT_FOLDER_NAME_PUBLIC }}"
+
+      - name: Install dependencies on server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            cd ./apps/${{ secrets.PROJECT_FOLDER_NAME_PUBLIC }}
+            npm install --unsafe-perm --ignore-scripts=false
+
+      - name: Restart project
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            pm2 delete ${{ secrets.PM2_PROCESS_NAME_PUBLIC }}
+            pm2 start ecosystem.config.js --only ${{ secrets.PM2_PROCESS_NAME_PUBLIC }}

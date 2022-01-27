@@ -1,0 +1,59 @@
+name: CI-CD-BUILD-STRAPI
+
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - '.developing/package.json'
+      - '.github/workflows/ci-cd-build-strapi.yml'
+
+  workflow_dispatch:
+
+
+jobs:
+  ci_cd-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          cd ./backend
+          npm install
+          npm run build
+
+      - name: Copy files to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: ${{ secrets.SERVER_PORT }}
+          source: "backend/build"
+          target: "apps/${{ secrets.PROJECT_FOLDER_NAME }}"
+
+      - name: Copy files to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: ${{ secrets.SERVER_PORT }}
+          source: "backend/build"
+          target: "apps/${{ secrets.PROJECT_FOLDER_NAME_PUBLIC }}"
+
+      - name: Restart project
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            pm2 delete ${{ secrets.PM2_PROCESS_NAME }}
+            pm2 delete ${{ secrets.PM2_PROCESS_NAME_PUBLIC }}
+            pm2 start ecosystem.config.js --only ${{ secrets.PM2_PROCESS_NAME }}
+            pm2 start ecosystem.config.js --only ${{ secrets.PM2_PROCESS_NAME_PUBLIC }}
