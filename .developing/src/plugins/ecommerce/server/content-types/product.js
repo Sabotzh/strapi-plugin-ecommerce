@@ -80,10 +80,15 @@ module.exports = {
     status: {
       type: 'enumeration',
       enum: [
-        'enabled',
-        'disabled',
+        'SELLING',
+        'ON_ORDER',
+        'UNAVAILABLE',
       ],
       configurable: false,
+    },
+    discount: {
+      type: 'integer',
+      configurable: false
     },
     relative_products: {
       type: 'relation',

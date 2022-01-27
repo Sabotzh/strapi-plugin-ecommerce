@@ -12,7 +12,7 @@ import { TextInput } from '@strapi/design-system/TextInput';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
 import { Option, Select } from "@strapi/design-system/Select";
 import { Button } from '@strapi/design-system/Button'
-import {Textarea} from "@strapi/design-system/Textarea";
+import { Textarea } from "@strapi/design-system/Textarea";
 import validateCategories from "../../../utils/validate";
 
 
@@ -73,7 +73,7 @@ const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
                 onClear={ () => setSelectParent(null) }
               >
                 { tableData.map((entry) => {
-                  return <Option value={ entry.id } key={entry.id}>{ entry.name }</Option>
+                  return <Option value={entry.id} key={entry.id}>{ entry.name }</Option>
                 })}
               </Select>
             </GridItem>

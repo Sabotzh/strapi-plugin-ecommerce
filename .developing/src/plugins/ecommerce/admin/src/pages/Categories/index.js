@@ -30,6 +30,7 @@ const CategoriesPage = () => {
   const [ isCreateVisible, setIsCreateVisible ] = useState(false)
   const [ sortBy, setSortBy ] = useState(null)
   const [ tableData, setTableData] = useState([])
+  const [ error, setError ] = useState(false)
   // const categories = [
   //   'Fish & Meat', 'Fruits & Vegetable', 'Fresh Seafood', 'Cooking Essentials', 'Breakfast', 'Drinks',
   //   'Milk & Dairy', 'Organic Food', 'Honey', 'Sauces & Pickles', 'Jam & Jelly', 'Snacks & Instant',
@@ -49,11 +50,12 @@ const CategoriesPage = () => {
   }
 
   const createCategory = async (data) => {
-    console.log(data)
     await request(`/ecommerce/categories`, {
       method: 'POST',
       body: data
-    }).then(() => getTableData())
+    }).then(() => {
+      getTableData()
+    })
   }
 
   useEffect(async () => {

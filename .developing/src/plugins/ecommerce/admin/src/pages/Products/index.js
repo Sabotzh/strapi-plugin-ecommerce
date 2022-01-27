@@ -8,7 +8,7 @@ import Create from "./Create";
 import Plus from '@strapi/icons/Plus'
 
 import { useIntl } from 'react-intl';
-import { useFocusWhenNavigate } from '@strapi/helper-plugin';
+import { useFocusWhenNavigate, request  } from '@strapi/helper-plugin';
 import { HeaderLayout, ContentLayout } from '@strapi/design-system/Layout';
 import { Table, Thead, Tbody, Tr, Th } from '@strapi/design-system/Table';
 import { Typography } from '@strapi/design-system/Typography';
@@ -16,6 +16,8 @@ import { VisuallyHidden } from "@strapi/design-system/VisuallyHidden";
 import { Select, Option } from '@strapi/design-system/Select';
 import { Stack } from '@strapi/design-system/Stack';
 import { Button } from '@strapi/design-system/Button';
+import { Grid, GridItem } from '@strapi/design-system/Grid';
+
 
 
 const ProductsPage = () => {
@@ -27,87 +29,83 @@ const ProductsPage = () => {
     defaultMessage: 'Products',
   });
 
+  const [ tableData, setTableData ] = useState([])
+  const [ categories, setCategories ] = useState([])
   const [ isVisible, setIsVisible ] = useState(false)
   const [ sortByCategoriesValue, setSortByCategoriesValue ] = useState('')
   const [ sortByPrice, setSortByPrice ] = useState('')
-  const [ tableData, setTableData ] = useState([
-      {
-        sku: '1e2c47',
-        icon: '',
-        productName: 'Green Leaf Lettuce',
-        category: 'Fruits & Vegetable',
-        price: 14,
-        stock: 70,
-        status: 'selling',
-        discount: '',
-        published: true
-      },
-      {
-        sku: '1e2c48',
-        icon: '',
-        productName: 'Green Leaf Lettuce',
-        category: 'Fish & Meat',
-        price: 15,
-        stock: 70,
-        status: 'selling',
-        discount: '',
-        published: false
-      },
-      {
-        sku: '1e2c49',
-        icon: '',
-        productName: 'Green Leaf Lettuce',
-        category: 'Fruits & Vegetable',
-        price: 16,
-        stock: 70,
-        status: 'selling',
-        discount: '',
-        published: true
-      }
-    ]
-  )
 
-  const categories = [
-    'Fish & Meat', 'Fruits & Vegetable', 'Fresh Seafood', 'Cooking Essentials', 'Breakfast', 'Drinks',
-    'Milk & Dairy', 'Organic Food', 'Honey', 'Sauces & Pickles', 'Jam & Jelly', 'Snacks & Instant',
-    'Biscuits & Cakes', 'Household Tools', 'Baby Care', 'Pet Care', 'Beauty & Health', 'Sports & Fitness'
-  ]
-  const prices = ['Low to High', 'High to Low']
 
-  const sort = () => {
-    if (!sortByCategoriesValue && !sortByPrice) return
-    const copyTableData = JSON.parse(JSON.stringify(tableData))
-    const newTableData = copyTableData.sort((a, b) => {
-      if ((a.category === sortByCategoriesValue && b.category === sortByCategoriesValue) ||
-        (a.category !== sortByCategoriesValue && b.category !== sortByCategoriesValue)) {
-        if (sortByPrice) {
-          if (sortByPrice === 'Low to High') return a.price - b.price
-          return b.price - a.price
-        }
-        return 0
-      }
-      if (a.category !== sortByCategoriesValue && b.category === sortByCategoriesValue) return 1
-      if (a.category === sortByCategoriesValue && b.category !== sortByCategoriesValue) return -1
-      return 0
-    })
+  const getTableData = async () => {
+    await request(`/ecommerce/products`)
+      .then((res) => sort(res))
+  }
 
-    setTableData(newTableData)
+  const getCategories = async () => {
+    await request(`/ecommerce/categories`)
+      .then((res) => {
+        setCategories(res)
+      })
+  }
+
+  useEffect(async () => {
+    await getTableData()
+    await getCategories()
+  }, [])
+
+  const sort = (sortData = tableData) => {
+    const copyTableData = JSON.parse(JSON.stringify(sortData))
+    if (!sortByCategoriesValue && !sortByPrice) {
+      setTableData(sortData.sort((a, b) => {
+        return Date.parse(a.createdAt) - Date.parse(b.createdAt)
+      }))
+    } else {
+      setTableData(
+        copyTableData.sort((a, b) => {
+          let aInclude = false
+          let bInclude = false
+          a.categories.forEach(el => {
+            console.log(sortByCategoriesValue, el.name)
+            if (el.name === sortByCategoriesValue) aInclude = true
+          })
+          b.categories.forEach(el => {
+            if (el.name === sortByCategoriesValue) bInclude = true
+          })
+          if ((aInclude && bInclude) || (!aInclude && !bInclude)) {
+            if (sortByPrice) {
+              if (sortByPrice === 'Low to High') return a.price - b.price
+              return b.price - a.price
+            }
+            return 0
+          }
+          if (!aInclude && bInclude) return 1
+          if (aInclude && !bInclude) return -1
+          return 0
+        })
+      )
+    }
   }
 
   useEffect(() => sort(), [sortByPrice, sortByCategoriesValue])
 
-  const tableDataUpdate = (updatedRow, idUpdatedRow) => {
-    const updatedTableData = tableData.map(row => {
-      if (row.sku === idUpdatedRow) {
-        return updatedRow
-      }
-      return row
-    })
-    setTableData(updatedTableData)
+  const updateTableData = async (id, updateData) => {
+    await request(`/ecommerce/products/${id}`, {
+      method: 'PUT',
+      body: updateData
+    }).then(() => getTableData())
   }
 
-  const deleteRow = (idRow) => {
-    setTableData(tableData.filter((row) => row.sku !== idRow))
+  const deleteRow = async(id) => {
+    await request(`/ecommerce/products/${id}`, {
+      method: 'DELETE',
+    }).then(() => getTableData())
+  }
+
+  const postProduct = async(data) => {
+    await request(`/ecommerce/products`, {
+      method: 'POST',
+      body: data
+    }).then(() => getTableData())
   }
 
   return (
@@ -130,38 +128,40 @@ const ProductsPage = () => {
       { isVisible &&
         <Create
           closeHandler = { () => setIsVisible(false) }
-          tableData = { tableData }
-          createField = { setTableData }
+          allCategories={ categories }
+          postProduct= { postProduct }
         />
       }
       <ContentLayout>
         <Stack size={7}>
-          <Stack horizontal size={3}>
-            <Select
-              placeholder={'Sort by category'}
-              value={ sortByCategoriesValue }
-              onChange={ (value) => {
-                setSortByCategoriesValue(value)
-              }}
-              onClear={ () => {
-                setSortByCategoriesValue(null)
-              } }
-            >
-              { categories.map((entry, id) => <Option value={entry} key={id}>{ entry }</Option>) }
-            </Select>
-            <Select
-              placeholder={'Sort by price'}
-              value={ sortByPrice }
-              onChange={ (value) => {
-                setSortByPrice(value)
-              } }
-              onClear={ () => {
-                setSortByPrice(null)
-              }}
-            >
-              { prices.map((entry, id) => <Option value={entry} key={id}>{ entry }</Option>) }
-            </Select>
-          </Stack>
+          <Grid gap={3}>
+            <GridItem col={3}>
+              <Select
+                placeholder={'Sort by category'}
+                value={ sortByCategoriesValue }
+                onChange={ setSortByCategoriesValue }
+                onClear={ () => setSortByCategoriesValue(null) }
+              >
+                { categories.map((entry, id) => <Option value={entry.name} key={entry.id}>{ entry.name }</Option>) }
+              </Select>
+            </GridItem>
+            <GridItem col={2}>
+              <Select
+                placeholder={'Sort by price'}
+                value={ sortByPrice }
+                onChange={ (value) => {
+                  setSortByPrice(value)
+                }}
+                onClear={ () => {
+                  setSortByPrice(null)
+                }}
+              >
+                <Option value={'Low to High'}>{ 'Low to High' }</Option>
+                <Option value={'High to Low'}>{ 'High to Low' }</Option>
+              </Select>
+            </GridItem>
+          </Grid>
+
           <Table colCount={9} rowCount={15}>
             <Thead>
               <Tr>
@@ -180,11 +180,12 @@ const ProductsPage = () => {
             <Tbody>
               {
                 tableData.map(entry =>
-                  <Tr key={entry.sku}>
+                  <Tr key={entry.id}>
                     <RowTable
                       rowData = { entry }
-                      updateRowData = { (dataRow, idRow) => tableDataUpdate(dataRow, idRow) }
+                      updateRowData = { (id, data) => updateTableData(id, data) }
                       deleteRow = { (idRow) => deleteRow(idRow) }
+                      allCategories = { categories }
                     />
                   </Tr>
                 )

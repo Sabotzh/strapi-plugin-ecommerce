@@ -34,6 +34,7 @@ module.exports = {
       type: 'string',
       min: 1,
       max: 50,
+      unique: true,
       configurable: false,
     },
     description: {

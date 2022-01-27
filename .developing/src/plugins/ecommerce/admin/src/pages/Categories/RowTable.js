@@ -4,6 +4,8 @@ import Pencil from "@strapi/icons/Pencil";
 import Trash from "@strapi/icons/Trash";
 import ExclamationMarkCircle from "@strapi/icons/ExclamationMarkCircle";
 
+import Edit from "./Edit";
+
 import { Td } from "@strapi/design-system/Table";
 import { Typography } from "@strapi/design-system/Typography";
 import { Avatar } from "@strapi/design-system/Avatar";
@@ -11,16 +13,29 @@ import { Switch } from "@strapi/design-system/Switch";
 import { Flex } from "@strapi/design-system/Flex";
 import { IconButton } from "@strapi/design-system/IconButton";
 import { Box } from "@strapi/design-system/Box";
-import Edit from "./Edit";
 import { Dialog, DialogBody, DialogFooter } from "@strapi/design-system/Dialog";
 import { Stack } from "@strapi/design-system/Stack";
 import { Button } from "@strapi/design-system/Button";
+import { request } from '@strapi/helper-plugin';
+
 
 
 const RowTable = ({ rowData, tableData, updateRowData, deleteRow }) => {
   const [ published, setPublished ] = useState(rowData.publishedAt)
   const [ isVisible, setIsVisible ] = useState(false)
   const [ isDeleteVisible, setIsDeleteVisible ] = useState(false)
+
+  const publishUpdate = async () => {
+    await request(`/ecommerce/categories/${rowData.id}/publish`, {
+      method: 'PUT',
+    })
+  }
+
+  const unPublishUpdate = async () => {
+    await request(`/ecommerce/categories/${rowData.id}/un-publish`, {
+      method: 'PUT',
+    })
+  }
 
   return (
     <>
@@ -32,7 +47,7 @@ const RowTable = ({ rowData, tableData, updateRowData, deleteRow }) => {
           updateRowData = { (id, data) => updateRowData(id, data) }
         />
       }
-      <Dialog onClose={() => setIsDeleteVisible(false)} title="Confirmation" isOpen={isDeleteVisible}>
+      <Dialog onClose={ () => setIsDeleteVisible(false) } title="Confirmation" isOpen={ isDeleteVisible }>
         <DialogBody icon={<ExclamationMarkCircle />}>
           <Stack size={2}>
             <Flex justifyContent="center">
@@ -40,11 +55,14 @@ const RowTable = ({ rowData, tableData, updateRowData, deleteRow }) => {
             </Flex>
           </Stack>
         </DialogBody>
-        <DialogFooter startAction={<Button onClick={() => setIsDeleteVisible(false)} variant="tertiary">
-          Cancel
-        </Button>} endAction={<Button onClick={() => deleteRow(rowData.id)} variant="danger-light" startIcon={<Trash />}>
-          Confirm
-        </Button>} />
+        <DialogFooter
+          startAction = {
+            <Button onClick= { () => setIsDeleteVisible(false) } variant="tertiary">Cancel</Button>
+          }
+          endAction = {
+            <Button onClick={ () => deleteRow(rowData.id) } variant="danger-light" startIcon={<Trash/>}>Confirm</Button>
+          }
+        />
       </Dialog>
       <Td><Typography textColor="neutral800">{ rowData.id }</Typography></Td>
       <Td><Typography textColor="neutral800">{ rowData.name }</Typography></Td>
@@ -52,11 +70,16 @@ const RowTable = ({ rowData, tableData, updateRowData, deleteRow }) => {
       <Td><Typography textColor="neutral800">{ rowData.type }</Typography></Td>
       <Td><Typography textColor="neutral800">{ rowData.slug }</Typography></Td>
       <Td>
-        <Switch label="Published" selected={ !!published } onChange={() => {
-          const time = published ? null : Date.now()
-          updateRowData(rowData.id, { publishedAt: time })
-          setPublished(time)
-        }} />
+        <Switch label="Published" selected={ !!published } onChange = {
+          () => {
+            if (published) {
+              unPublishUpdate()
+            } else {
+              publishUpdate()
+            }
+            setPublished(!published)
+          }
+        } />
       </Td>
       <Td>
         <Flex>
