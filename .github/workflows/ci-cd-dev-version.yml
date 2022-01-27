@@ -38,8 +38,10 @@ jobs:
           npm i --force
 
       - name: Build strapi
-        run: npm run build
-          
+        run: |
+          cd ./.developing
+          npm run build
+
       - name: Deleted potential conflict files
         uses: appleboy/ssh-action@master
         with:
