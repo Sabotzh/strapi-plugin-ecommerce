@@ -34,6 +34,8 @@ jobs:
         run: |
           cd ./.developing
           npm i --force
+          cd ./src/plugins/ecommerce
+          npm i --force
           npm run build
 
       - name: Deleted potential conflict files
@@ -79,6 +81,8 @@ jobs:
           script: |
             cd ./apps/${{ secrets.PROJECT_FOLDER_NAME }}
             npm install --unsafe-perm --ignore-scripts=false
+            cd ./src/plugins/ecommerce
+            npm i --unsafe-perm --ignore-scripts=false
 
       - name: Restart project
         uses: appleboy/ssh-action@master
