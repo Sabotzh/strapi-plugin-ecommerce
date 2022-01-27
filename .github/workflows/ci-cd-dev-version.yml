@@ -52,6 +52,17 @@ jobs:
           source: ".developing/*,!.developing/node_modules,!.developing/package-lock.json"
           target: "apps/${{ secrets.PROJECT_FOLDER_NAME }}"
 
+      - name: Move files from .developing to root
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            mv ./apps/${{ secrets.PROJECT_FOLDER_NAME }}/.developing/* ./apps/${{ secrets.PROJECT_FOLDER_NAME }}
+            rm -rf ./apps/${{ secrets.PROJECT_FOLDER_NAME }}/.developing
+
       - name: Install dependencies on server
         uses: appleboy/ssh-action@master
         with:
