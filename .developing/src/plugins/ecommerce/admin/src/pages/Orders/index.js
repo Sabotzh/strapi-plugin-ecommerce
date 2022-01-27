@@ -7,10 +7,10 @@ import { HeaderLayout, ContentLayout } from '@strapi/design-system/Layout';
 
 import getTrad from '../../utils/getTrad';
 import { Table, Tbody, Th, Thead, Tr } from "@strapi/design-system/Table";
-import { Typography } from "@strapi/design-system/Typography";
+import { Typography } from '@strapi/design-system/Typography';
 import { Stack } from '@strapi/design-system/Stack'
-import RowTable from "./RowTable";
-import {Option, Select} from "@strapi/design-system/Select";
+import RowTable from './RowTable';
+import { Option, Select } from '@strapi/design-system/Select';
 
 const OrdersPage = () => {
   useFocusWhenNavigate();
@@ -52,28 +52,28 @@ const OrdersPage = () => {
       amount: '$132.00',
       status: 'processing',
     }
-  ])
-  const [ sortBy, setSortBy ] = useState()
+  ]);
+  const [ sortBy, setSortBy ] = useState();
 
   const tableDataUpdate = (updatedRow, idUpdatedRow) => {
     const updatedTableData = tableData.map(row => {
       if (row.id === idUpdatedRow) {
-        return updatedRow
+        return updatedRow;
       }
-      return row
-    })
-    setTableData(updatedTableData)
+      return row;
+    });
+    setTableData(updatedTableData);
   }
 
   const sortData = (sortCategory) => {
-    setSortBy(sortCategory)
-    sortCategory = sortCategory.toLowerCase()
+    setSortBy(sortCategory);
+    sortCategory = sortCategory.toLowerCase();
     setTableData(tableData.sort((a, b) => {
-      console.log(a.status, sortCategory)
-      if (a.status === sortCategory && b.status === sortCategory) return 0
-      if (a.status === sortCategory && b.status !== sortCategory) return -1
-      return 1
-    }))
+      console.log(a.status, sortCategory);
+      if (a.status === sortCategory && b.status === sortCategory) return 0;
+      if (a.status === sortCategory && b.status !== sortCategory) return -1;
+      return 1;
+    }));
   }
 
   const { formatMessage } = useIntl();

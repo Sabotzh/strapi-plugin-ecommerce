@@ -7,7 +7,7 @@ module.exports = ({ strapi }) => async (ctx) => {
   if (!data.name) {
     ctx.status = 400;
     ctx.body = `Field "name" required`;
-    return
+    return;
   }
 
   delete data.id;
@@ -17,9 +17,9 @@ module.exports = ({ strapi }) => async (ctx) => {
   delete data.publishedAt;
 
   if (data.slug) {
-    data.slug = slugify(data.slug)
+    data.slug = slugify(data.slug);
   } else {
-    data.slug = slugify(data.name)
+    data.slug = slugify(data.name);
   }
 
   const productsWithTheSameSlug = await strapi

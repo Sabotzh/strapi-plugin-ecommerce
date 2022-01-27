@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import pluginId from '../../pluginId'
+import pluginId from '../../pluginId';
 
 import { useIntl } from 'react-intl';
 import { Helmet } from 'react-helmet';

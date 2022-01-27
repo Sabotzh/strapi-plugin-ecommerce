@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from "styled-components";
+import styled from 'styled-components';
 
 import { LocalMall } from '@material-ui/icons';
 import { Dashboard } from '@material-ui/icons';
@@ -48,7 +48,7 @@ const SubNavHeaderStyled = styled.div`
       border-radius: 2px;
     }
   }
-  
+
   div:nth-child(2) {
     padding-top: 16px;
     hr {
@@ -61,21 +61,21 @@ const SubNavHeaderStyled = styled.div`
       margin: 0;
     }
   }
-`
+`;
 
 
 const Navigation = () => {
-  const stage = 'alpha'
-  let backgroundColor
+  const stage = 'alpha';
+  let backgroundColor;
   switch (stage) {
     case 'pro':
-      backgroundColor = '#5668A9'
-      break
+      backgroundColor = '#5668A9';
+      break;
     case 'enterprise':
-      backgroundColor = '#000000'
-      break
+      backgroundColor = '#000000';
+      break;
     default:
-      backgroundColor = '#56A977'
+      backgroundColor = '#56A977';
   }
 
   const links = [
@@ -84,7 +84,8 @@ const Navigation = () => {
     { id: 3, label: getTrad('menu.categories.name'), link: 'categories', icon: <Category viewBox="0 0 22 22"/> },
     { id: 4, label: getTrad('menu.customers.name'), link: 'customers', icon: <RecentActors viewBox="0 0 22 22"/> },
     { id: 5, label: getTrad('menu.orders.name'), link: 'orders', icon: <CardGiftcard viewBox="0 0 22 22"/> },
-    { id: 6, label: getTrad('menu.settings.name'), link: 'settings', icon: <Settings viewBox="0 0 22 22"/> }]
+    { id: 6, label: getTrad('menu.settings.name'), link: 'settings', icon: <Settings viewBox="0 0 22 22"/> },
+  ];
 
   return (
     <SubNav ariaLabel='Ecommerce'>
@@ -109,7 +110,7 @@ const Navigation = () => {
           }
       </SubNavSections>
     </SubNav>
-  )
+  );
 };
 
 export default Navigation;

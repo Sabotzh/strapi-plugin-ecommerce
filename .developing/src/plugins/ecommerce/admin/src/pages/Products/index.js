@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 import getTrad from '../../utils/getTrad';
-import RowTable from "./RowTable";
-import Create from "./Create";
+import RowTable from './RowTable';
+import Create from './Create';
 
-import Plus from '@strapi/icons/Plus'
+import Plus from '@strapi/icons/Plus';
 
 import { useIntl } from 'react-intl';
 import { useFocusWhenNavigate, request  } from '@strapi/helper-plugin';
@@ -29,83 +29,83 @@ const ProductsPage = () => {
     defaultMessage: 'Products',
   });
 
-  const [ tableData, setTableData ] = useState([])
-  const [ categories, setCategories ] = useState([])
-  const [ isVisible, setIsVisible ] = useState(false)
-  const [ sortByCategoriesValue, setSortByCategoriesValue ] = useState('')
-  const [ sortByPrice, setSortByPrice ] = useState('')
+  const [ tableData, setTableData ] = useState([]);
+  const [ categories, setCategories ] = useState([]);
+  const [ isVisible, setIsVisible ] = useState(false);
+  const [ sortByCategoriesValue, setSortByCategoriesValue ] = useState('');
+  const [ sortByPrice, setSortByPrice ] = useState('');
 
 
   const getTableData = async () => {
     await request(`/ecommerce/products`)
-      .then((res) => sort(res))
+      .then((res) => sort(res));
   }
 
   const getCategories = async () => {
     await request(`/ecommerce/categories`)
       .then((res) => {
-        setCategories(res)
-      })
+        setCategories(res);
+      });
   }
 
   useEffect(async () => {
-    await getTableData()
-    await getCategories()
-  }, [])
+    await getTableData();
+    await getCategories();
+  }, []);
 
   const sort = (sortData = tableData) => {
-    const copyTableData = JSON.parse(JSON.stringify(sortData))
+    const copyTableData = JSON.parse(JSON.stringify(sortData));
     if (!sortByCategoriesValue && !sortByPrice) {
       setTableData(sortData.sort((a, b) => {
-        return Date.parse(a.createdAt) - Date.parse(b.createdAt)
-      }))
+        return Date.parse(a.createdAt) - Date.parse(b.createdAt);
+      }));
     } else {
       setTableData(
         copyTableData.sort((a, b) => {
-          let aInclude = false
-          let bInclude = false
+          let aInclude = false;
+          let bInclude = false;
           a.categories.forEach(el => {
-            console.log(sortByCategoriesValue, el.name)
-            if (el.name === sortByCategoriesValue) aInclude = true
-          })
+            console.log(sortByCategoriesValue, el.name);
+            if (el.name === sortByCategoriesValue) aInclude = true;
+          });
           b.categories.forEach(el => {
-            if (el.name === sortByCategoriesValue) bInclude = true
-          })
+            if (el.name === sortByCategoriesValue) bInclude = true;
+          });
           if ((aInclude && bInclude) || (!aInclude && !bInclude)) {
             if (sortByPrice) {
-              if (sortByPrice === 'Low to High') return a.price - b.price
-              return b.price - a.price
+              if (sortByPrice === 'Low to High') return a.price - b.price;
+              return b.price - a.price;
             }
-            return 0
+            return 0;
           }
-          if (!aInclude && bInclude) return 1
-          if (aInclude && !bInclude) return -1
-          return 0
+          if (!aInclude && bInclude) return 1;
+          if (aInclude && !bInclude) return -1;
+          return 0;
         })
       )
     }
   }
 
-  useEffect(() => sort(), [sortByPrice, sortByCategoriesValue])
+  useEffect(() => sort(), [sortByPrice, sortByCategoriesValue]);
 
   const updateTableData = async (id, updateData) => {
     await request(`/ecommerce/products/${id}`, {
       method: 'PUT',
       body: updateData
-    }).then(() => getTableData())
+    }).then(() => getTableData());
   }
 
   const deleteRow = async(id) => {
     await request(`/ecommerce/products/${id}`, {
       method: 'DELETE',
-    }).then(() => getTableData())
+    }).then(() => getTableData());
   }
 
   const postProduct = async(data) => {
     await request(`/ecommerce/products`, {
       method: 'POST',
       body: data
-    }).then(() => getTableData())
+    }).then(() => getTableData());
   }
 
   return (

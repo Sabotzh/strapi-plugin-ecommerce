@@ -1,9 +1,3 @@
-/**
- *
- * PluginIcon
- *
- */
-
 import React from 'react';
 import { MonetizationOn } from '@material-ui/icons';
 

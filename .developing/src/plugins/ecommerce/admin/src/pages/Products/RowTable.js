@@ -1,25 +1,25 @@
-import React from 'react'
-import Pencil from "@strapi/icons/Pencil";
-import Trash from "@strapi/icons/Trash";
-import styled from "styled-components"
-import ExclamationMarkCircle from "@strapi/icons/ExclamationMarkCircle";
+import React from 'react';
+import Pencil from '@strapi/icons/Pencil';
+import Trash from '@strapi/icons/Trash';
+import styled from 'styled-components';
+import ExclamationMarkCircle from '@strapi/icons/ExclamationMarkCircle';
 
-import { useState, useRef } from 'react'
-import Edit from "./Edit";
+import { useState, useRef } from 'react';
+import Edit from './Edit';
 
-import { Td } from "@strapi/design-system/Table";
-import { Typography } from "@strapi/design-system/Typography";
-import { Avatar } from "@strapi/design-system/Avatar";
-import { Switch } from "@strapi/design-system/Switch";
-import { Flex } from "@strapi/design-system/Flex";
-import { IconButton } from "@strapi/design-system/IconButton";
-import { Box } from "@strapi/design-system/Box";
+import { Td } from '@strapi/design-system/Table';
+import { Typography } from '@strapi/design-system/Typography';
+import { Avatar } from '@strapi/design-system/Avatar';
+import { Switch } from '@strapi/design-system/Switch';
+import { Flex } from '@strapi/design-system/Flex';
+import { IconButton } from '@strapi/design-system/IconButton';
+import { Box } from '@strapi/design-system/Box';
 import { Popover } from '@strapi/design-system/Popover';
 import { Badge } from '@strapi/design-system/Badge';
 import { SortIcon, stopPropagation, request } from '@strapi/helper-plugin';
-import { Dialog, DialogBody, DialogFooter } from "@strapi/design-system/Dialog";
-import { Stack } from "@strapi/design-system/Stack";
-import { Button } from "@strapi/design-system/Button";
+import { Dialog, DialogBody, DialogFooter } from '@strapi/design-system/Dialog';
+import { Stack } from '@strapi/design-system/Stack';
+import { Button } from '@strapi/design-system/Button';
 
 
 const BadgeStyled = styled(Typography)`
@@ -27,7 +27,7 @@ const BadgeStyled = styled(Typography)`
   padding: 1.3px 10px;
   border-radius: 20px;
   color: ${props => props.color};
-`
+`;
 const RelationCountBadge = styled(Badge)`
   display: flex;
   align-items: center;
@@ -42,33 +42,33 @@ const ActionWrapper = styled.span`
 
 
 const RowTable = ({ rowData, updateRowData, deleteRow, allCategories }) => {
-  const [ toggleSwitch, setToggleSwitch ] = useState(!!rowData.publishedAt)
-  const [ editOpen, setEditOpen ] = useState(false)
-  const [ visible, setVisible ] = useState(false)
-  const [ isDeleteVisible, setIsDeleteVisible ] = useState(false)
+  const [ toggleSwitch, setToggleSwitch ] = useState(!!rowData.publishedAt);
+  const [ editOpen, setEditOpen ] = useState(false);
+  const [ visible, setVisible ] = useState(false);
+  const [ isDeleteVisible, setIsDeleteVisible ] = useState(false);
 
   const buttonRef = useRef();
 
-  let badgeColor
-  let badgeBackgroundColor
+  let badgeColor;
+  let badgeBackgroundColor;
   switch (rowData.status) {
     case 'SELLING':
-      badgeColor = '#4EB899'
-      badgeBackgroundColor = '#DEF7EC'
-      break
+      badgeColor = '#4EB899';
+      badgeBackgroundColor = '#DEF7EC';
+      break;
     case 'ON_ORDER':
-      badgeColor = '#DCA433'
-      badgeBackgroundColor = '#FDF6B2'
-      break
+      badgeColor = '#DCA433';
+      badgeBackgroundColor = '#FDF6B2';
+      break;
     case 'UNAVAILABLE':
-      badgeColor = '#4F9FFA'
-      badgeBackgroundColor = '#E1EFFE'
+      badgeColor = '#4F9FFA';
+      badgeBackgroundColor = '#E1EFFE';
   }
 
   const status = () => {
-    if (rowData.status === 'SELLING') return 'Selling'
-    if (rowData.status === 'ON_ORDER') return 'On order'
-    if (rowData.status === 'UNAVAILABLE') return 'Unavailable'
+    if (rowData.status === 'SELLING') return 'Selling';
+    if (rowData.status === 'ON_ORDER') return 'On order';
+    if (rowData.status === 'UNAVAILABLE') return 'Unavailable';
   }
 
   const handleTogglePopover = () => setVisible(prev => !prev);
@@ -76,13 +76,13 @@ const RowTable = ({ rowData, updateRowData, deleteRow, allCategories }) => {
   const publishUpdate = async () => {
     await request(`/ecommerce/products/${rowData.id}/publish`, {
       method: 'PUT',
-    })
+    });
   }
 
   const unPublishUpdate = async () => {
     await request(`/ecommerce/products/${rowData.id}/un-publish`, {
       method: 'PUT',
-    })
+    });
   }
 
   return (
@@ -173,6 +173,7 @@ const RowTable = ({ rowData, updateRowData, deleteRow, allCategories }) => {
         </Flex>
       </Td>
     </>
-  )
-}
-export default RowTable
+  );
+};
+
+export default RowTable;

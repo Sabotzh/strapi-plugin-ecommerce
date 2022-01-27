@@ -23,7 +23,7 @@ module.exports = ({ strapi }) => async (ctx) => {
   delete data.category_level;
   delete data.createdAt;
   delete data.updatedAt;
-  // delete data.publishedAt;
+  delete data.publishedAt;
 
   if (data.slug) {
     data.slug = slugify(data.slug)
@@ -33,7 +33,6 @@ module.exports = ({ strapi }) => async (ctx) => {
   const categoryWithTheSameSlug = await strapi
     .query('plugin::ecommerce.category')
     .findOne({ where: { slug: data.slug } });
-  // console.log(categoryWithTheSameSlug)
   if (categoryWithTheSameSlug) {
     data.slug = data.slug + '-' + randomIntFromInterval(1000, 9999);
   }

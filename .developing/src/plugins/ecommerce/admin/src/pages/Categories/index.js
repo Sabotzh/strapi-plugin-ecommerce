@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
 
-import Plus from "@strapi/icons/Plus";
+import Plus from '@strapi/icons/Plus';
 
 import getTrad from '../../utils/getTrad';
-import Create from "./Create";
-import RowTable from "./RowTable";
+import Create from './Create';
+import RowTable from './RowTable';
 
 import { useIntl } from 'react-intl';
 import { useFocusWhenNavigate, request  } from '@strapi/helper-plugin';
 import { ContentLayout, HeaderLayout } from '@strapi/design-system/Layout';
-import { Stack } from "@strapi/design-system/Stack";
-import { Option, Select } from "@strapi/design-system/Select";
-import { Table, Tbody, Th, Thead, Tr } from "@strapi/design-system/Table";
-import { Typography } from "@strapi/design-system/Typography";
-import { VisuallyHidden } from "@strapi/design-system/VisuallyHidden";
+import { Stack } from '@strapi/design-system/Stack';
+import { Option, Select } from '@strapi/design-system/Select';
+import { Table, Tbody, Th, Thead, Tr } from '@strapi/design-system/Table';
+import { Typography } from '@strapi/design-system/Typography';
+import { VisuallyHidden } from '@strapi/design-system/VisuallyHidden';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
-import { Button } from "@strapi/design-system/Button"
+import { Button } from '@strapi/design-system/Button'
 
 
 const CategoriesPage = () => {
@@ -27,10 +27,10 @@ const CategoriesPage = () => {
     defaultMessage: 'Categories',
   });
 
-  const [ isCreateVisible, setIsCreateVisible ] = useState(false)
-  const [ sortBy, setSortBy ] = useState(null)
-  const [ tableData, setTableData] = useState([])
-  const [ error, setError ] = useState(false)
+  const [ isCreateVisible, setIsCreateVisible ] = useState(false);
+  const [ sortBy, setSortBy ] = useState(null);
+  const [ tableData, setTableData] = useState([]);
+  const [ error, setError ] = useState(false);
   // const categories = [
   //   'Fish & Meat', 'Fruits & Vegetable', 'Fresh Seafood', 'Cooking Essentials', 'Breakfast', 'Drinks',
   //   'Milk & Dairy', 'Organic Food', 'Honey', 'Sauces & Pickles', 'Jam & Jelly', 'Snacks & Instant',
@@ -39,14 +39,14 @@ const CategoriesPage = () => {
 
   const getTableData = async () => {
     await request(`/ecommerce/categories`)
-      .then((res) => sort(sortBy, res))
+      .then((res) => sort(sortBy, res));
   }
 
   const updateTableData = async (id, updateData) => {
     await request(`/ecommerce/categories/${id}`, {
       method: 'PUT',
       body: updateData
-    }).then(() => getTableData())
+    }).then(() => getTableData());
   }
 
   const createCategory = async (data) => {
@@ -54,32 +54,32 @@ const CategoriesPage = () => {
       method: 'POST',
       body: data
     }).then(() => {
-      getTableData()
-    })
+      getTableData();
+    });
   }
 
   useEffect(async () => {
-    await getTableData()
+    await getTableData();
   }, [])
 
   const deleteRow = async(id) => {
     await request(`/ecommerce/categories/${id}`, {
       method: 'DELETE',
-    }).then(() => getTableData())
+    }).then(() => getTableData());
   }
 
   const sort = (sortCategory, sortData = tableData) => {
     setSortBy(sortCategory)
     if (!sortCategory) {
       setTableData(sortData.sort((a, b) => {
-        return Date.parse(a.createdAt) - Date.parse(b.createdAt)
-      }))
+        return Date.parse(a.createdAt) - Date.parse(b.createdAt);
+      }));
     } else {
       setTableData(sortData.sort((a, b) => {
-        if (a.name === sortCategory && b.name === sortCategory) return 0
-        if (a.name === sortCategory && b.name !== sortCategory) return -1
-        return 1
-      }))
+        if (a.name === sortCategory && b.name === sortCategory) return 0;
+        if (a.name === sortCategory && b.name !== sortCategory) return -1;
+        return 1;
+      }));
     }
   }
 

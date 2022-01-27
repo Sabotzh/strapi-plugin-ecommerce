@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import CollectionType from '@strapi/icons/CollectionType';
 
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
-import { Box } from "@strapi/design-system/Box"
-import { Stack } from "@strapi/design-system/Stack"
+import { Box } from "@strapi/design-system/Box";
+import { Stack } from "@strapi/design-system/Stack";
 import { Breadcrumbs, Crumb } from '@strapi/design-system/Breadcrumbs';
 import { Typography } from "@strapi/design-system/Typography";
 import { Divider } from "@strapi/design-system/Divider";
@@ -18,29 +18,29 @@ import validateCategories from "../../../utils/validate";
 
 
 const Create = ({ tableData, createCategory, closeHandler }) => {
-  const [ name, setName ] = useState('')
-  const [ selectParent, setSelectParent ] = useState(null)
-  const [ type, setType ] = useState('')
-  const [ slug, setSlug ] = useState('')
-  const [ published, setPublished ] = useState(false)
-  const [ description, setDescription ] = useState('')
-  const [ metaTitle, setMetaTitle ] = useState('')
-  const [ metaKeywords, setMetaKeywords ] = useState('')
-  const [ metaDescription, setMetaDescription ] = useState('')
-  const [ errors, setErrors] = useState({})
+  const [ name, setName ] = useState('');
+  const [ selectParent, setSelectParent ] = useState(null);
+  const [ type, setType ] = useState('');
+  const [ slug, setSlug ] = useState('');
+  const [ published, setPublished ] = useState(false);
+  const [ description, setDescription ] = useState('');
+  const [ metaTitle, setMetaTitle ] = useState('');
+  const [ metaKeywords, setMetaKeywords ] = useState('');
+  const [ metaDescription, setMetaDescription ] = useState('');
+  const [ errors, setErrors] = useState({});
 
   const submitButtonHandler = () => {
-    let { success, validateErrors } = validateCategories({ name, description, metaTitle, metaKeywords, metaDescription }, errors, setErrors)
+    let { success, validateErrors } = validateCategories({ name, description, metaTitle, metaKeywords, metaDescription }, errors, setErrors);
 
     tableData.forEach(el => {
       if (el.name === name) {
-        success = false
-        validateErrors = ( { ...validateErrors, name: 'This name is used'} )
+        success = false;
+        validateErrors = ( { ...validateErrors, name: 'This name is used'} );
       }
     })
 
     if (success) {
-      closeHandler()
+      closeHandler();
       createCategory({
         name,
         parent_category: selectParent,
@@ -51,9 +51,9 @@ const Create = ({ tableData, createCategory, closeHandler }) => {
         meta_description: metaDescription,
         meta_keywords: metaKeywords,
         publishedAt: published ? Date.now() : null,
-      })
+      });
     } else {
-      setErrors({ ...errors, ...validateErrors})
+      setErrors({ ...errors, ...validateErrors});
     }
   }
 
@@ -161,7 +161,7 @@ const Create = ({ tableData, createCategory, closeHandler }) => {
         endActions = { <Button onClick = { submitButtonHandler }> Finish </Button> }
       />
     </ModalLayout>
-  )
+  );
 }
 
-export default Create
+export default Create;

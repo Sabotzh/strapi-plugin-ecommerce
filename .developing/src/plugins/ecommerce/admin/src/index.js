@@ -1,7 +1,6 @@
 import { prefixPluginTranslations } from '@strapi/helper-plugin';
-import PluginIcon from './components/PluginIcon'
-import pluginId from './pluginId'
-
+import PluginIcon from './components/PluginIcon';
+import pluginId from './pluginId';
 
 export default {
   register(app) {
@@ -13,9 +12,7 @@ export default {
         defaultMessage: 'Ecommerce',
       },
       Component: async () => {
-        const component = await import('./pages/App');
-
-        return component;
+        return await import('./pages/App');
       },
       permissions: [],
     });

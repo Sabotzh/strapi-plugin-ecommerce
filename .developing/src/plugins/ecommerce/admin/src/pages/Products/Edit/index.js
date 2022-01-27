@@ -1,57 +1,57 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
 import CollectionType from '@strapi/icons/CollectionType';
-import validate from '../../../utils/validate'
+import validate from '../../../utils/validate';
 
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
 import { request  } from '@strapi/helper-plugin';
-import { Box } from "@strapi/design-system/Box"
-import { Stack } from "@strapi/design-system/Stack"
+import { Box } from '@strapi/design-system/Box';
+import { Stack } from '@strapi/design-system/Stack';
 import { Breadcrumbs, Crumb } from '@strapi/design-system/Breadcrumbs';
-import { Typography } from "@strapi/design-system/Typography";
+import { Typography } from '@strapi/design-system/Typography';
 import { Divider } from '@strapi/design-system/Divider';
 import { TextInput } from '@strapi/design-system/TextInput';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
-import { Option, Select } from "@strapi/design-system/Select";
+import { Option, Select } from '@strapi/design-system/Select';
 import { NumberInput } from '@strapi/design-system/NumberInput';
-import { Button } from '@strapi/design-system/Button'
-import { Textarea } from "@strapi/design-system/Textarea";
+import { Button } from '@strapi/design-system/Button';
+import { Textarea } from '@strapi/design-system/Textarea';
 import { DatePicker } from '@strapi/design-system/DatePicker';
 
 
-const statusArr = [ 'SELLING', 'ON_ORDER', 'UNAVAILABLE' ]
+const statusArr = [ 'SELLING', 'ON_ORDER', 'UNAVAILABLE' ];
 
 const Edit = ({ rowData, closeHandler, updateRowData, allCategories } ) => {
-  const [ name, setName ] = useState(rowData.name)
-  const [ slug, setSlug ] = useState(rowData.slug)
-  const [ sku, setSku ] = useState(rowData.sku)
-  const [ icon, setIcon ] = useState(rowData.icon)
-  const [ categories, setCategories ] = useState(rowData.categories.map(el => el.id))
-  const [ price, setPrice ] = useState(rowData.price || undefined)
-  const [ dateAvailable, setDateAvailable ] = useState()
-  const [ quantity, setQuantity ] = useState(rowData.quantity || undefined)
-  const [ minQuantity, setMinQuantity ] = useState(rowData.min_quantity || undefined)
-  const [ status, setStatus ] = useState(rowData.status)
-  const [ discount, setDiscount ] = useState(rowData.discount || undefined)
-  const [ description, setDescription ] = useState(rowData.description)
-  const [ shortDescription, setShortDescription ] = useState(rowData.short_description)
-  const [ metaTitle, setMetaTitle ] = useState(rowData.meta_title)
-  const [ metaKeywords, setMetaKeywords ] = useState(rowData.meta_keywords)
-  const [ metaDescription, setMetaDescription ] = useState(rowData.meta_description)
-  const [ errors, setErrors] = useState({})
+  const [ name, setName ] = useState(rowData.name);
+  const [ slug, setSlug ] = useState(rowData.slug);
+  const [ sku, setSku ] = useState(rowData.sku);
+  const [ icon, setIcon ] = useState(rowData.icon);
+  const [ categories, setCategories ] = useState(rowData.categories.map(el => el.id));
+  const [ price, setPrice ] = useState(rowData.price || undefined);
+  const [ dateAvailable, setDateAvailable ] = useState();
+  const [ quantity, setQuantity ] = useState(rowData.quantity || undefined);
+  const [ minQuantity, setMinQuantity ] = useState(rowData.min_quantity || undefined);
+  const [ status, setStatus ] = useState(rowData.status);
+  const [ discount, setDiscount ] = useState(rowData.discount || undefined);
+  const [ description, setDescription ] = useState(rowData.description);
+  const [ shortDescription, setShortDescription ] = useState(rowData.short_description);
+  const [ metaTitle, setMetaTitle ] = useState(rowData.meta_title);
+  const [ metaKeywords, setMetaKeywords ] = useState(rowData.meta_keywords);
+  const [ metaDescription, setMetaDescription ] = useState(rowData.meta_description);
+  const [ errors, setErrors] = useState({});
 
   const submitButtonHandler = async() => {
-    setErrors({})
+    setErrors({});
 
     let { success, validateErrors } = validate({
       name, sku, slug, price, shortDescription, description, metaTitle, metaKeywords, metaDescription
-    }, errors, setErrors)
+    }, errors, setErrors);
 
     if (slug !== rowData.slug) {
-      const categoryWithTheSameSlug = await request(`/ecommerce/products/by-slug/${slug}`).catch(() => {})
+      const categoryWithTheSameSlug = await request(`/ecommerce/products/by-slug/${slug}`).catch(() => {});
       if (categoryWithTheSameSlug) {
-        success = false
-        setErrors({ ...validateErrors, slug: 'This name is taken'})
+        success = false;
+        setErrors({ ...validateErrors, slug: 'This name is taken'});
       }
     }
 
@@ -60,10 +60,10 @@ const Edit = ({ rowData, closeHandler, updateRowData, allCategories } ) => {
         name, slug, sku, icon, categories, price, dateAvailable, quantity, min_quantity: minQuantity,
         status, discount, description, short_description: shortDescription,
         meta_description: metaDescription, meta_title: metaTitle, meta_keywords: metaKeywords
-      })
-      closeHandler()
+      });
+      closeHandler();
     } else {
-      setErrors(validateErrors)
+      setErrors(validateErrors);
     }
   }
 
@@ -230,7 +230,7 @@ const Edit = ({ rowData, closeHandler, updateRowData, allCategories } ) => {
         endActions = { <Button onClick = { submitButtonHandler }> Finish </Button> }
       />
     </ModalLayout>
-  )
-}
+  );
+};
 
-export default Edit
+export default Edit;

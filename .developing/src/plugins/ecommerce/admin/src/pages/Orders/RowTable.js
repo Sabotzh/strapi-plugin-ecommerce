@@ -1,11 +1,11 @@
-import React from 'react'
-import styled from "styled-components"
+import React from 'react';
+import styled from 'styled-components';
 
-import { Td } from "@strapi/design-system/Table";
-import { Typography } from "@strapi/design-system/Typography";
+import { Td } from '@strapi/design-system/Table';
+import { Typography } from '@strapi/design-system/Typography';
 import { Badge } from '@strapi/design-system/Badge';
 
-import Edit from './Edit'
+import Edit from './Edit';
 
 
 const BadgeStyled = styled(Badge)`
@@ -15,24 +15,25 @@ const BadgeStyled = styled(Badge)`
   span {
     color: ${props => props.color};
   }
-`
-const RowTable = (props) => {
-  const rowData = props.rowData
+`;
 
-  let badgeColor
-  let badgeBackgroundColor
+const RowTable = (props) => {
+  const rowData = props.rowData;
+
+  let badgeColor;
+  let badgeBackgroundColor;
   switch (rowData.status) {
     case 'pending':
-      badgeColor = '#DCA433'
-      badgeBackgroundColor = '#FDF6B2'
-      break
+      badgeColor = '#DCA433';
+      badgeBackgroundColor = '#FDF6B2';
+      break;
     case 'delivered':
-      badgeColor = '#4EB899'
-      badgeBackgroundColor = '#DEF7EC'
-      break
+      badgeColor = '#4EB899';
+      badgeBackgroundColor = '#DEF7EC';
+      break;
     case 'processing':
-      badgeColor = '#4F9FFA'
-      badgeBackgroundColor = '#E1EFFE'
+      badgeColor = '#4F9FFA';
+      badgeBackgroundColor = '#E1EFFE';
   }
 
   return (

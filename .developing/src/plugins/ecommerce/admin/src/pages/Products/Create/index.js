@@ -1,67 +1,67 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
 import CollectionType from '@strapi/icons/CollectionType';
-import validate from '../../../utils/validate'
+import validate from '../../../utils/validate';
 
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
 import { request  } from '@strapi/helper-plugin';
-import { Box } from "@strapi/design-system/Box"
-import { Stack } from "@strapi/design-system/Stack"
+import { Box } from '@strapi/design-system/Box';
+import { Stack } from '@strapi/design-system/Stack';
 import { Breadcrumbs, Crumb } from '@strapi/design-system/Breadcrumbs';
-import { Typography } from "@strapi/design-system/Typography";
+import { Typography } from '@strapi/design-system/Typography';
 import { Divider } from '@strapi/design-system/Divider';
 import { TextInput } from '@strapi/design-system/TextInput';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
 import { Option, Select } from "@strapi/design-system/Select";
 import { NumberInput } from '@strapi/design-system/NumberInput';
-import { Button } from '@strapi/design-system/Button'
+import { Button } from '@strapi/design-system/Button';
 import { Textarea } from "@strapi/design-system/Textarea";
 import { DatePicker } from '@strapi/design-system/DatePicker';
 
 
-const statusArr = [ 'SELLING', 'ON_ORDER', 'UNAVAILABLE' ]
+const statusArr = [ 'SELLING', 'ON_ORDER', 'UNAVAILABLE' ];
 
 const Edit = ({ closeHandler, postProduct, allCategories } ) => {
-  const [ name, setName ] = useState('')
-  const [ slug, setSlug ] = useState('')
-  const [ sku, setSku ] = useState('')
-  const [ icon, setIcon ] = useState('')
-  const [ categories, setCategories ] = useState([])
-  const [ price, setPrice ] = useState()
-  const [ dateAvailable, setDateAvailable ] = useState()
-  const [ quantity, setQuantity ] = useState()
-  const [ minQuantity, setMinQuantity ] = useState()
-  const [ status, setStatus ] = useState(statusArr[0])
-  const [ discount, setDiscount ] = useState()
-  const [ description, setDescription ] = useState('')
-  const [ shortDescription, setShortDescription ] = useState('')
-  const [ metaTitle, setMetaTitle ] = useState('')
-  const [ metaKeywords, setMetaKeywords ] = useState('')
-  const [ metaDescription, setMetaDescription ] = useState('')
-  const [ errors, setErrors] = useState({})
+  const [ name, setName ] = useState('');
+  const [ slug, setSlug ] = useState('');
+  const [ sku, setSku ] = useState('');
+  const [ icon, setIcon ] = useState('');
+  const [ categories, setCategories ] = useState([]);
+  const [ price, setPrice ] = useState();
+  const [ dateAvailable, setDateAvailable ] = useState();
+  const [ quantity, setQuantity ] = useState();
+  const [ minQuantity, setMinQuantity ] = useState();
+  const [ status, setStatus ] = useState(statusArr[0]);
+  const [ discount, setDiscount ] = useState();
+  const [ description, setDescription ] = useState('');
+  const [ shortDescription, setShortDescription ] = useState('');
+  const [ metaTitle, setMetaTitle ] = useState('');
+  const [ metaKeywords, setMetaKeywords ] = useState('');
+  const [ metaDescription, setMetaDescription ] = useState('');
+  const [ errors, setErrors] = useState({});
 
   const submitButtonHandler = async() => {
-    setErrors({})
+    setErrors({});
 
     let { success, validateErrors } = validate({
       name, sku, slug, price, shortDescription, description, metaTitle, metaKeywords, metaDescription
-    })
+    });
 
-    const categoryWithTheSameSlug = await request(`/ecommerce/products/by-slug/${slug}`).catch(() => {})
+    const categoryWithTheSameSlug = await request(`/ecommerce/products/by-slug/${slug}`).catch(() => {});
     if (categoryWithTheSameSlug) {
-      success = false
-      setErrors({ ...validateErrors, slug: 'This name is taken' })
+      success = false;
+      setErrors({ ...validateErrors, slug: 'This name is taken' });
     }
 
     if (success) {
       postProduct({
         name, slug, sku, icon, categories, price, dateAvailable, quantity, min_quantity: minQuantity,
         status, discount, description, short_description: shortDescription,
-        meta_description: metaDescription, meta_title: metaTitle, meta_keywords: metaKeywords
-      })
-      closeHandler()
+        meta_description: metaDescription, meta_title: metaTitle, meta_keywords: metaKeywords,
+      });
+      closeHandler();
     } else {
-      setErrors(validateErrors)
+      setErrors(validateErrors);
     }
   }
 
@@ -227,7 +227,7 @@ const Edit = ({ closeHandler, postProduct, allCategories } ) => {
         endActions = { <Button onClick = { submitButtonHandler }> Finish </Button> }
       />
     </ModalLayout>
-  )
-}
+  );
+};
 
-export default Edit
+export default Edit;
