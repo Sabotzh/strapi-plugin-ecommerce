@@ -72,7 +72,7 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            mv ./apps/${{ secrets.PROJECT_FOLDER_NAME_PUBLIC }}/.developing/* ./apps/${{ secrets.PROJECT_FOLDER_NAME }}
+            mv ./apps/${{ secrets.PROJECT_FOLDER_NAME_PUBLIC }}/.developing/* ./apps/${{ secrets.PROJECT_FOLDER_NAME_PUBLIC }}
             rm -rf ./apps/${{ secrets.PROJECT_FOLDER_NAME_PUBLIC }}/.developing
 
       - name: Install dependencies on server
