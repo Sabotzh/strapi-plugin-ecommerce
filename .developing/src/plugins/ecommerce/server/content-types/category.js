@@ -20,6 +20,21 @@ module.exports = {
     },
   },
   attributes: {
+    image: {
+      type: 'media',
+      multiple: false,
+      required: false,
+      allowedTypes: [
+        'images'
+      ]
+    },
+    name: {
+      type: 'string',
+      min: 1,
+      max: 50,
+      unique: true,
+      configurable: false,
+    },
     parent_category: {
       type: 'relation',
       relation: 'oneToOne',
@@ -30,11 +45,8 @@ module.exports = {
       type: 'integer',
       configurable: false,
     },
-    name: {
-      type: 'string',
-      min: 1,
-      max: 50,
-      unique: true,
+    short_description: {
+      type: 'text',
       configurable: false,
     },
     description: {

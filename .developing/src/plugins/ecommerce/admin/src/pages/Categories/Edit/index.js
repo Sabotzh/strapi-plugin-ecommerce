@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 
 import CollectionType from '@strapi/icons/CollectionType';
-
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
 import { Box } from '@strapi/design-system/Box';
 import { Stack } from '@strapi/design-system/Stack';
@@ -13,14 +12,16 @@ import { Grid, GridItem } from '@strapi/design-system/Grid';
 import { Option, Select } from "@strapi/design-system/Select";
 import { Button } from '@strapi/design-system/Button';
 import { Textarea } from '@strapi/design-system/Textarea';
+
 import validateCategories from "../../../utils/validate";
+import Wysiwyg from "../../../components/Wysiwyg/Wysiwyg";
 
 
 const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
   const [ name, setName ] = useState(rowData.name);
   const [ selectParent, setSelectParent ] = useState(rowData.parent_category ? rowData.parent_category.id : null);
-  const [ type, setType ] = useState('');
   const [ slug, setSlug ] = useState(rowData.slug);
+  const [ shortDescription, setShortDescription ] = useState(rowData.short_description);
   const [ description, setDescription ] = useState(rowData.description);
   const [ metaTitle, setMetaTitle ] = useState(rowData.meta_title);
   const [ metaKeywords, setMetaKeywords ] = useState(rowData.meta_keywords);
@@ -77,59 +78,67 @@ const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
                 })}
               </Select>
             </GridItem>
-            <GridItem col={5}>
-              <TextInput
-                placeholder='Type'
-                label='Type'
-                name='Type'
-                value={ type }
-                onChange={ e => setType(e.target.value) }
-              />
+            <GridItem col={12}>
+              <Textarea
+                error={ errors.shortDescription }
+                label="Short description"
+                name="shortDescription"
+                onChange={e => setShortDescription(e.target.value)}
+              >
+                { shortDescription }
+              </Textarea>
             </GridItem>
             <GridItem col={12}>
-              <Textarea error={ errors.description } label="Description" name="description" onChange={e => setDescription(e.target.value)}>
-                { description }
-              </Textarea>
+              <Wysiwyg
+                disabled={ false }
+                intlLabel={ { id: 'id', defaultMessage: 'Description', values: undefined } }
+                value={ description }
+                name="rich-text"
+                onChange={ e => setDescription(e.target.value) }
+                error={ errors.description }
+              />
             </GridItem>
           </Grid>
           <Box paddingTop={5} paddingBottom={3}><Typography variant={'beta'}>SEO</Typography></Box>
-          <Grid gap={5}>
-            <GridItem col={6}>
-              <TextInput
-                label="Meta_title"
-                name="metaTitle"
-                value={ metaTitle }
-                onChange={ e => setMetaTitle(e.target.value) }
-                error={ errors.metaTitle }
-              />
-            </GridItem>
-            <GridItem col={6}>
-              <TextInput
-                label="Meta_keywords"
-                name="metaKeywords"
-                value={ metaKeywords }
-                onChange={ e => setMetaKeywords(e.target.value) }
-                error={ errors.metaKeywords }
-              />
-            </GridItem>
-            <GridItem col={12}>
-              <Textarea error={ errors.metaDescription } label="Meta_description" name="metaDescription" onChange={e => setMetaDescription(e.target.value)}>
-                { metaDescription }
-              </Textarea>
-            </GridItem>
-          </Grid>
+          <Divider/>
+          <Box paddingTop={5}>
+            <Grid gap={5}>
+              <GridItem col={6}>
+                <TextInput
+                  label="Meta_title"
+                  name="metaTitle"
+                  value={ metaTitle }
+                  onChange={ e => setMetaTitle(e.target.value) }
+                  error={ errors.metaTitle }
+                />
+              </GridItem>
+              <GridItem col={6}>
+                <TextInput
+                  label="Meta_keywords"
+                  name="metaKeywords"
+                  value={ metaKeywords }
+                  onChange={ e => setMetaKeywords(e.target.value) }
+                  error={ errors.metaKeywords }
+                />
+              </GridItem>
+              <GridItem col={12}>
+                <Textarea error={ errors.metaDescription } label="Meta_description" name="metaDescription" onChange={e => setMetaDescription(e.target.value)}>
+                  { metaDescription }
+                </Textarea>
+              </GridItem>
+            </Grid>
+          </Box>
         </Box>
       </ModalBody>
       <ModalFooter
         startActions = { <Button onClick = { () => closeHandler() } variant="tertiary"> Cancel </Button> }
         endActions = { <Button onClick = { () => {
-          const { success, validateErrors } = validateCategories({ name, description, metaTitle, metaKeywords, metaDescription }, errors, setErrors)
+          const { success, validateErrors } = validateCategories({ name, shortDescription, description, metaTitle, metaKeywords, metaDescription }, errors, setErrors)
           if (success) {
             closeHandler()
             updateRowData(rowData.id, {
               name,
               parent_category: selectParent,
-              type,
               slug,
               description,
               meta_title: metaTitle,
