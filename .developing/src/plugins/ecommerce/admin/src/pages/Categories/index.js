@@ -16,6 +16,7 @@ import { Typography } from '@strapi/design-system/Typography';
 import { VisuallyHidden } from '@strapi/design-system/VisuallyHidden';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
 import { Button } from '@strapi/design-system/Button'
+import { Flex } from '@strapi/design-system/Flex'
 
 
 const CategoriesPage = () => {
@@ -28,18 +29,30 @@ const CategoriesPage = () => {
   });
 
   const [ isCreateVisible, setIsCreateVisible ] = useState(false);
+  const [ categories, setCategories ] = useState([])
   const [ sortBy, setSortBy ] = useState(null);
   const [ tableData, setTableData] = useState([]);
   const [ error, setError ] = useState(false);
-  // const categories = [
-  //   'Fish & Meat', 'Fruits & Vegetable', 'Fresh Seafood', 'Cooking Essentials', 'Breakfast', 'Drinks',
-  //   'Milk & Dairy', 'Organic Food', 'Honey', 'Sauces & Pickles', 'Jam & Jelly', 'Snacks & Instant',
-  //   'Biscuits & Cakes', 'Household Tools', 'Baby Care', 'Pet Care', 'Beauty & Health', 'Sports & Fitness'
-  // ]
 
-  const getTableData = async () => {
-    await request(`/ecommerce/categories`)
-      .then((res) => sort(sortBy, res));
+  const getTableData = async (filter) => {
+    const qs = require('qs');
+    const queryPopulate = { populate: ['parent_category'] }
+    const query = qs.stringify(
+      filter ? { where: { name: filter, parent: filter }, ...queryPopulate } : queryPopulate, {
+        encodeValuesOnly: true,
+      }
+    );
+
+    await request(`/ecommerce/categories?${query}`)
+      .then(async (res) => {
+        console.log(res)
+
+        setTableData(res)
+
+        if (!filter) {
+          setCategories(res.map(el => el.name))
+        }
+      });
   }
 
   const updateTableData = async (id, updateData) => {
@@ -68,21 +81,6 @@ const CategoriesPage = () => {
     }).then(() => getTableData());
   }
 
-  const sort = (sortCategory, sortData = tableData) => {
-    setSortBy(sortCategory)
-    if (!sortCategory) {
-      setTableData(sortData.sort((a, b) => {
-        return Date.parse(a.createdAt) - Date.parse(b.createdAt);
-      }));
-    } else {
-      setTableData(sortData.sort((a, b) => {
-        if (a.name === sortCategory && b.name === sortCategory) return 0;
-        if (a.name === sortCategory && b.name !== sortCategory) return -1;
-        return 1;
-      }));
-    }
-  }
-
   return (
     <main>
       <HeaderLayout
@@ -91,7 +89,7 @@ const CategoriesPage = () => {
             startIcon={ <Plus/> }
             onClick={ () => setIsCreateVisible(true) }
           >
-            Add product
+            Add category
           </Button>
         }
         title={title}
@@ -117,14 +115,14 @@ const CategoriesPage = () => {
                   value={ sortBy }
                   onChange={ (value) => {
                     setSortBy(value)
-                    sort(value)
+                    getTableData(value)
                   }}
                   onClear={ () => {
                     setSortBy(null)
-                    sort(null)
+                    getTableData(null)
                   }}
                   >
-                  { tableData.map((entry, id) => <Option value={ entry.name } key={id}>{ entry.name }</Option>) }
+                  { categories.map((entry, id) => <Option value={ entry } key={id}>{ entry }</Option>) }
                 </Select>
               </GridItem>
             </Grid>
@@ -133,10 +131,16 @@ const CategoriesPage = () => {
             <Thead>
               <Tr>
                 <Th><Typography variant="sigma">ID</Typography></Th>
+                <Th><Typography variant="sigma">Image</Typography></Th>
                 <Th><Typography variant="sigma">Name</Typography></Th>
                 <Th><Typography variant="sigma">Parent</Typography></Th>
-                <Th><Typography variant="sigma">Type</Typography></Th>
+                <Th>
+                  <Flex justifyContent={'center'}>
+                    <Typography variant="sigma">Category level</Typography>
+                  </Flex>
+                </Th>
                 <Th><Typography variant="sigma">Slug</Typography></Th>
+                <Th><Typography variant="sigma">Short description</Typography></Th>
                 <Th><Typography variant="sigma">Published</Typography></Th>
                 <Th><VisuallyHidden>Actions</VisuallyHidden></Th>
               </Tr>
