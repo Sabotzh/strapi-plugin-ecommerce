@@ -4,7 +4,7 @@ module.exports = ({ strapi }) => async (ctx) => {
   const data = ctx.request.body;
   const { id } = ctx.params;
 
-  const forbiddenFields = [ ...strapiForbiddenFields, 'category_level' ];
+  const forbiddenFields = [ ...strapiForbiddenFields, 'category_level', 'categoryLevel' ];
   for (const forbiddenField of forbiddenFields) {
     delete data[forbiddenField];
   }
