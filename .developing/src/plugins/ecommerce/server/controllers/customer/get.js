@@ -1,10 +1,18 @@
 const jwt = require('jsonwebtoken');
+const getCustomerIdFromctx = require('../_utils/getCustomerIdFromCtx');
 
 module.exports = ({ strapi }) => async (ctx) => {
-  const isGenerateNewCustomer = true;
+  const customerId = getCustomerIdFromctx(ctx);
+
   let customer = null;
 
-  if (isGenerateNewCustomer) {
+  if (customerId) {
+    customer = await strapi
+      .query('plugin::ecommerce.customer')
+      .findOne({ where: { id: customerId } });
+  }
+
+  if (!customer) {
     customer = await strapi
       .query('plugin::ecommerce.customer')
       .create({
