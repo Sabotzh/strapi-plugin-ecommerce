@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { LocalMall } from '@material-ui/icons';
-import { Dashboard } from '@material-ui/icons';
-import { Category } from '@material-ui/icons';
-import { RecentActors } from '@material-ui/icons';
-import { CardGiftcard } from '@material-ui/icons';
-import { Settings } from '@material-ui/icons';
+import Dashboard from './Icons/Dashboard';
+import Products from './Icons/Products';
+import Categories from './Icons/Categories';
+import Customers from './Icons/Customers';
+import Orders from './Icons/Orders';
+import Settings from './Icons/Settings';
 
 import getTrad from '../../utils/getTrad';
 import { FormattedMessage } from 'react-intl';
@@ -79,12 +79,12 @@ const Navigation = () => {
   }
 
   const links = [
-    { id: 1, label: getTrad('menu.dashboard.name'), link: 'dashboard', icon: <Dashboard viewBox="0 0 22 22"/> },
-    { id: 2, label: getTrad('menu.products.name'), link: 'products', icon: <LocalMall viewBox="0 0 22 22"/> },
-    { id: 3, label: getTrad('menu.categories.name'), link: 'categories', icon: <Category viewBox="0 0 22 22"/> },
-    { id: 4, label: getTrad('menu.customers.name'), link: 'customers', icon: <RecentActors viewBox="0 0 22 22"/> },
-    { id: 5, label: getTrad('menu.orders.name'), link: 'orders', icon: <CardGiftcard viewBox="0 0 22 22"/> },
-    { id: 6, label: getTrad('menu.settings.name'), link: 'settings', icon: <Settings viewBox="0 0 22 22"/> },
+    { id: 1, label: getTrad('menu.dashboard.name'), link: 'dashboard', icon: <Dashboard /> },
+    { id: 2, label: getTrad('menu.products.name'), link: 'products', icon: <Products /> },
+    { id: 3, label: getTrad('menu.categories.name'), link: 'categories', icon: <Categories /> },
+    { id: 4, label: getTrad('menu.customers.name'), link: 'customers', icon: <Customers /> },
+    { id: 5, label: getTrad('menu.orders.name'), link: 'orders', icon: <Orders /> },
+    { id: 6, label: getTrad('menu.settings.name'), link: 'settings', icon: <Settings /> },
   ];
 
   return (
