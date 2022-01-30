@@ -34,25 +34,34 @@ const CategoriesPage = () => {
   const [ tableData, setTableData] = useState([]);
   const [ error, setError ] = useState(false);
 
-  const getTableData = async (filter) => {
+  const filteredData = async (filter) => {
+    await request(`/ecommerce/categories/${filter}`)
+      .then(async (res) => {
+        setTableData(res)
+      });
+  }
+
+  const getTableData = async () => {
     const qs = require('qs');
-    const queryPopulate = { populate: ['parent_category'] }
     const query = qs.stringify(
-      filter ? { where: { name: filter, parent: filter }, ...queryPopulate } : queryPopulate, {
+      { populate: ['parent_category'] }, {
         encodeValuesOnly: true,
       }
     );
 
+    if (sortBy) return filteredData(sortBy)
+
     await request(`/ecommerce/categories?${query}`)
       .then(async (res) => {
-        console.log(res)
-
         setTableData(res)
-
-        if (!filter) {
-          setCategories(res.map(el => el.name))
-        }
+        setCategories(res.map(el => el.name))
       });
+  }
+
+  const sortHandler = (value) => {
+    setSortBy(value)
+    if (value) return filteredData(value)
+    return getTableData()
   }
 
   const updateTableData = async (id, updateData) => {
@@ -113,14 +122,8 @@ const CategoriesPage = () => {
                 <Select
                   placeholder={'Sort by category'}
                   value={ sortBy }
-                  onChange={ (value) => {
-                    setSortBy(value)
-                    getTableData(value)
-                  }}
-                  onClear={ () => {
-                    setSortBy(null)
-                    getTableData(null)
-                  }}
+                  onChange={ sortHandler }
+                  onClear={ sortHandler }
                   >
                   { categories.map((entry, id) => <Option value={ entry } key={id}>{ entry }</Option>) }
                 </Select>
