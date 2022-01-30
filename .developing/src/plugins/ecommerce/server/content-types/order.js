@@ -30,7 +30,7 @@ module.exports = {
       type: 'json',
       configurable: false,
     },
-    shipping_address: {
+    shippingAddress: {
       type: "string",
       configurable: false,
     },

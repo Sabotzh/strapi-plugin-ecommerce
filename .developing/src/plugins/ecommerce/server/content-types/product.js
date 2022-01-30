@@ -39,7 +39,7 @@ module.exports = {
       type: 'richtext',
       configurable: false,
     },
-    short_description: {
+    shortDescription: {
       type: 'string',
       configurable: false,
     },
@@ -49,7 +49,7 @@ module.exports = {
       multiple: false,
       configurable: false,
     },
-    addition_images: {
+    additionImages: {
       allowedTypes: [ 'images' ],
       type: 'media',
       multiple: true,
@@ -69,11 +69,11 @@ module.exports = {
       type: 'integer',
       configurable: false,
     },
-    min_quantity: {
+    minQuantity: {
       type: 'integer',
       configurable: false,
     },
-    date_available: {
+    dateAvailable: {
       type: 'date',
       configurable: false,
     },
@@ -90,21 +90,21 @@ module.exports = {
       type: 'integer',
       configurable: false
     },
-    relative_products: {
+    relativeProducts: {
       type: 'relation',
       relation: 'manyToMany',
       target: 'plugin::ecommerce.product',
       configurable: false,
     },
-    meta_title: {
+    metaTitle: {
       type: 'string',
       configurable: false,
     },
-    meta_description: {
+    metaDescription: {
       type: 'string',
       configurable: false,
     },
-    meta_keywords: {
+    metaKeywords: {
       type: 'string',
       configurable: false,
     },

@@ -1,4 +1,5 @@
 const slugify = require('slugify');
+const strapiForbiddenFields = require('../_utils/strapiForbiddenFieldsForUpdate');
 const randomIntFromInterval = require('../../utils/randomIntFromInterval');
 
 module.exports = ({ strapi }) => async (ctx) => {
@@ -19,11 +20,10 @@ module.exports = ({ strapi }) => async (ctx) => {
     return
   }
 
-  delete data.id;
-  delete data.category_level;
-  delete data.createdAt;
-  delete data.updatedAt;
-  delete data.publishedAt;
+  const forbiddenFields = [ ...strapiForbiddenFields, 'category_level', 'categoryLevel' ];
+  for (const forbiddenField of forbiddenFields) {
+    delete data[forbiddenField];
+  }
 
   if (data.slug) {
     data.slug = slugify(data.slug)

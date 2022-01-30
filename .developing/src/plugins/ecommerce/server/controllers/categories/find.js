@@ -1,4 +1,4 @@
-module.exports = ({ strapi }) => async(ctx) => {
+module.exports = ({ strapi }) => async (ctx) => {
   ctx.body = await strapi
     .query('plugin::ecommerce.category')
     .findMany(ctx.query);

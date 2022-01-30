@@ -53,6 +53,8 @@ jobs:
             cd ./apps/${{ secrets.PROJECT_FOLDER_NAME_PUBLIC }}
             rm -rf src
             rm -rf config
+            rm -rf build
+            rm -rf .cache
 
       - name: Copy files to server
         uses: appleboy/scp-action@master

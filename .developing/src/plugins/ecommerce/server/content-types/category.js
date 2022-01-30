@@ -35,17 +35,17 @@ module.exports = {
       unique: true,
       configurable: false,
     },
-    parent_category: {
+    parentCategory: {
       type: 'relation',
       relation: 'oneToOne',
       target: 'plugin::ecommerce.category',
       configurable: false,
     },
-    category_level: {
+    categoryLevel: {
       type: 'integer',
       configurable: false,
     },
-    short_description: {
+    shortDescription: {
       type: 'text',
       configurable: false,
     },
@@ -58,15 +58,15 @@ module.exports = {
       targetField: 'name',
       configurable: false,
     },
-    meta_title: {
+    metaTitle: {
       type: 'string',
       configurable: false,
     },
-    meta_description: {
+    metaDescription: {
       type: 'string',
       configurable: false,
     },
-    meta_keywords: {
+    metaKeywords: {
       type: 'string',
       configurable: false,
     },
