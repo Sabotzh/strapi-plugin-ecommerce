@@ -52,13 +52,5 @@ module.exports = {
       max: 50,
       configurable: false,
     },
-    cart: {
-      type: 'json',
-      configurable: false,
-    },
-    wishlist: {
-      type: 'json',
-      configurable: false,
-    },
   },
 };
