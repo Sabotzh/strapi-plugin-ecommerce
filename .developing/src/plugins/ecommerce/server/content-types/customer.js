@@ -38,11 +38,7 @@ module.exports = {
       max: 50,
       configurable: false,
     },
-    token: {
-      type: 'string',
-      configurable: false,
-    },
-    is_shadow: {
+    isShadow: {
       type: 'boolean',
       configurable: false,
     },

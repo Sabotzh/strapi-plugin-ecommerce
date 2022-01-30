@@ -20,21 +20,33 @@ module.exports = {
     },
   },
   attributes: {
-    parent_category: {
-      type: 'relation',
-      relation: 'oneToOne',
-      target: 'plugin::ecommerce.category',
-      configurable: false,
-    },
-    category_level: {
-      type: 'integer',
-      configurable: false,
+    image: {
+      type: 'media',
+      multiple: false,
+      required: false,
+      allowedTypes: [
+        'images'
+      ]
     },
     name: {
       type: 'string',
       min: 1,
       max: 50,
       unique: true,
+      configurable: false,
+    },
+    parentCategory: {
+      type: 'relation',
+      relation: 'oneToOne',
+      target: 'plugin::ecommerce.category',
+      configurable: false,
+    },
+    categoryLevel: {
+      type: 'integer',
+      configurable: false,
+    },
+    shortDescription: {
+      type: 'text',
       configurable: false,
     },
     description: {
@@ -46,15 +58,15 @@ module.exports = {
       targetField: 'name',
       configurable: false,
     },
-    meta_title: {
+    metaTitle: {
       type: 'string',
       configurable: false,
     },
-    meta_description: {
+    metaDescription: {
       type: 'string',
       configurable: false,
     },
-    meta_keywords: {
+    metaKeywords: {
       type: 'string',
       configurable: false,
     },

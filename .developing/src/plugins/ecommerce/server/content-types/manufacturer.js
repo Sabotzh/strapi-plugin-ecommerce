@@ -40,20 +40,20 @@ module.exports = {
       type: 'media',
       multiple: false,
     },
-    addition_images: {
+    additionImages: {
       allowedTypes: [ 'images' ],
       type: 'media',
       multiple: true,
     },
-    meta_title: {
+    metaTitle: {
       type: 'string',
       configurable: false,
     },
-    meta_description: {
+    metaDescription: {
       type: 'string',
       configurable: false,
     },
-    meta_keywords: {
+    metaKeywords: {
       type: 'string',
       configurable: false,
     },

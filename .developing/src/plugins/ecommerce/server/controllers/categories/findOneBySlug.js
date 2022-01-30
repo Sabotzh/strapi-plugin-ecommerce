@@ -1,4 +1,4 @@
-module.exports = ({ strapi }) => async(ctx) => {
+module.exports = ({ strapi }) => async (ctx) => {
   const { slug } = ctx.params;
 
   ctx.body = await strapi
