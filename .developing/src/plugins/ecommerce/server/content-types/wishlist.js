@@ -22,14 +22,10 @@ module.exports = {
   attributes: {
     customerId: {
       type: 'string',
-      min: 1,
-      max: 50,
       configurable: false,
     },
     productId: {
       type: 'string',
-      min: 1,
-      max: 50,
       configurable: false,
     },
   },

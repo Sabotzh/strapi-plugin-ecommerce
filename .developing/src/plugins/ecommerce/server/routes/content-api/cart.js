@@ -7,19 +7,25 @@ module.exports = [
   },
   {
     method: 'PUT',
-    path: '/cart',
+    path: '/cart/add',
     handler: 'cart.add',
     config: {},
   },
   {
+    method: 'PUT',
+    path: '/cart/subtract',
+    handler: 'cart.subtract',
+    config: {},
+  },
+  {
     method: 'DELETE',
-    path: '/cart',
+    path: '/cart/:id',
     handler: 'cart.remove',
     config: {},
   },
   {
     method: 'DELETE',
-    path: '/cart/all',
+    path: '/cart',
     handler: 'cart.removeAll',
     config: {},
   },
