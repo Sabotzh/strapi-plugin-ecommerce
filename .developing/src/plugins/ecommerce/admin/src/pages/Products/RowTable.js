@@ -41,7 +41,7 @@ const ActionWrapper = styled.span`
 `;
 
 
-const RowTable = ({ rowData, updateRowData, deleteRow, allCategories }) => {
+const RowTable = ({ rowData, updateRowData, deleteRow, allCategories, publishAlert }) => {
   const [ toggleSwitch, setToggleSwitch ] = useState(!!rowData.publishedAt);
   const [ editOpen, setEditOpen ] = useState(false);
   const [ visible, setVisible ] = useState(false);
@@ -76,13 +76,17 @@ const RowTable = ({ rowData, updateRowData, deleteRow, allCategories }) => {
   const publishUpdate = async () => {
     await request(`/ecommerce/products/${rowData.id}/publish`, {
       method: 'PUT',
-    });
+    })
+      .then(() => publishAlert({ variant: 'success', title: 'Success', text: 'Product published' }))
+      .catch(() => publishAlert({ variant: 'danger', title: 'Error', text: 'Product has not been published' }));
   }
 
   const unPublishUpdate = async () => {
     await request(`/ecommerce/products/${rowData.id}/un-publish`, {
       method: 'PUT',
-    });
+    })
+      .then(() => publishAlert({ variant: 'success', title: 'Success', text: 'Product unpublished' }))
+      .catch(() => publishAlert({ variant: 'danger', title: 'Error', text: 'Product has not been unpublished' }));
   }
 
   return (
@@ -112,9 +116,11 @@ const RowTable = ({ rowData, updateRowData, deleteRow, allCategories }) => {
           }
         />
       </Dialog>
-      <Td><Typography textColor="neutral800">{ rowData.sku }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ rowData.id }</Typography></Td>
       <Td><Avatar src = { rowData.icon } alt={''} /></Td>
       <Td><Typography textColor="neutral800">{ rowData.name }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ rowData.slug }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ rowData.sku }</Typography></Td>
       <Td>
         <Flex { ...stopPropagation }>
           <RelationCountBadge>{ rowData.categories.length }</RelationCountBadge>

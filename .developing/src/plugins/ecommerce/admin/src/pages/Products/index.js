@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-import { useState, useEffect } from 'react';
 import getTrad from '../../utils/getTrad';
 import RowTable from './RowTable';
 import Create from './Create';
+import CustomAlert from '../../components/Alert';
+import Filter from "./Filter";
 
 import Plus from '@strapi/icons/Plus';
 
@@ -13,7 +14,6 @@ import { HeaderLayout, ContentLayout } from '@strapi/design-system/Layout';
 import { Table, Thead, Tbody, Tr, Th } from '@strapi/design-system/Table';
 import { Typography } from '@strapi/design-system/Typography';
 import { VisuallyHidden } from "@strapi/design-system/VisuallyHidden";
-import { Select, Option } from '@strapi/design-system/Select';
 import { Stack } from '@strapi/design-system/Stack';
 import { Button } from '@strapi/design-system/Button';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
@@ -30,15 +30,30 @@ const ProductsPage = () => {
   });
 
   const [ tableData, setTableData ] = useState([]);
+  const [ unSortedData, setUnSortedData ] = useState([])
   const [ categories, setCategories ] = useState([]);
   const [ isVisible, setIsVisible ] = useState(false);
   const [ sortByCategoriesValue, setSortByCategoriesValue ] = useState('');
   const [ sortByPrice, setSortByPrice ] = useState('');
+  const [ alert, setAlert ] = useState(null);
+  const [ timerId, setTimerId ] = useState(null);
 
 
   const getTableData = async () => {
-    await request(`/ecommerce/products`)
-      .then((res) => sort(res));
+    const qs = require('qs');
+    const query = qs.stringify(
+      { orderBy: { id: 'asc' }, populate: ['categories'] },
+      { encodeValuesOnly: true }
+    );
+
+    await request(`/ecommerce/products?${query}`)
+      .then((res) => {
+        console.log(res)
+        setTableData(res)
+        setUnSortedData(res)
+        // sort(res)
+
+      });
   }
 
   const getCategories = async () => {
@@ -53,40 +68,38 @@ const ProductsPage = () => {
     await getCategories();
   }, []);
 
-  const sort = (sortData = tableData) => {
-    const copyTableData = JSON.parse(JSON.stringify(sortData));
-    if (!sortByCategoriesValue && !sortByPrice) {
-      setTableData(sortData.sort((a, b) => {
-        return Date.parse(a.createdAt) - Date.parse(b.createdAt);
-      }));
-    } else {
-      setTableData(
-        copyTableData.sort((a, b) => {
-          let aInclude = false;
-          let bInclude = false;
-          a.categories.forEach(el => {
-            console.log(sortByCategoriesValue, el.name);
-            if (el.name === sortByCategoriesValue) aInclude = true;
-          });
-          b.categories.forEach(el => {
-            if (el.name === sortByCategoriesValue) bInclude = true;
-          });
-          if ((aInclude && bInclude) || (!aInclude && !bInclude)) {
-            if (sortByPrice) {
-              if (sortByPrice === 'Low to High') return a.price - b.price;
-              return b.price - a.price;
-            }
-            return 0;
-          }
-          if (!aInclude && bInclude) return 1;
-          if (aInclude && !bInclude) return -1;
-          return 0;
-        })
-      )
-    }
-  }
+  // const sort = (sortData = tableData) => {
+  //   const copyTableData = JSON.parse(JSON.stringify(sortData));
+  //   if (!sortByCategoriesValue && !sortByPrice) {
+  //     return setTableData(sortData)
+  //   } else {
+  //     setTableData(
+  //       copyTableData.sort((a, b) => {
+  //         let aInclude = false;
+  //         let bInclude = false;
+  //         a.categories.forEach(el => {
+  //           console.log(sortByCategoriesValue, el.name);
+  //           if (el.name === sortByCategoriesValue) aInclude = true;
+  //         });
+  //         b.categories.forEach(el => {
+  //           if (el.name === sortByCategoriesValue) bInclude = true;
+  //         });
+  //         if ((aInclude && bInclude) || (!aInclude && !bInclude)) {
+  //           if (sortByPrice) {
+  //             if (sortByPrice === 'Low to High') return a.price - b.price;
+  //             return b.price - a.price;
+  //           }
+  //           return 0;
+  //         }
+  //         if (!aInclude && bInclude) return 1;
+  //         if (aInclude && !bInclude) return -1;
+  //         return 0;
+  //       })
+  //     )
+  //   }
+  // }
 
-  useEffect(() => sort(), [sortByPrice, sortByCategoriesValue]);
+  // useEffect(() => sort(), [sortByPrice, sortByCategoriesValue]);
 
   const updateTableData = async (id, updateData) => {
     await request(`/ecommerce/products/${id}`, {
@@ -108,8 +121,30 @@ const ProductsPage = () => {
     }).then(() => getTableData());
   }
 
+  const alertHandler = (params) => {
+    if (timerId) clearTimeout(timerId)
+
+    const newTimerId = setTimeout(() => {
+      setAlert(null)
+    }, 3000)
+
+    setTimerId(newTimerId)
+    setAlert(params)
+  }
+
   return (
-    <main>
+    <main style={{position: 'relative'}}>
+      {
+        alert &&
+        <CustomAlert
+          isActive={!!alert}
+          closeAlert={() => setAlert(null)}
+          title={alert.title}
+          variant={alert.variant}
+          text={alert.text}
+          timerId={timerId}
+        />
+      }
       <HeaderLayout
         primaryAction={
           <Button
@@ -135,42 +170,25 @@ const ProductsPage = () => {
       <ContentLayout>
         <Stack size={7}>
           <Grid gap={3}>
-            <GridItem col={3}>
-              <Select
-                placeholder={'Sort by category'}
-                value={ sortByCategoriesValue }
-                onChange={ setSortByCategoriesValue }
-                onClear={ () => setSortByCategoriesValue(null) }
-              >
-                { categories.map((entry, id) => <Option value={entry.name} key={entry.id}>{ entry.name }</Option>) }
-              </Select>
-            </GridItem>
-            <GridItem col={2}>
-              <Select
-                placeholder={'Sort by price'}
-                value={ sortByPrice }
-                onChange={ (value) => {
-                  setSortByPrice(value)
-                }}
-                onClear={ () => {
-                  setSortByPrice(null)
-                }}
-              >
-                <Option value={'Low to High'}>{ 'Low to High' }</Option>
-                <Option value={'High to Low'}>{ 'High to Low' }</Option>
-              </Select>
-            </GridItem>
+            <Filter
+              filterValues={ [categories, [{ id: 1, name: 'Low to High' }, { id: 2, name: 'High to Low' }]] }
+              data={ tableData }
+              unSortedData={ unSortedData }
+              updateData={ setTableData }
+            />
           </Grid>
 
           <Table colCount={9} rowCount={15}>
             <Thead>
               <Tr>
-                <Th><Typography variant="sigma">SKU</Typography></Th>
+                <Th><Typography variant="sigma">ID</Typography></Th>
                 <Th><Typography variant="sigma">Icon</Typography></Th>
                 <Th><Typography variant="sigma">Product name</Typography></Th>
+                <Th><Typography variant="sigma">Slug</Typography></Th>
+                <Th><Typography variant="sigma">SKU</Typography></Th>
                 <Th><Typography variant="sigma">Category</Typography></Th>
                 <Th><Typography variant="sigma">Price</Typography></Th>
-                <Th><Typography variant="sigma">Stock</Typography></Th>
+                <Th><Typography variant="sigma">Quantity</Typography></Th>
                 <Th><Typography variant="sigma">Status</Typography></Th>
                 <Th><Typography variant="sigma">Discount</Typography></Th>
                 <Th><Typography variant="sigma">Published</Typography></Th>
@@ -186,6 +204,7 @@ const ProductsPage = () => {
                       updateRowData = { (id, data) => updateTableData(id, data) }
                       deleteRow = { (idRow) => deleteRow(idRow) }
                       allCategories = { categories }
+                      publishAlert={(value) => alertHandler(value)}
                     />
                   </Tr>
                 )
