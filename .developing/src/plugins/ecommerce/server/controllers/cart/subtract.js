@@ -27,27 +27,23 @@ module.exports = ({ strapi }) => async (ctx) => {
     });
 
   if (createdProduct) {
-    const newAmount = Number(createdProduct.amount) + Number(amount);
-    ctx.body = await strapi
-      .query('plugin::ecommerce.cart')
-      .update({
-        where: {
-          id: createdProduct.id,
-        },
-        data: {
-          amount: newAmount,
-        },
-      });
-  } else {
-    await strapi
-      .query('plugin::ecommerce.cart')
-      .create({
-        data: {
-          customerId,
-          productId,
-          amount,
-        }
-      });
+    const newAmount = Number(createdProduct.amount) - Number(amount);
+    if (newAmount > 0) {
+      ctx.body = await strapi
+        .query('plugin::ecommerce.cart')
+        .update({
+          where: {
+            id: createdProduct.id,
+          },
+          data: {
+            amount: newAmount,
+          },
+        });
+    } else {
+      ctx.body = await strapi
+        .query('plugin::ecommerce.cart')
+        .delete({ where: { id: createdProduct.id } });
+    }
   }
 
   ctx.body = await strapi
