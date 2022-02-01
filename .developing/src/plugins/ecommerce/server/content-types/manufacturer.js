@@ -31,6 +31,10 @@ module.exports = {
       targetField: 'name',
       configurable: false,
     },
+    shortDescription: {
+      type: 'text',
+      configurable: false,
+    },
     description: {
       type: 'richtext',
       configurable: false,
