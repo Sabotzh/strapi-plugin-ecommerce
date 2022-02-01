@@ -34,8 +34,12 @@ module.exports = {
       type: "string",
       configurable: false,
     },
-    method: {
+    paymentMethod: {
       type: "string",
+      configurable: false,
+    },
+    paymentData: {
+      type: 'json',
       configurable: false,
     },
     status: {

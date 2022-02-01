@@ -52,5 +52,9 @@ module.exports = {
       max: 50,
       configurable: false,
     },
+    attachedToUser: {
+      type: 'string',
+      configurable: false,
+    },
   },
 };
