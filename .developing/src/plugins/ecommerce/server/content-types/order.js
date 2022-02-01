@@ -31,11 +31,11 @@ module.exports = {
       configurable: false,
     },
     shippingAddress: {
-      type: "string",
+      type: 'string',
       configurable: false,
     },
     paymentMethod: {
-      type: "string",
+      type: 'string',
       configurable: false,
     },
     paymentData: {
@@ -43,11 +43,11 @@ module.exports = {
       configurable: false,
     },
     status: {
-      type: "string",
+      type: 'string',
       configurable: false,
     },
     time: {
-      type: "datetime",
+      type: 'datetime',
       configurable: false,
     }
   },
