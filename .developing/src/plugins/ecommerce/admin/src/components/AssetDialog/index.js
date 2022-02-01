@@ -23,6 +23,8 @@ const AssetDialog = ({
   const { formatMessage } = useIntl();
   const [ data, setData ] = useState([])
 
+  if (!initiallySelectedAssets) initiallySelectedAssets = []
+
   const getData = async () => {
     const qs = require('qs');
     const query = qs.stringify(
@@ -37,8 +39,6 @@ const AssetDialog = ({
       })
       .catch(() => setError(true));
   }
-
-  //const returnedImageData =
 
   useEffect(() => {
     getData().then()

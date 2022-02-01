@@ -125,7 +125,10 @@ const Create = ({ tableData, createCategory, closeHandler }) => {
               </Textarea>
             </GridItem>
             <GridItem col={6} paddingTop={5}>
-              <InputImage selectedAsset={image} onFinish ={(image) => setImage(...image)}/>
+              <InputImage
+                selectedAsset={image}
+                deleteSelectedAsset={() => setImage(null)}
+                onFinish ={(image) => setImage(...image)}/>
             </GridItem>
             <GridItem col={12}>
               <Wysiwyg
