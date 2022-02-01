@@ -31,6 +31,10 @@ module.exports = {
       targetField: 'name',
       configurable: false,
     },
+    shortDescription: {
+      type: 'text',
+      configurable: false,
+    },
     description: {
       type: 'richtext',
       configurable: false,
@@ -39,11 +43,13 @@ module.exports = {
       allowedTypes: [ 'images' ],
       type: 'media',
       multiple: false,
+      configurable: false,
     },
     additionImages: {
       allowedTypes: [ 'images' ],
       type: 'media',
       multiple: true,
+      configurable: false,
     },
     metaTitle: {
       type: 'string',

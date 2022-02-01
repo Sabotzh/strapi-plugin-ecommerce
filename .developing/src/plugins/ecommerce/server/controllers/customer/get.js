@@ -10,6 +10,28 @@ module.exports = ({ strapi }) => async (ctx) => {
     customer = await strapi
       .query('plugin::ecommerce.customer')
       .findOne({ where: { id: customerId } });
+  } else if (ctx.state.isAuthenticated) {
+    customer = await strapi
+      .query('plugin::ecommerce.customer')
+      .findOne({ where: { attachedToUser: ctx.state.user.id } });
+
+    if (!customer) {
+      customer = await strapi
+        .query('plugin::ecommerce.customer')
+        .create({
+          data: {
+            firstname: ctx.state.user.username,
+            middlename: '',
+            lastname: '',
+            isShadow: false,
+            email: ctx.state.user.email,
+            phone: '',
+            cart: [],
+            wishlist: [],
+            attachedToUser: ctx.state.user.id,
+          }
+        });
+    }
   }
 
   if (!customer) {
@@ -25,6 +47,7 @@ module.exports = ({ strapi }) => async (ctx) => {
           phone: '',
           cart: [],
           wishlist: [],
+          attachedToUser: null,
         }
       });
   }

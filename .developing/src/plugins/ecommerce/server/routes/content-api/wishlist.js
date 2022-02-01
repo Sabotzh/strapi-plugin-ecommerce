@@ -7,19 +7,19 @@ module.exports = [
   },
   {
     method: 'PUT',
-    path: '/wishlist',
+    path: '/wishlist/add',
     handler: 'wishlist.add',
     config: {},
   },
   {
     method: 'DELETE',
-    path: '/wishlist',
+    path: '/wishlist/:id',
     handler: 'wishlist.remove',
     config: {},
   },
   {
     method: 'DELETE',
-    path: '/wishlist/all',
+    path: '/wishlist',
     handler: 'wishlist.removeAll',
     config: {},
   },

@@ -16,7 +16,7 @@ module.exports = {
       visible: false,
     },
     'content-type-builder': {
-      visible: false,
+      visible: true,
     },
   },
   attributes: {
@@ -50,6 +50,10 @@ module.exports = {
       type: 'string',
       min: 4,
       max: 50,
+      configurable: false,
+    },
+    attachedToUser: {
+      type: 'string',
       configurable: false,
     },
   },

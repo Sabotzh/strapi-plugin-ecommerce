@@ -10,7 +10,11 @@ module.exports = ({ strapi }) => async (ctx) => {
     return;
   }
 
-  ctx.body = await strapi
+  await strapi
     .query('plugin::ecommerce.cart')
     .delete({ where: { id, customerId } });
+
+  ctx.body = await strapi
+    .query('plugin::ecommerce.cart')
+    .findMany({ where: { customerId } });
 };
