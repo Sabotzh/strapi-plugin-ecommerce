@@ -43,11 +43,13 @@ module.exports = {
       allowedTypes: [ 'images' ],
       type: 'media',
       multiple: false,
+      configurable: false,
     },
     additionImages: {
       allowedTypes: [ 'images' ],
       type: 'media',
       multiple: true,
+      configurable: false,
     },
     metaTitle: {
       type: 'string',
