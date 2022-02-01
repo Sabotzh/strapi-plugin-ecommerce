@@ -46,15 +46,15 @@ const CategoriesPage = () => {
   const getTableData = async () => {
     const qs = require('qs');
     const query = qs.stringify(
-      { orderBy: { id: 'asc' }, populate: ['parent_category'] },
+      { orderBy: { id: 'asc' }, populate: ['parentCategory', 'image'] },
       { encodeValuesOnly: true }
     );
-
     if (sortBy) return filteredData(sortBy)
 
     await request(`/ecommerce/categories?${query}`)
       .then(async (res) => {
         setTableData(res)
+        console.log(res)
         setCategories(res.map(el => el.name))
       });
   }
@@ -103,7 +103,7 @@ const CategoriesPage = () => {
   }
 
   return (
-    <main style={{position: 'relative'}}>
+    <main style={{ position: 'relative' }}>
       {
         alert &&
           <CustomAlert
@@ -159,13 +159,13 @@ const CategoriesPage = () => {
                 <Th><Typography variant="sigma">ID</Typography></Th>
                 <Th><Typography variant="sigma">Image</Typography></Th>
                 <Th><Typography variant="sigma">Name</Typography></Th>
+                <Th><Typography variant="sigma">Slug</Typography></Th>
                 <Th><Typography variant="sigma">Parent</Typography></Th>
                 <Th>
                   <Flex justifyContent={'center'}>
                     <Typography variant="sigma">Category level</Typography>
                   </Flex>
                 </Th>
-                <Th><Typography variant="sigma">Slug</Typography></Th>
                 <Th><Typography variant="sigma">Short description</Typography></Th>
                 <Th><Typography variant="sigma">Published</Typography></Th>
                 <Th><VisuallyHidden>Actions</VisuallyHidden></Th>

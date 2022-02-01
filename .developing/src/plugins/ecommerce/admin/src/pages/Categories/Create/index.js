@@ -14,9 +14,9 @@ import { Option, Select } from "@strapi/design-system/Select";
 import { ToggleCheckbox } from '@strapi/design-system/ToggleCheckbox';
 import { Button } from "@strapi/design-system/Button";
 import { Textarea } from '@strapi/design-system/Textarea';
-import Wysiwyg from "../../../components/Wysiwyg/Wysiwyg"
+import Wysiwyg from "../../../components/Wysiwyg/Wysiwyg";
 import validateCategories from "../../../utils/validate";
-
+import InputImage from "../../../components/InputImage"
 
 const Create = ({ tableData, createCategory, closeHandler }) => {
   const [ name, setName ] = useState('');
@@ -28,10 +28,14 @@ const Create = ({ tableData, createCategory, closeHandler }) => {
   const [ metaTitle, setMetaTitle ] = useState('');
   const [ metaKeywords, setMetaKeywords ] = useState('');
   const [ metaDescription, setMetaDescription ] = useState('');
+  const [ image, setImage ] = useState(null)
   const [ errors, setErrors] = useState({});
 
+  console.log('ff', image)
   const submitButtonHandler = () => {
-    let { success, validateErrors } = validateCategories({ name, shortDescription, description, metaTitle, metaKeywords, metaDescription }, errors, setErrors);
+    let { success, validateErrors } = validateCategories(
+      { name, shortDescription, description, metaTitle, metaKeywords, metaDescription },
+      errors, setErrors);
 
     tableData.forEach(el => {
       if (el.name === name) {
@@ -44,12 +48,14 @@ const Create = ({ tableData, createCategory, closeHandler }) => {
       closeHandler();
       createCategory({
         name,
-        parent_category: selectParent,
+        parentCategory: selectParent,
         slug,
+        image,
+        shortDescription,
         description,
-        meta_title: metaTitle,
-        meta_description: metaDescription,
-        meta_keywords: metaKeywords,
+        metaTitle,
+        metaDescription,
+        metaKeywords,
         publishedAt: published ? Date.now() : null,
       });
     } else {
@@ -113,10 +119,13 @@ const Create = ({ tableData, createCategory, closeHandler }) => {
                 </ToggleCheckbox>
               </Stack>
             </GridItem>
-            <GridItem col={12}>
+            <GridItem col={6}>
               <Textarea error={ errors.shortDescription } label="Short description" name="shortDescription" onChange={e => setShortDescription(e.target.value)}>
                 { shortDescription }
               </Textarea>
+            </GridItem>
+            <GridItem col={6} paddingTop={5}>
+              <InputImage selectedAsset={image} onFinish ={(image) => setImage(...image)}/>
             </GridItem>
             <GridItem col={12}>
               <Wysiwyg

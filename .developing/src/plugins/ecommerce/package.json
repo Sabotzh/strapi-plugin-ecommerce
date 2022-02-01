@@ -19,7 +19,6 @@
   "dependencies": {
     "axios": "^0.24.0",
     "jsonwebtoken": "^8.5.1",
-    "react-transition-group": "^4.4.2",
     "slugify": "^1.6.5"
   }
 }
