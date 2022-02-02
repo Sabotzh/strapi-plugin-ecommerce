@@ -23,7 +23,7 @@ const RowTable = ({ rowData, tableData, updateRowData, deleteRow, publishAlert }
   const [ published, setPublished ] = useState(rowData.publishedAt);
   const [ isVisible, setIsVisible ] = useState(false);
   const [ isDeleteVisible, setIsDeleteVisible ] = useState(false);
-  console.log(rowData)
+
   const publishUpdate = async () => {
     await request(`/ecommerce/categories/${rowData.id}/publish`, {
       method: 'PUT',
