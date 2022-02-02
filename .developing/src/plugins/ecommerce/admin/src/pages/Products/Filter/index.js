@@ -5,7 +5,7 @@ import { GridItem } from '@strapi/design-system/Grid';
 import Select from "../../../components/Select";
 import filter from "./filter"
 
-const Filter = ({ filterValues, data, unSortedData, updateData }) => {
+const Filter = ({ filterValues, unSortedData, updateData }) => {
   const [ category, setCategory ] = useState('');
   const [ price, setPrice ] = useState('');
 
@@ -18,11 +18,11 @@ const Filter = ({ filterValues, data, unSortedData, updateData }) => {
           values={ filterValues[0] }
           onChange={ (value) => {
             setCategory(value)
-            filter(data, unSortedData, updateData, value, price)
+            filter(unSortedData, updateData, value, price)
           } }
           onClear={ () => {
             setCategory(null)
-            filter(data, unSortedData, updateData, null, price)
+            filter(unSortedData, updateData, null, price)
           } }
         />
       </GridItem>
@@ -33,11 +33,11 @@ const Filter = ({ filterValues, data, unSortedData, updateData }) => {
           values={ filterValues[1] }
           onChange={ (value) => {
             setPrice(value)
-            filter(data, unSortedData, updateData, category, value)
+            filter(unSortedData, updateData, category, value)
           } }
           onClear={ () => {
             setPrice(null)
-            filter(data, unSortedData, updateData, category, null)
+            filter(unSortedData, updateData, category, null)
           } }
         />
       </GridItem>

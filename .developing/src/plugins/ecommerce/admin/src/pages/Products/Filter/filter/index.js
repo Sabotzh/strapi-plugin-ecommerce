@@ -1,9 +1,8 @@
-export default (data, unSortedData, updateData, category, price) => {
-  //const copyTableData = JSON.parse(JSON.stringify(data));
+export default (unSortedData, updateData, category, price) => {
 
   if (!category && !price) return updateData(unSortedData)
 
-  let filterData = data
+  let filterData = unSortedData
   if (!category) filterData = unSortedData
 
   if (category) {
@@ -16,10 +15,10 @@ export default (data, unSortedData, updateData, category, price) => {
     }))
   }
 
-  if (filterData === 'Low to High') {
+  if (price === 'Low to High') {
     filterData = filterData.sort((a, b) => a.price - b.price)
   }
-  if (filterData === 'High to Low') {
+  if (price === 'High to Low') {
     filterData = filterData.sort((a, b) => b.price - a.price)
   }
 

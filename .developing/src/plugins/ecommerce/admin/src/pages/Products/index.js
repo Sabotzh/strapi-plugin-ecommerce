@@ -33,8 +33,6 @@ const ProductsPage = () => {
   const [ unSortedData, setUnSortedData ] = useState([])
   const [ categories, setCategories ] = useState([]);
   const [ isVisible, setIsVisible ] = useState(false);
-  const [ sortByCategoriesValue, setSortByCategoriesValue ] = useState('');
-  const [ sortByPrice, setSortByPrice ] = useState('');
   const [ alert, setAlert ] = useState(null);
   const [ timerId, setTimerId ] = useState(null);
 
@@ -51,8 +49,6 @@ const ProductsPage = () => {
         console.log(res)
         setTableData(res)
         setUnSortedData(res)
-        // sort(res)
-
       });
   }
 
@@ -68,38 +64,6 @@ const ProductsPage = () => {
     await getCategories();
   }, []);
 
-  // const sort = (sortData = tableData) => {
-  //   const copyTableData = JSON.parse(JSON.stringify(sortData));
-  //   if (!sortByCategoriesValue && !sortByPrice) {
-  //     return setTableData(sortData)
-  //   } else {
-  //     setTableData(
-  //       copyTableData.sort((a, b) => {
-  //         let aInclude = false;
-  //         let bInclude = false;
-  //         a.categories.forEach(el => {
-  //           console.log(sortByCategoriesValue, el.name);
-  //           if (el.name === sortByCategoriesValue) aInclude = true;
-  //         });
-  //         b.categories.forEach(el => {
-  //           if (el.name === sortByCategoriesValue) bInclude = true;
-  //         });
-  //         if ((aInclude && bInclude) || (!aInclude && !bInclude)) {
-  //           if (sortByPrice) {
-  //             if (sortByPrice === 'Low to High') return a.price - b.price;
-  //             return b.price - a.price;
-  //           }
-  //           return 0;
-  //         }
-  //         if (!aInclude && bInclude) return 1;
-  //         if (aInclude && !bInclude) return -1;
-  //         return 0;
-  //       })
-  //     )
-  //   }
-  // }
-
-  // useEffect(() => sort(), [sortByPrice, sortByCategoriesValue]);
 
   const updateTableData = async (id, updateData) => {
     await request(`/ecommerce/products/${id}`, {
@@ -172,7 +136,6 @@ const ProductsPage = () => {
           <Grid gap={3}>
             <Filter
               filterValues={ [categories, [{ id: 1, name: 'Low to High' }, { id: 2, name: 'High to Low' }]] }
-              data={ tableData }
               unSortedData={ unSortedData }
               updateData={ setTableData }
             />
