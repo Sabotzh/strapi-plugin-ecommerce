@@ -5,6 +5,7 @@ import Plus from '@strapi/icons/Plus';
 import getTrad from '../../utils/getTrad';
 import Create from './Create';
 import RowTable from './RowTable';
+import CustomAlert from '../../components/Alert'
 
 import { useIntl } from 'react-intl';
 import { useFocusWhenNavigate, request  } from '@strapi/helper-plugin';
@@ -15,9 +16,8 @@ import { Table, Tbody, Th, Thead, Tr } from '@strapi/design-system/Table';
 import { Typography } from '@strapi/design-system/Typography';
 import { VisuallyHidden } from '@strapi/design-system/VisuallyHidden';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
-import { Button } from '@strapi/design-system/Button'
-import { Flex } from '@strapi/design-system/Flex'
-
+import { Button } from '@strapi/design-system/Button';
+import { Flex } from '@strapi/design-system/Flex';
 
 const CategoriesPage = () => {
   useFocusWhenNavigate();
@@ -32,9 +32,11 @@ const CategoriesPage = () => {
   const [ categories, setCategories ] = useState([])
   const [ sortBy, setSortBy ] = useState(null);
   const [ tableData, setTableData] = useState([]);
-  const [ error, setError ] = useState(false);
+  const [ alert, setAlert ] = useState(null);
+  const [ timerId, setTimerId ] = useState(null);
 
   const filteredData = async (filter) => {
+    if (!filter) filter = ''
     await request(`/ecommerce/categories/${filter}`)
       .then(async (res) => {
         setTableData(res)
@@ -44,24 +46,24 @@ const CategoriesPage = () => {
   const getTableData = async () => {
     const qs = require('qs');
     const query = qs.stringify(
-      { populate: ['parent_category'] }, {
-        encodeValuesOnly: true,
-      }
+      { orderBy: { id: 'asc' }, populate: ['parentCategory', 'image'] },
+      { encodeValuesOnly: true }
     );
-
     if (sortBy) return filteredData(sortBy)
 
     await request(`/ecommerce/categories?${query}`)
       .then(async (res) => {
         setTableData(res)
+        console.log(res)
         setCategories(res.map(el => el.name))
       });
   }
 
   const sortHandler = (value) => {
+    console.log(value)
     setSortBy(value)
-    if (value) return filteredData(value)
-    return getTableData()
+    filteredData(value)
+    //return getTableData()
   }
 
   const updateTableData = async (id, updateData) => {
@@ -90,8 +92,30 @@ const CategoriesPage = () => {
     }).then(() => getTableData());
   }
 
+  const alertHandler = (params) => {
+    if (timerId) clearTimeout(timerId)
+
+    const newTimerId = setTimeout(() => {
+      setAlert(null)
+    }, 3000)
+
+    setTimerId(newTimerId)
+    setAlert(params)
+  }
+
   return (
-    <main>
+    <main style={{ position: 'relative' }}>
+      {
+        alert &&
+          <CustomAlert
+            isActive={!!alert}
+            closeAlert={() => setAlert(null)}
+            title={alert.title}
+            variant={alert.variant}
+            text={alert.text}
+            timerId={timerId}
+          />
+      }
       <HeaderLayout
         primaryAction={
           <Button
@@ -136,13 +160,13 @@ const CategoriesPage = () => {
                 <Th><Typography variant="sigma">ID</Typography></Th>
                 <Th><Typography variant="sigma">Image</Typography></Th>
                 <Th><Typography variant="sigma">Name</Typography></Th>
+                <Th><Typography variant="sigma">Slug</Typography></Th>
                 <Th><Typography variant="sigma">Parent</Typography></Th>
                 <Th>
                   <Flex justifyContent={'center'}>
                     <Typography variant="sigma">Category level</Typography>
                   </Flex>
                 </Th>
-                <Th><Typography variant="sigma">Slug</Typography></Th>
                 <Th><Typography variant="sigma">Short description</Typography></Th>
                 <Th><Typography variant="sigma">Published</Typography></Th>
                 <Th><VisuallyHidden>Actions</VisuallyHidden></Th>
@@ -157,6 +181,7 @@ const CategoriesPage = () => {
                       rowData={ entry }
                       updateRowData={(id, data) => updateTableData(id, data)}
                       deleteRow={(idRow) => deleteRow(idRow)}
+                      publishAlert={(value) => alertHandler(value)}
                     />
                   </Tr>
                 })

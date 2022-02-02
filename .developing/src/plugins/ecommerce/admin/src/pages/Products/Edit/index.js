@@ -57,9 +57,8 @@ const Edit = ({ rowData, closeHandler, updateRowData, allCategories } ) => {
 
     if (success) {
       updateRowData(rowData.id, {
-        name, slug, sku, icon, categories, price, dateAvailable, quantity, min_quantity: minQuantity,
-        status, discount, description, short_description: shortDescription,
-        meta_description: metaDescription, meta_title: metaTitle, meta_keywords: metaKeywords
+        name, slug, sku, icon, categories, price, dateAvailable, quantity, minQuantity, status, discount,
+        description, shortDescription, metaDescription,metaTitle, metaKeywords
       });
       closeHandler();
     } else {

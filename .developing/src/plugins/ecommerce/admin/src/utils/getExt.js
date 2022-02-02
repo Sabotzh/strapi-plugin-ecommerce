@@ -1,0 +1,1 @@
+export const ext = ['.jpeg', '.jpg', '.png', '.svg', '.tiff', '.ico', '.dvu']

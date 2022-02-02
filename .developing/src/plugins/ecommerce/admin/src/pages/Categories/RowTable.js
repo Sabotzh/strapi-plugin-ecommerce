@@ -19,7 +19,7 @@ import { Button } from '@strapi/design-system/Button';
 import { request } from '@strapi/helper-plugin';
 
 
-const RowTable = ({ rowData, tableData, updateRowData, deleteRow }) => {
+const RowTable = ({ rowData, tableData, updateRowData, deleteRow, publishAlert }) => {
   const [ published, setPublished ] = useState(rowData.publishedAt);
   const [ isVisible, setIsVisible ] = useState(false);
   const [ isDeleteVisible, setIsDeleteVisible ] = useState(false);
@@ -27,13 +27,17 @@ const RowTable = ({ rowData, tableData, updateRowData, deleteRow }) => {
   const publishUpdate = async () => {
     await request(`/ecommerce/categories/${rowData.id}/publish`, {
       method: 'PUT',
-    });
+    })
+      .then(() => publishAlert({ variant: 'success', title: 'Success', text: 'Category published' }))
+      .catch(() => publishAlert({ variant: 'danger', title: 'Error', text: 'Category has not been published' }));
   }
 
   const unPublishUpdate = async () => {
     await request(`/ecommerce/categories/${rowData.id}/un-publish`, {
       method: 'PUT',
-    });
+    })
+      .then(() => publishAlert({ variant: 'success', title: 'Success', text: 'Category unpublished' }))
+      .catch(() => publishAlert({ variant: 'danger', title: 'Error', text: 'Category has not been unpublished' }));
   }
 
   return (
@@ -64,14 +68,14 @@ const RowTable = ({ rowData, tableData, updateRowData, deleteRow }) => {
         />
       </Dialog>
       <Td><Typography textColor="neutral800">{ rowData.id }</Typography></Td>
-      <Td><Avatar src={'rowData.image'} alt={ rowData.name }/></Td>
+      <Td><Avatar src={rowData.image?.url} alt={ rowData.name }/></Td>
       <Td><Typography textColor="neutral800">{ rowData.name }</Typography></Td>
-      <Td><Typography textColor="neutral800">{ rowData.parent_category ? rowData.parent_category.name : null }</Typography></Td>
-      <Td><Typography textColor="neutral800">
-        <Flex justifyContent={'center'}>{ rowData.category_level }</Flex>
-      </Typography></Td>
       <Td><Typography textColor="neutral800">{ rowData.slug }</Typography></Td>
-      <Td><Typography textColor="neutral800">{ rowData.short_description }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ rowData.parentCategory?.name }</Typography></Td>
+      <Td><Typography textColor="neutral800">
+        <Flex justifyContent={'center'}>{ rowData.categoryLevel }</Flex>
+      </Typography></Td>
+      <Td><Typography textColor="neutral800">{ rowData.shortDescription }</Typography></Td>
       <Td>
         <Switch label="Published" selected={ !!published } onChange = {
           () => {
