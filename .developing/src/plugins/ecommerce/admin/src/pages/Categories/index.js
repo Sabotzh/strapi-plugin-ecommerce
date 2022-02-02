@@ -18,6 +18,8 @@ import { VisuallyHidden } from '@strapi/design-system/VisuallyHidden';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
 import { Button } from '@strapi/design-system/Button';
 import { Flex } from '@strapi/design-system/Flex';
+import { auth } from '@strapi/helper-plugin';
+console.log(auth.getToken())
 
 
 const CategoriesPage = () => {

@@ -19,7 +19,8 @@ import {
 
 export const PreviewBox = ({
   asset,
-  onDeleteAsset
+  onDeleteAsset,
+  canCopyLink
 }) => {
   const { width, height } = asset
   const { formatMessage } = useIntl();
@@ -30,35 +31,39 @@ export const PreviewBox = ({
       <Box style={{ position: 'relative' }} hasRadius background={"neutral150"} borderColor="neutral200">
         <ActionRow paddingLeft={3} paddingRight={3} justifyContent="flex-end">
           <Stack size={1} horizontal>
-            <IconButton
-              label={formatMessage({
-                id: getTrad('app.utils.delete'),
-                defaultMessage: 'Delete',
-              })}
-              icon={<Trash />}
-              onClick={() => onDeleteAsset()}
-            />
-
-            <CopyToClipboard
-              text={prefixFileUrlWithBackendUrl(asset.url)}
-              onCopy={() => {
-                toggleNotification({
-                  type: 'success',
-                  message: {
-                    id: 'notification.link-copied',
-                    defaultMessage: 'Link copied into the clipboard',
-                  },
-                });
-              }}
-            >
+            {onDeleteAsset && (
               <IconButton
                 label={formatMessage({
-                  id: getTrad('control-card.copy-link'),
-                  defaultMessage: 'Copy link',
+                  id: getTrad('app.utils.delete'),
+                  defaultMessage: 'Delete',
                 })}
-                icon={<LinkIcon />}
+                icon={<Trash/>}
+                onClick={() => onDeleteAsset()}
               />
-            </CopyToClipboard>
+            )}
+
+            { canCopyLink && (
+              <CopyToClipboard
+                text={prefixFileUrlWithBackendUrl(asset.url)}
+                onCopy={() => {
+                  toggleNotification({
+                    type: 'success',
+                    message: {
+                      id: 'notification.link-copied',
+                      defaultMessage: 'Link copied into the clipboard',
+                    },
+                  });
+                }}
+              >
+                <IconButton
+                  label={formatMessage({
+                    id: getTrad('control-card.copy-link'),
+                    defaultMessage: 'Copy link',
+                  })}
+                  icon={<LinkIcon/>}
+                />
+              </CopyToClipboard>)
+            }
           </Stack>
         </ActionRow>
 
@@ -91,10 +96,12 @@ export const PreviewBox = ({
 PreviewBox.defaultProps = {
   replacementFile: undefined,
   trackedLocation: undefined,
+  canCopyLink: true
 };
 
 PreviewBox.propTypes = {
   replacementFile: PropTypes.instanceOf(File),
   asset: PropTypes.func.isRequired,
   onDeleteAsset: PropTypes.func.isRequired,
+  canCopyLink: PropTypes.bool
 };

@@ -14,7 +14,7 @@ import getTrad from "../../utils/getTrad";
 import validateCategories from "../../utils/validate";
 import formatBytes from "../../utils/formatBytes";
 
-export const EditAssetDialog = ({ asset, onClose, onDeleteAsset }) => {
+export const EditAssetDialog = ({ asset, onClose, onDeleteAsset, canCopyLink }) => {
   const [ name, setName ] = useState(asset.name)
   const [ alt, setAlt ] = useState(asset.alternativeText)
   const [ caption, setCaption ] = useState(asset.caption)
@@ -28,6 +28,11 @@ export const EditAssetDialog = ({ asset, onClose, onDeleteAsset }) => {
 
     const updateImage = async(data) => {
       console.log('UPDATED')
+      console.log(
+        'alternativeText:', asset.alternativeText,
+        'caption:', asset.caption,
+        'name:', asset.name
+      )
       // await request(`/upload/files?id=${asset.id}`,{
       //   method: 'POST',
       //   body: data
@@ -50,7 +55,7 @@ export const EditAssetDialog = ({ asset, onClose, onDeleteAsset }) => {
   }
 
   return (
-    <ModalLayout onClose={onClose} labelledBy="title">
+    <ModalLayout onClose={() => onClose(asset)} labelledBy="title">
       <ModalHeader>
         <Typography fontWeight="bold" textColor="neutral800" as="h2" id="title">
           {formatMessage({ id: getTrad('modal.edit.title'), defaultMessage: 'Details' })}
@@ -58,70 +63,73 @@ export const EditAssetDialog = ({ asset, onClose, onDeleteAsset }) => {
       </ModalHeader>
       <ModalBody>
         <Grid gap={4}>
+          {onDeleteAsset && (
+            <GridItem xs={12} col={6}>
+              <PreviewBox
+                asset={asset}
+                onDeleteAsset={() => onDeleteAsset(asset.id)}
+                canCopyLink={canCopyLink}
+                // replacementFile={replacementFile}
+              />
+            </GridItem>
+          )}
           <GridItem xs={12} col={6}>
-            <PreviewBox
-              asset={asset}
-              onDeleteAsset={onDeleteAsset}
-              // replacementFile={replacementFile}
-            />
-          </GridItem>
-          <GridItem xs={12} col={6}>
-              <Stack size={3}>
-                <AssetMeta
-                  size={formatBytes(asset.size)}
-                  dimension={
-                    asset.height && asset.width ? `${asset.height}✕${asset.width}` : ''
-                  }
-                  date={formatDate(new Date(asset.createdAt))}
-                  extension={getFileExtension(asset.ext)}
-                />
+            <Stack size={3}>
+              <AssetMeta
+                size={formatBytes(asset.size)}
+                dimension={
+                  asset.height && asset.width ? `${asset.height}✕${asset.width}` : ''
+                }
+                date={formatDate(new Date(asset.createdAt))}
+                extension={getFileExtension(asset.ext)}
+              />
 
-                <TextInput
-                  size="S"
-                  label={formatMessage({
-                    id: getTrad('form.input.label.file-name'),
-                    defaultMessage: 'File name',
-                  })}
-                  name="name"
-                  error={ errors.name }
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
+              <TextInput
+                size="S"
+                label={formatMessage({
+                  id: getTrad('form.input.label.file-name'),
+                  defaultMessage: 'File name',
+                })}
+                name="name"
+                error={ errors.name }
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
 
-                <TextInput
-                  size="S"
-                  label={formatMessage({
-                    id: getTrad('form.input.label.file-alt'),
-                    defaultMessage: 'Alternative text',
-                  })}
-                  name="alternativeText"
-                  hint={formatMessage({
-                    id: getTrad({ id: getTrad('form.input.decription.file-alt') }),
-                    defaultMessage: 'This text will be displayed if the asset can’t be shown.',
-                  })}
-                  value={alt}
-                  error={ errors.alt }
-                  onChange={(e) => setAlt(e.target.value)}
-                />
+              <TextInput
+                size="S"
+                label={formatMessage({
+                  id: getTrad('form.input.label.file-alt'),
+                  defaultMessage: 'Alternative text',
+                })}
+                name="alternativeText"
+                hint={formatMessage({
+                  id: getTrad({ id: getTrad('form.input.decription.file-alt') }),
+                  defaultMessage: 'This text will be displayed if the asset can’t be shown.',
+                })}
+                value={alt}
+                error={ errors.alt }
+                onChange={(e) => setAlt(e.target.value)}
+              />
 
-                <TextInput
-                  size="S"
-                  label={formatMessage({
-                    id: getTrad('form.input.label.file-caption'),
-                    defaultMessage: 'Caption',
-                  })}
-                  name="caption"
-                  value={caption}
-                  error={errors.caption}
-                  onChange={(e) => setCaption(e.target.value)}
-                />
-              </Stack>
+              <TextInput
+                size="S"
+                label={formatMessage({
+                  id: getTrad('form.input.label.file-caption'),
+                  defaultMessage: 'Caption',
+                })}
+                name="caption"
+                value={caption}
+                error={errors.caption}
+                onChange={(e) => setCaption(e.target.value)}
+              />
+            </Stack>
           </GridItem>
         </Grid>
       </ModalBody>
       <ModalFooter
         startActions={
-          <Button onClick={onClose} variant="tertiary">
+          <Button onClick={() => onClose(asset)} variant="tertiary">
             {formatMessage({ id: 'cancel', defaultMessage: 'Cancel' })}
           </Button>
         }
@@ -145,3 +153,16 @@ export const EditAssetDialog = ({ asset, onClose, onDeleteAsset }) => {
     </ModalLayout>
   )
 }
+
+EditAssetDialog.defaultProps = {
+  onDeleteAsset: undefined,
+  canCopyLink: true,
+};
+
+EditAssetDialog.propTypes = {
+  asset: PropTypes.object.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onDeleteAsset: PropTypes.func,
+  canCopyLink: PropTypes.bool
+};
+

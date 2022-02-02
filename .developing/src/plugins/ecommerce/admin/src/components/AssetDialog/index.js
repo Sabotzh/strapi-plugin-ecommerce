@@ -1,56 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { ModalLayout } from '@strapi/design-system/ModalLayout';
+import { ModalLayout, ModalBody } from '@strapi/design-system/ModalLayout';
 import { Flex } from '@strapi/design-system/Flex';
 import { Box } from '@strapi/design-system/Box';
 import { useIntl } from 'react-intl';
+import { Button } from '@strapi/design-system/Button';
+import { Divider } from '@strapi/design-system/Divider';
+import { Badge } from '@strapi/design-system/Badge';
 import { Loader } from '@strapi/design-system/Loader';
-import { useSelectionState, request, AnErrorOccurred } from '@strapi/helper-plugin';
+import { useSelectionState, AnErrorOccurred } from '@strapi/helper-plugin';
 import getTrad from '../../utils/getTrad';
 import { DialogTitle } from './DialogTitle';
 import { DialogFooter } from './DialogFooter';
 import { ImageList } from './ImageList';
-import { ext } from '../../utils/getExt'
+import { Tabs, Tab, TabGroup, TabPanels, TabPanel } from '@strapi/design-system/Tabs';
 
 const AssetDialog = ({
   onClose,
   initiallySelectedAssets,
   size,
-  onFinish
+  onFinish,
+  uploadOpen,
+  loading,
+  assets,
+  deleteAsset,
+  error,
+  onEdit,
 }) => {
-  const [ loading, setLoading ] = useState(true)
-  const [ error, setError ] = useState(false)
   const { formatMessage } = useIntl();
-  const [ data, setData ] = useState([])
-
-  if (!initiallySelectedAssets) initiallySelectedAssets = []
-
-  const getData = async () => {
-    const qs = require('qs');
-    const query = qs.stringify(
-      { filters: { ext: { $in: ext }}},
-      { encodeValuesOnly: true }
-    );
-
-    await request(`/upload/files?${query}`)
-      .then((res) => {
-        setData(res.results)
-        setLoading(false)
-      })
-      .catch(() => setError(true));
-  }
-
-  useEffect(() => {
-    getData().then()
-  }, [])
-
-  if (data.length > 0) {
-    initiallySelectedAssets = [data[0]];
-  }
-
   const [selectedAssets, { selectOnly }] = useSelectionState(
     'id',
     initiallySelectedAssets
+  );
+
+  const [initialSelectedTabIndex, setInitialSelectedTabIndex] = useState(
+    selectedAssets.length > 0 ? 1 : 0
   );
 
   const handleSelectAsset = asset => {
@@ -87,15 +71,68 @@ const AssetDialog = ({
   return (
     <ModalLayout onClose={onClose} labelledBy="asset-dialog-title">
       <DialogTitle />
-      <Box paddingLeft={8} paddingRight={8} paddingBottom={6} paddingTop={6}>
-        <ImageList
-          allowedTypes
-          assets={data}
-          selectedAssets={selectedAssets}
-          onSelectAsset={handleSelectAsset}
-          size={size}
-        />
-      </Box>
+
+      <TabGroup
+        label={formatMessage({
+          id: getTrad('tabs.title'),
+          defaultMessage: 'How do you want to upload your assets?',
+        })}
+        variant="simple"
+        initialSelectedTabIndex={initialSelectedTabIndex}
+        onTabChange={() => setInitialSelectedTabIndex(0)}
+      >
+        <Flex paddingLeft={8} paddingRight={8} paddingTop={6} justifyContent="space-between">
+          <Tabs>
+            <Tab>
+              {formatMessage({
+                id: getTrad('modal.nav.browse'),
+                defaultMessage: 'Browse',
+              })}
+            </Tab>
+            <Tab>
+              {formatMessage({
+                id: getTrad('modal.header.select-files'),
+                defaultMessage: 'Selected files',
+              })}
+              <Badge marginLeft={2}>{selectedAssets.length}</Badge>
+            </Tab>
+          </Tabs>
+
+          <Button onClick={uploadOpen}>
+            {formatMessage({
+              id: getTrad('modal.upload-list.sub-header.button'),
+              defaultMessage: 'Add more assets',
+            })}
+          </Button>
+        </Flex>
+        <Divider />
+        <TabPanels>
+          <TabPanel>
+            <ModalBody>
+              <Box paddingTop={3}>
+                <ImageList
+                  assets={assets}
+                  selectedAssets={selectedAssets}
+                  onSelectAsset={handleSelectAsset}
+                  onDeleteAsset={deleteAsset}
+                  onEditAsset={onEdit}
+                />
+              </Box>
+            </ModalBody>
+          </TabPanel>
+          <TabPanel>
+            <ModalBody>
+              <ImageList
+                allowedTypes
+                assets={selectedAssets}
+                selectedAssets={selectedAssets}
+                onSelectAsset={handleSelectAsset}
+                size={size}
+              />
+            </ModalBody>
+          </TabPanel>
+        </TabPanels>
+      </TabGroup>
       <DialogFooter onClose={onClose} onFinish={() => {
         onClose()
         onFinish(selectedAssets)
@@ -110,6 +147,9 @@ AssetDialog.defaultProps = {
   allowedTypes: [],
   initiallySelectedAssets: [],
   size: 'S',
+  assets: [],
+  loading: false,
+  error: false
 };
 
 AssetDialog.propTypes = {
@@ -118,4 +158,6 @@ AssetDialog.propTypes = {
   onFinish: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   size: PropTypes.oneOf(['S', 'M']),
+  assets: PropTypes.array,
+  deleteAsset: PropTypes.func
 };

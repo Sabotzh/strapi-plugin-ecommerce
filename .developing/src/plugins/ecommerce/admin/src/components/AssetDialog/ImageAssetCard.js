@@ -1,6 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import getTrad from '../../utils/getTrad';
+
+import PropTypes from 'prop-types';
+import Pencil from '@strapi/icons/Pencil';
+import { IconButton } from '@strapi/design-system/IconButton';
+import { useIntl } from 'react-intl';
 import {
   Card,
   CardAction,
@@ -13,10 +18,7 @@ import {
   CardTitle,
   CardSubtitle,
 } from '@strapi/design-system/Card';
-import { IconButton } from '@strapi/design-system/IconButton';
-import Pencil from '@strapi/icons/Pencil';
-import { useIntl } from 'react-intl';
-import getTrad from '../../utils/getTrad';
+
 
 const Extension = styled.span`
   text-transform: uppercase;
@@ -36,25 +38,21 @@ export const ImageAssetCard = ({
   alt,
 }) => {
   const { formatMessage } = useIntl();
-
-  // Prevents the browser from caching the URL for all sizes and allow react-query to make a smooth update
-  // instead of a full refresh
   const optimizedCachingThumbnail =
     width && height ? `${thumbnail}?width=${width}&height=${height}` : thumbnail;
 
   let handleSelect = onSelect ? () => onSelect(asset) : undefined;
-  const fileType = asset.mime.split('/')[0];
 
   return (
     <Card>
       <CardHeader>
-        <CardCheckbox value={selected} onValueChange={handleSelect} />
+        {onSelect && <CardCheckbox value={selected} onValueChange={handleSelect}/>}
         {onEdit && (
           <CardAction position="end">
             <IconButton
               label={formatMessage({ id: getTrad('control-card.edit'), defaultMessage: 'Edit' })}
               icon={<Pencil />}
-              onClick={onEdit}
+              onClick={() => onEdit(asset)}
             />
           </CardAction>
         )}

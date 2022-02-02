@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Box } from '@strapi/design-system/Box';
 import { KeyboardNavigable } from '@strapi/design-system/KeyboardNavigable';
 import { ImageAssetCard } from "./ImageAssetCard";
 import { getFileExtension, prefixFileUrlWithBackendUrl } from '@strapi/helper-plugin'
+import {EditAssetDialog} from "../EditAssetDialog";
 
 const GridColSize = {
   S: 180,
@@ -18,12 +19,11 @@ const GridLayout = styled(Box)`
 `;
 
 export const ImageList = ({
-    allowedTypes,
-    assets,
-    onEditAsset,
-    onSelectAsset,
-    selectedAssets,
-    size,
+  assets,
+  onSelectAsset,
+  selectedAssets,
+  size,
+  onEditAsset,
   }) => {
 
   return (
@@ -35,21 +35,22 @@ export const ImageList = ({
           );
 
           return (
-            <ImageAssetCard
-              id={asset.id}
-              key={asset.id}
-              name={asset.name}
-              asset={asset}
-              alt={asset.alternativeText || asset.name}
-              extension={getFileExtension(asset.ext)}
-              height={asset.height}
-              width={asset.width}
-              thumbnail={prefixFileUrlWithBackendUrl(asset?.formats?.thumbnail?.url || asset.url)}
-              // onEdit={() => onEdit(asset)}
-              onSelect={onSelectAsset}
-              selected={isSelected}
-              size={size}
-            />
+            <>
+              <ImageAssetCard
+                id={asset.id}
+                key={asset.id}
+                name={asset.name}
+                asset={asset}
+                alt={asset.alternativeText || asset.name}
+                extension={getFileExtension(asset.ext)}
+                height={asset.height}
+                width={asset.width}
+                thumbnail={prefixFileUrlWithBackendUrl(asset?.formats?.thumbnail?.url || asset.url)}
+                onEdit={onEditAsset}
+                onSelect={onSelectAsset}
+                selected={isSelected}
+              />
+            </>
           );
         })}
 
@@ -66,17 +67,15 @@ export const ImageList = ({
 };
 
 ImageList.defaultProps = {
-  allowedTypes: ['images', 'files', 'videos'],
   onEditAsset: undefined,
-  size: 'M',
-  onReorderAsset: undefined,
+  selectedAsset: [],
+  size: 'S',
 };
 
 ImageList.propTypes = {
-  allowedTypes: PropTypes.arrayOf(PropTypes.string),
   assets: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   onEditAsset: PropTypes.func,
+  selectedAsset: PropTypes.array,
   onSelectAsset: PropTypes.func.isRequired,
   size: PropTypes.oneOf(['S', 'M']),
-  onReorderAsset: PropTypes.func,
 };
