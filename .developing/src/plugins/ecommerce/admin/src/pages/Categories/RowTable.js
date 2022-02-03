@@ -20,7 +20,6 @@ import { request } from '@strapi/helper-plugin';
 
 
 const RowTable = ({ rowData, tableData, updateRowData, deleteRow, publishAlert }) => {
-  console.log(rowData)
   const [ published, setPublished ] = useState(rowData.publishedAt);
   const [ isVisible, setIsVisible ] = useState(false);
   const [ isDeleteVisible, setIsDeleteVisible ] = useState(false);

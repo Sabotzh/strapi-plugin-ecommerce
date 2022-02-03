@@ -69,7 +69,6 @@ const OrdersPage = () => {
     setSortBy(sortCategory);
     sortCategory = sortCategory.toLowerCase();
     setTableData(tableData.sort((a, b) => {
-      console.log(a.status, sortCategory);
       if (a.status === sortCategory && b.status === sortCategory) return 0;
       if (a.status === sortCategory && b.status !== sortCategory) return -1;
       return 1;

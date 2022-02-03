@@ -46,7 +46,6 @@ const ProductsPage = () => {
 
     await request(`/ecommerce/products?${query}`)
       .then((res) => {
-        console.log(res)
         setTableData(res)
         setUnSortedData(res)
       });

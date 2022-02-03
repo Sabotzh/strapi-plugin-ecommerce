@@ -18,6 +18,7 @@ import { VisuallyHidden } from '@strapi/design-system/VisuallyHidden';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
 import { Button } from '@strapi/design-system/Button';
 import { Flex } from '@strapi/design-system/Flex';
+import axios from "axios";
 
 const CategoriesPage = () => {
   useFocusWhenNavigate();
@@ -31,12 +32,14 @@ const CategoriesPage = () => {
   const [ isCreateVisible, setIsCreateVisible ] = useState(false);
   const [ categories, setCategories ] = useState([])
   const [ sortBy, setSortBy ] = useState(null);
+  const [ unsortedSortedData, setUnsortedData ] = useState([])
   const [ tableData, setTableData] = useState([]);
   const [ alert, setAlert ] = useState(null);
   const [ timerId, setTimerId ] = useState(null);
 
   const filteredData = async (filter) => {
-    if (!filter) filter = ''
+    if (!filter) return setTableData(unsortedSortedData)
+
     await request(`/ecommerce/categories/${filter}`)
       .then(async (res) => {
         setTableData(res)
@@ -54,7 +57,7 @@ const CategoriesPage = () => {
     await request(`/ecommerce/categories?${query}`)
       .then(async (res) => {
         setTableData(res)
-        console.log(res)
+        setUnsortedData(res)
         setCategories(res.map(el => el.name))
       });
   }
@@ -62,7 +65,6 @@ const CategoriesPage = () => {
   const sortHandler = (value) => {
     setSortBy(value)
     filteredData(value)
-    //return getTableData()
   }
 
   const updateTableData = async (id, updateData) => {
