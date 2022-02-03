@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 const qs = require('qs');
-
-import RowTable from "./RowTable";
 import { useIntl } from 'react-intl';
-import Plus from '@strapi/icons/Plus';
 
+import RowTable from './RowTable';
+import Create from './Create'
+import getTrad from '../../utils/getTrad';
+
+import Plus from '@strapi/icons/Plus';
+import { Loader } from '@strapi/design-system/Loader';
+import { Flex } from '@strapi/design-system/Flex';
 import { useFocusWhenNavigate } from '@strapi/helper-plugin';
 import { HeaderLayout, ContentLayout } from '@strapi/design-system/Layout';
 import { Button } from '@strapi/design-system/Button';
@@ -14,12 +18,14 @@ import { VisuallyHidden } from "@strapi/design-system/VisuallyHidden";
 import { Stack } from '@strapi/design-system/Stack';
 import { request } from '@strapi/helper-plugin';
 
-import getTrad from '../../utils/getTrad';
 
 const ManufacturerPage = () => {
-  const [ data, setData ] = useState([])
-  console.log(data)
   useFocusWhenNavigate();
+
+  const [ data, setData ] = useState([])
+  const [ createVisible, setCreateVisible ] = useState(false)
+  const [ loader, setLoader ] = useState(false)
+
 
   const { formatMessage } = useIntl();
   const title = formatMessage({
@@ -28,12 +34,31 @@ const ManufacturerPage = () => {
   });
 
   const getData = async () => {
+    setLoader(true)
     const query = qs.stringify(
       { orderBy: { id: 'asc' }, populate: ['image'] },
       { encodeValuesOnly: true }
     );
     await request(`/ecommerce/manufacturer?${query}`)
-      .then((res) => setData(res))
+      .then((res) => {
+        setData(res)
+        setLoader(false)
+      })
+  }
+
+  const create = async(data) => {
+    await request(`/ecommerce/manufacturer`, {
+      method: 'POST',
+      body: data,
+    }).then(() => getData())
+  }
+
+  const update = async(id, data) => {
+    console.log('update', data)
+    await request(`/ecommerce/manufacturer/${id}`, {
+      method: 'PUT',
+      body: data
+    }).then(() => getData())
   }
 
   useEffect(() => {
@@ -47,7 +72,7 @@ const ManufacturerPage = () => {
           primaryAction={
             <Button
               startIcon={ <Plus/> }
-              onClick={ () => console.log('Add') }
+              onClick={ () => setCreateVisible(true) }
             >
               Add product
             </Button>
@@ -58,34 +83,53 @@ const ManufacturerPage = () => {
             defaultMessage: 'Configure the ecommerce plugin',
           })}
         />
+        { createVisible && (
+          <Create
+            data={data}
+            onClose={() => setCreateVisible(false)}
+            onCreate={ create }
+          />
+        )}
         <ContentLayout>
           <Stack size={7}>
-            <Table colCount={9} rowCount={15}>
-              <Thead>
-                <Tr>
-                  <Th><Typography variant="sigma">ID</Typography></Th>
-                  <Th><Typography variant="sigma">Image</Typography></Th>
-                  <Th><Typography variant="sigma">Name</Typography></Th>
-                  <Th><Typography variant="sigma">Slug</Typography></Th>
-                  <Th><Typography variant="sigma">Short Description</Typography></Th>
-                  <Th><Typography variant="sigma">Published</Typography></Th>
-                  <Th><VisuallyHidden>Actions</VisuallyHidden></Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {
-                  data.map(entry =>
-                    <Tr key={entry.id}>
-                      <RowTable
-                        data = { entry }
-                        onDeleteData={ () => console.log("DELETE") }
-                        onUpdateData={ () => console.log("UPDATE") }
-                      />
-                    </Tr>
-                  )
-                }
-              </Tbody>
-            </Table>
+            { loader
+              ?
+                <Flex
+                  width={'100%'}
+                  height={'300px'}
+                  justifyContent={'center'}
+                  alignItems={'center'}
+                >
+                  <Loader/>
+                </Flex>
+              : <Table colCount={9} rowCount={15}>
+                <Thead>
+                  <Tr>
+                    <Th><Typography variant="sigma">ID</Typography></Th>
+                    <Th><Typography variant="sigma">Image</Typography></Th>
+                    <Th><Typography variant="sigma">Name</Typography></Th>
+                    <Th><Typography variant="sigma">Slug</Typography></Th>
+                    <Th><Typography variant="sigma">Short Description</Typography></Th>
+                    <Th><Typography variant="sigma">Published</Typography></Th>
+                    <Th><VisuallyHidden>Actions</VisuallyHidden></Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {
+                    data.map(entry =>
+                      <Tr key={entry.id}>
+                        <RowTable
+                          data = { entry }
+                          onDeleteData={ () => console.log("DELETE") }
+                          onUpdateData={ update }
+                        />
+                      </Tr>
+                    )
+                  }
+                </Tbody>
+              </Table>
+
+            }
           </Stack>
         </ContentLayout>
       </main>

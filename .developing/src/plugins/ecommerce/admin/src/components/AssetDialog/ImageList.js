@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Box } from '@strapi/design-system/Box';
 import { KeyboardNavigable } from '@strapi/design-system/KeyboardNavigable';
-import { ImageAssetCard } from "./ImageAssetCard";
+import { ImageAssetCard } from './ImageAssetCard';
 import { getFileExtension, prefixFileUrlWithBackendUrl } from '@strapi/helper-plugin'
-import {EditAssetDialog} from "../EditAssetDialog";
 
 const GridColSize = {
   S: 180,

@@ -6,7 +6,7 @@ import pluginId from '../../pluginId';
 import { useIntl } from 'react-intl';
 import { Helmet } from 'react-helmet';
 
-import { useFocusWhenNavigate, LoadingIndicatorPage } from '@strapi/helper-plugin';
+import { LoadingIndicatorPage } from '@strapi/helper-plugin';
 import { Layout } from '@strapi/design-system/Layout';
 
 import getTrad from '../../utils/getTrad';
@@ -21,7 +21,7 @@ import Orders from '../Orders';
 import Settings from '../Settings';
 
 const App = () => {
-  useFocusWhenNavigate();
+  // useFocusWhenNavigate();
 
   const { formatMessage } = useIntl();
   const title = formatMessage({
