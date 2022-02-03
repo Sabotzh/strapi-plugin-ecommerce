@@ -7,6 +7,7 @@ import Categories from './Icons/Categories';
 import Customers from './Icons/Customers';
 import Orders from './Icons/Orders';
 import Settings from './Icons/Settings';
+import Manufacturer from './Icons/Manufacturer';
 
 import getTrad from '../../utils/getTrad';
 import { FormattedMessage } from 'react-intl';
@@ -82,9 +83,10 @@ const Navigation = () => {
     { id: 1, label: getTrad('menu.dashboard.name'), link: 'dashboard', icon: <Dashboard /> },
     { id: 2, label: getTrad('menu.products.name'), link: 'products', icon: <Products /> },
     { id: 3, label: getTrad('menu.categories.name'), link: 'categories', icon: <Categories /> },
-    { id: 4, label: getTrad('menu.customers.name'), link: 'customers', icon: <Customers /> },
-    { id: 5, label: getTrad('menu.orders.name'), link: 'orders', icon: <Orders /> },
-    { id: 6, label: getTrad('menu.settings.name'), link: 'settings', icon: <Settings /> },
+    { id: 4, label: getTrad('menu.manufacturer.name'), link: 'manufacturer', icon: <Manufacturer /> },
+    { id: 5, label: getTrad('menu.customers.name'), link: 'customers', icon: <Customers /> },
+    { id: 6, label: getTrad('menu.orders.name'), link: 'orders', icon: <Orders /> },
+    { id: 7, label: getTrad('menu.settings.name'), link: 'settings', icon: <Settings /> },
   ];
 
   return (
