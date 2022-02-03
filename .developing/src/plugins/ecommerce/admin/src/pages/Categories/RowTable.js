@@ -8,7 +8,7 @@ import Edit from './Edit';
 
 import { Td } from '@strapi/design-system/Table';
 import { Typography } from '@strapi/design-system/Typography';
-import { Avatar } from '@strapi/design-system/Avatar';
+import { Avatar, Initials } from '@strapi/design-system/Avatar';
 import { Switch } from '@strapi/design-system/Switch';
 import { Flex } from '@strapi/design-system/Flex';
 import { IconButton } from '@strapi/design-system/IconButton';
@@ -20,6 +20,7 @@ import { request } from '@strapi/helper-plugin';
 
 
 const RowTable = ({ rowData, tableData, updateRowData, deleteRow, publishAlert }) => {
+  console.log(rowData)
   const [ published, setPublished ] = useState(rowData.publishedAt);
   const [ isVisible, setIsVisible ] = useState(false);
   const [ isDeleteVisible, setIsDeleteVisible ] = useState(false);
@@ -68,7 +69,12 @@ const RowTable = ({ rowData, tableData, updateRowData, deleteRow, publishAlert }
         />
       </Dialog>
       <Td><Typography textColor="neutral800">{ rowData.id }</Typography></Td>
-      <Td><Avatar src={rowData.image?.url} alt={ rowData.name }/></Td>
+      <Td>
+        {rowData.image?.url
+          ? <Avatar src={rowData.image?.url} alt={rowData.name}/>
+          : <Initials>{ rowData.name[0] }</Initials>
+        }
+      </Td>
       <Td><Typography textColor="neutral800">{ rowData.name }</Typography></Td>
       <Td><Typography textColor="neutral800">{ rowData.slug }</Typography></Td>
       <Td><Typography textColor="neutral800">{ rowData.parentCategory?.name }</Typography></Td>

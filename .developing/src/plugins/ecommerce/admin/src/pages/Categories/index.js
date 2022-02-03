@@ -60,7 +60,6 @@ const CategoriesPage = () => {
   }
 
   const sortHandler = (value) => {
-    console.log(value)
     setSortBy(value)
     filteredData(value)
     //return getTableData()

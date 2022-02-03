@@ -31,7 +31,6 @@ const Create = ({ tableData, createCategory, closeHandler }) => {
   const [ image, setImage ] = useState(null)
   const [ errors, setErrors] = useState({});
 
-  console.log('ff', image)
   const submitButtonHandler = () => {
     let { success, validateErrors } = validateCategories(
       { name, shortDescription, description, metaTitle, metaKeywords, metaDescription },
@@ -152,7 +151,7 @@ const Create = ({ tableData, createCategory, closeHandler }) => {
                 name="metaTitle"
                 value={ metaTitle }
                 onChange={ e => setMetaTitle(e.target.value) }
-                error={ errors.metaDescription }
+                error={ errors.metaTitle }
               />
             </GridItem>
             <GridItem col={6}>
@@ -165,7 +164,7 @@ const Create = ({ tableData, createCategory, closeHandler }) => {
               />
             </GridItem>
             <GridItem col={12}>
-              <Textarea error={ errors.metaKeywords } label="Meta_description" name="metaDescription" onChange={e => setMetaDescription(e.target.value)}>
+              <Textarea error={ errors.metaDescription } label="Meta_description" name="metaDescription" onChange={e => setMetaDescription(e.target.value)}>
                 { metaDescription }
               </Textarea>
             </GridItem>
