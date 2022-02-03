@@ -19,13 +19,13 @@ import Wysiwyg from "../../../components/Wysiwyg/Wysiwyg";
 
 const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
   const [ name, setName ] = useState(rowData.name);
-  const [ selectParent, setSelectParent ] = useState(rowData.parent_category ? rowData.parent_category.id : null);
+  const [ selectParent, setSelectParent ] = useState(rowData.parentCategory?.id);
   const [ slug, setSlug ] = useState(rowData.slug);
-  const [ shortDescription, setShortDescription ] = useState(rowData.short_description);
+  const [ shortDescription, setShortDescription ] = useState(rowData.shortDescription);
   const [ description, setDescription ] = useState(rowData.description);
-  const [ metaTitle, setMetaTitle ] = useState(rowData.meta_title);
-  const [ metaKeywords, setMetaKeywords ] = useState(rowData.meta_keywords);
-  const [ metaDescription, setMetaDescription ] = useState(rowData.meta_description);
+  const [ metaTitle, setMetaTitle ] = useState(rowData.metaTitle);
+  const [ metaKeywords, setMetaKeywords ] = useState(rowData.metaKeywords);
+  const [ metaDescription, setMetaDescription ] = useState(rowData.metaDescription);
 
   const [ errors, setErrors] = useState({});
 
@@ -138,12 +138,13 @@ const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
             closeHandler()
             updateRowData(rowData.id, {
               name,
-              parent_category: selectParent,
+              parentCategory: selectParent,
               slug,
+              shortDescription,
               description,
-              meta_title: metaTitle,
-              meta_description: metaDescription,
-              meta_keywords: metaKeywords,
+              metaTitle,
+              metaDescription,
+              metaKeywords,
             })
           } else {
             setErrors(validateErrors)

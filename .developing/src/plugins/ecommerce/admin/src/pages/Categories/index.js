@@ -37,6 +37,7 @@ const CategoriesPage = () => {
   const [ alert, setAlert ] = useState(null);
   const [ timerId, setTimerId ] = useState(null);
 
+  console.log(tableData)
   const filteredData = async (filter) => {
     if (!filter) return setTableData(unsortedSortedData)
 
@@ -47,12 +48,13 @@ const CategoriesPage = () => {
   }
 
   const getTableData = async () => {
+    if (sortBy) return filteredData(sortBy)
+
     const qs = require('qs');
     const query = qs.stringify(
       { orderBy: { id: 'asc' }, populate: ['parentCategory', 'image'] },
       { encodeValuesOnly: true }
     );
-    if (sortBy) return filteredData(sortBy)
 
     await request(`/ecommerce/categories?${query}`)
       .then(async (res) => {

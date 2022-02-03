@@ -69,10 +69,9 @@ const RowTable = ({ rowData, tableData, updateRowData, deleteRow, publishAlert }
       </Dialog>
       <Td><Typography textColor="neutral800">{ rowData.id }</Typography></Td>
       <Td>
-        {rowData.image?.url
+        { rowData.image?.url
           ? <Avatar src={rowData.image?.url} alt={rowData.name}/>
-          : <Initials>{ rowData.name[0] }</Initials>
-        }
+          : <Initials>{ rowData.name[0] }</Initials> }
       </Td>
       <Td><Typography textColor="neutral800">{ rowData.name }</Typography></Td>
       <Td><Typography textColor="neutral800">{ rowData.slug }</Typography></Td>
