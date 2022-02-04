@@ -6,17 +6,15 @@ import Create from './Create';
 import Filter from "./Filter";
 
 import Plus from '@strapi/icons/Plus';
-
 import { useIntl } from 'react-intl';
-import { useFocusWhenNavigate, request  } from '@strapi/helper-plugin';
+import { useFocusWhenNavigate, request, useNotification  } from '@strapi/helper-plugin';
 import { HeaderLayout, ContentLayout } from '@strapi/design-system/Layout';
 import { Table, Thead, Tbody, Tr, Th } from '@strapi/design-system/Table';
 import { Typography } from '@strapi/design-system/Typography';
 import { VisuallyHidden } from "@strapi/design-system/VisuallyHidden";
 import { Stack } from '@strapi/design-system/Stack';
 import { Button } from '@strapi/design-system/Button';
-import { Grid, GridItem } from '@strapi/design-system/Grid';
-
+import { Grid } from '@strapi/design-system/Grid';
 
 
 const ProductsPage = () => {
@@ -28,23 +26,22 @@ const ProductsPage = () => {
     defaultMessage: 'Products',
   });
 
-  const [ tableData, setTableData ] = useState([]);
+  const [ data, setData ] = useState([]);
   const [ unSortedData, setUnSortedData ] = useState([])
   const [ categories, setCategories ] = useState([]);
-  const [ isVisible, setIsVisible ] = useState(false);
-  const [ timerId, setTimerId ] = useState(null);
+  const [ createVisible, setCreateVisible ] = useState(false);
+  const notification = useNotification()
 
-
-  const getTableData = async () => {
+  const getData = async () => {
     const qs = require('qs');
     const query = qs.stringify(
-      { orderBy: { id: 'asc' }, populate: ['categories'] },
+      { orderBy: { id: 'asc' }, populate: ['categories', 'image'] },
       { encodeValuesOnly: true }
     );
 
     await request(`/ecommerce/products?${query}`)
       .then((res) => {
-        setTableData(res)
+        setData(res)
         setUnSortedData(res)
       });
   }
@@ -57,29 +54,65 @@ const ProductsPage = () => {
   }
 
   useEffect(async () => {
-    await getTableData();
+    await getData();
     await getCategories();
   }, []);
 
 
-  const updateTableData = async (id, updateData) => {
+  const update = async (id, updateData) => {
     await request(`/ecommerce/products/${id}`, {
       method: 'PUT',
       body: updateData
-    }).then(() => getTableData());
+    }).then(() => getData());
   }
 
-  const deleteRow = async(id) => {
+  const remove = async(id) => {
     await request(`/ecommerce/products/${id}`, {
       method: 'DELETE',
-    }).then(() => getTableData());
+    }).then(() => getData());
   }
 
-  const postProduct = async(data) => {
+  const create = async(data) => {
     await request(`/ecommerce/products`, {
       method: 'POST',
       body: data
-    }).then(() => getTableData());
+    }).then((res) => {
+      data.publishedAt
+        ? publish(res.id).then(() => getData())
+        : unPublish(res.id).then(() => getData())
+    });
+  }
+
+  const publish = async(id) => {
+    let response
+    await request(`/ecommerce/products/${id}/publish`, {
+      method: 'PUT',
+    })
+      .then(() => {
+        notification({ type: 'success', message: 'Product published' });
+        response = true;
+      })
+      .catch(() => {
+        notification({ type: 'warning', message: 'Product has not been published' });
+        response = false;
+      });
+    return response
+  }
+
+  const unPublish = async(id) => {
+    let response
+    await request(`/ecommerce/products/${id}/un-publish`, {
+      method: 'PUT',
+    })
+      .then(() => {
+        notification({ type: 'success', message: 'Product unpublished' });
+        response = false;
+      })
+      .catch(() => {
+        notification({ type: 'warning', message: 'Product has not been unpublished' });
+        response = true;
+      });
+    return response
   }
 
   return (
@@ -88,7 +121,7 @@ const ProductsPage = () => {
         primaryAction={
           <Button
             startIcon={ <Plus/> }
-            onClick={ () => setIsVisible(true) }
+            onClick={ () => setCreateVisible(true) }
           >
             Add product
           </Button>
@@ -99,11 +132,11 @@ const ProductsPage = () => {
           defaultMessage: 'Configure the ecommerce plugin',
         })}
       />
-      { isVisible &&
+      { createVisible &&
         <Create
-          closeHandler = { () => setIsVisible(false) }
+          onClose={ () => setCreateVisible(false) }
           allCategories={ categories }
-          postProduct= { postProduct }
+          onCreate={ create }
         />
       }
       <ContentLayout>
@@ -112,7 +145,7 @@ const ProductsPage = () => {
             <Filter
               filterValues={ [categories, [{ id: 1, name: 'Low to High' }, { id: 2, name: 'High to Low' }]] }
               unSortedData={ unSortedData }
-              updateData={ setTableData }
+              updateData={ setData }
             />
           </Grid>
 
@@ -135,13 +168,15 @@ const ProductsPage = () => {
             </Thead>
             <Tbody>
               {
-                tableData.map(entry =>
+                data.map(entry =>
                   <Tr key={entry.id}>
                     <RowTable
-                      rowData = { entry }
-                      updateRowData = { (id, data) => updateTableData(id, data) }
-                      deleteRow = { (idRow) => deleteRow(idRow) }
-                      allCategories = { categories }
+                      data = { entry }
+                      onUpdate = { update }
+                      onDelete = { remove }
+                      categories = { categories }
+                      onPublish={ publish }
+                      onUnPublish={ unPublish }
                     />
                   </Tr>
                 )

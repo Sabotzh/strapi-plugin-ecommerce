@@ -112,7 +112,7 @@ const Create = ({ data, onCreate, onClose }) => {
             <GridItem col={12}>
               <Wysiwyg
                 disabled={ false }
-                intlLabel={ { id: 'id', defaultMessage: 'Description', values: undefined } }
+                label={ 'Description' }
                 value={ description }
                 name="rich-text"
                 onChange={ e => setDescription(e.target.value) }

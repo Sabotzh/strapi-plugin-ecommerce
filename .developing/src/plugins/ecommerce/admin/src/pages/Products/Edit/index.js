@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
-import CollectionType from '@strapi/icons/CollectionType';
+import InputImage from '../../../components/InputImage';
+import Wysiwyg from '../../../components/Wysiwyg/Wysiwyg';
 import validate from '../../../utils/validate';
 
+import CollectionType from '@strapi/icons/CollectionType';
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
 import { request  } from '@strapi/helper-plugin';
 import { Box } from '@strapi/design-system/Box';
@@ -17,27 +19,29 @@ import { NumberInput } from '@strapi/design-system/NumberInput';
 import { Button } from '@strapi/design-system/Button';
 import { Textarea } from '@strapi/design-system/Textarea';
 import { DatePicker } from '@strapi/design-system/DatePicker';
-
+import { ToggleCheckbox } from '@strapi/design-system/ToggleCheckbox';
 
 const statusArr = [ 'SELLING', 'ON_ORDER', 'UNAVAILABLE' ];
 
-const Edit = ({ rowData, closeHandler, updateRowData, allCategories } ) => {
-  const [ name, setName ] = useState(rowData.name);
-  const [ slug, setSlug ] = useState(rowData.slug);
-  const [ sku, setSku ] = useState(rowData.sku);
-  const [ icon, setIcon ] = useState(rowData.icon);
-  const [ categories, setCategories ] = useState(rowData.categories.map(el => el.id));
-  const [ price, setPrice ] = useState(rowData.price || undefined);
-  const [ dateAvailable, setDateAvailable ] = useState();
-  const [ quantity, setQuantity ] = useState(rowData.quantity || undefined);
-  const [ minQuantity, setMinQuantity ] = useState(rowData.min_quantity || undefined);
-  const [ status, setStatus ] = useState(rowData.status);
-  const [ discount, setDiscount ] = useState(rowData.discount || undefined);
-  const [ description, setDescription ] = useState(rowData.description);
-  const [ shortDescription, setShortDescription ] = useState(rowData.short_description);
-  const [ metaTitle, setMetaTitle ] = useState(rowData.meta_title);
-  const [ metaKeywords, setMetaKeywords ] = useState(rowData.meta_keywords);
-  const [ metaDescription, setMetaDescription ] = useState(rowData.meta_description);
+const Edit = ({ data, onClose, onUpdate, allCategories } ) => {
+  const [ name, setName ] = useState(data.name);
+  const [ slug, setSlug ] = useState(data.slug);
+  const [ sku, setSku ] = useState(data.sku);
+  const [ icon, setIcon ] = useState(data.icon);
+  const [ categories, setCategories ] = useState(data.categories.map(el => el.id));
+  const [ price, setPrice ] = useState(data.price || undefined);
+  const [ dateAvailable, setDateAvailable ] = useState(null);//data.dateAvailable
+  const [ published, setPublished ] = useState(!!data.publishedAt);
+  const [ quantity, setQuantity ] = useState(data.quantity || undefined);
+  const [ minQuantity, setMinQuantity ] = useState(data.minQuantity || undefined);
+  const [ status, setStatus ] = useState(data.status);
+  const [ discount, setDiscount ] = useState(data.discount || undefined);
+  const [ description, setDescription ] = useState(data.description);
+  const [ shortDescription, setShortDescription ] = useState(data.shortDescription);
+  const [ metaTitle, setMetaTitle ] = useState(data.metaTitle);
+  const [ metaKeywords, setMetaKeywords ] = useState(data.metaKeywords);
+  const [ metaDescription, setMetaDescription ] = useState(data.metaDescription);
+  const [ image, setImage ] = useState(data.image)
   const [ errors, setErrors] = useState({});
 
   const submitButtonHandler = async() => {
@@ -47,7 +51,7 @@ const Edit = ({ rowData, closeHandler, updateRowData, allCategories } ) => {
       name, sku, slug, price, shortDescription, description, metaTitle, metaKeywords, metaDescription
     }, errors, setErrors);
 
-    if (slug !== rowData.slug) {
+    if (slug !== data.slug) {
       const categoryWithTheSameSlug = await request(`/ecommerce/products/by-slug/${slug}`).catch(() => {});
       if (categoryWithTheSameSlug) {
         success = false;
@@ -56,29 +60,29 @@ const Edit = ({ rowData, closeHandler, updateRowData, allCategories } ) => {
     }
 
     if (success) {
-      updateRowData(rowData.id, {
+      onUpdate(data.id, {
         name, slug, sku, icon, categories, price, dateAvailable, quantity, minQuantity, status, discount,
-        description, shortDescription, metaDescription,metaTitle, metaKeywords
+        description, shortDescription, metaDescription,metaTitle, metaKeywords, image
       });
-      closeHandler();
+      onClose();
     } else {
       setErrors(validateErrors);
     }
   }
 
   return (
-    <ModalLayout onClose={ () => closeHandler() } labelledBy="Edit">
+    <ModalLayout onClose={ onClose } labelledBy="Edit">
       <ModalHeader>
         <Stack horizontal size={2}>
           <CollectionType/>
           <Breadcrumbs label="Category model, name field">
             <Crumb>Products</Crumb>
-            <Crumb>{ rowData.name }</Crumb>
+            <Crumb>{ data.name }</Crumb>
           </Breadcrumbs>
         </Stack>
       </ModalHeader>
       <ModalBody>
-        <Box paddingTop={4} paddingBottom={3}><Typography variant={'beta'}>Edit {rowData.name}</Typography></Box>
+        <Box paddingTop={4} paddingBottom={3}><Typography variant={'beta'}>Edit {data.name}</Typography></Box>
         <Divider/>
         <Box paddingTop={5}>
           <Grid gap={5}>
@@ -185,15 +189,36 @@ const Edit = ({ rowData, closeHandler, updateRowData, allCategories } ) => {
                 selectedDateLabel={formattedDate => `Date picker, current is ${formattedDate}`}
               />
             </GridItem>
-            <GridItem col={12}>
+            <GridItem col={6}>
               <Textarea error={ errors.shortDescription } label="Short description" name="short description" onChange={e => setShortDescription(e.target.value)}>
                 { shortDescription }
               </Textarea>
             </GridItem>
+            <GridItem col={6}>
+              <InputImage
+                label={'Image'}
+                error={''}
+                selectedAsset={image}
+                deleteSelectedAsset={() => setImage(null)}
+                onFinish ={(image) => setImage(...image)}/>
+            </GridItem>
             <GridItem col={12}>
-              <Textarea error={ errors.description } label="Description" name="description" onChange={e => setDescription(e.target.value)}>
-                { description }
-              </Textarea>
+              <Wysiwyg
+                disabled={ false }
+                label={ 'Description' }
+                value={ description }
+                name='description'
+                onChange={ e => setDescription(e.target.value) }
+                error={ errors.description }
+              />
+            </GridItem>
+            <GridItem col={6}>
+              <Stack size={1}>
+                <Typography fontWeight={'bold'} variant={'pi'}>Published</Typography>
+                <ToggleCheckbox onLabel={'On'} offLabel={'Off'} checked={ published } onChange={() => {setPublished(!published)}}>
+                  Published
+                </ToggleCheckbox>
+              </Stack>
             </GridItem>
           </Grid>
           <Box paddingTop={5} paddingBottom={3}><Typography variant={'beta'}>SEO</Typography></Box>
@@ -225,7 +250,7 @@ const Edit = ({ rowData, closeHandler, updateRowData, allCategories } ) => {
         </Box>
       </ModalBody>
       <ModalFooter
-        startActions = { <Button onClick = { closeHandler } variant="tertiary"> Cancel </Button> }
+        startActions = { <Button onClick = { onClose } variant="tertiary"> Cancel </Button> }
         endActions = { <Button onClick = { submitButtonHandler }> Finish </Button> }
       />
     </ModalLayout>

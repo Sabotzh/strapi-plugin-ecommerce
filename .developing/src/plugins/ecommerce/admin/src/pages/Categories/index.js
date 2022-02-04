@@ -37,13 +37,13 @@ const CategoriesPage = () => {
   const notification = useNotification()
 
   const filteredData = async (filter) => {
+    console.log(filter)
     if (!filter) {
       setLoader(false)
       return setData(unsortedData)
     }
-
     await request(`/ecommerce/categories/${filter}`)
-      .then(async (res) => {
+      .then((res) => {
         setData(res)
         setLoader(false)
       });
