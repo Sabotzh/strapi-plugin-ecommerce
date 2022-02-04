@@ -17,7 +17,7 @@ import { Stack } from '@strapi/design-system/Stack';
 import { Button } from '@strapi/design-system/Button';
 
 
-const RowTable = ({ data, onUpdateData, onDeleteData, onPublish, onUnPublish }) => {
+const RowTable = ({ data, onUpdate, onDelete, onPublish, onUnPublish }) => {
   const [ toggleSwitch, setToggleSwitch ] = useState(!!data.publishedAt);
   const [ visibleEdit, setVisibleEdit ] = useState(false);
   const [ visibleDelete, setVisibleDelete ] = useState(false);
@@ -28,7 +28,7 @@ const RowTable = ({ data, onUpdateData, onDeleteData, onPublish, onUnPublish }) 
         <Edit
           onClose = { () => setVisibleEdit(false) }
           data = { data }
-          onUpdateData = { onUpdateData }
+          onUpdateData = { onUpdate }
         />
       }
       <Dialog onClose={ () => setVisibleDelete(false) } title="Confirmation" isOpen={ visibleDelete }>
@@ -46,7 +46,7 @@ const RowTable = ({ data, onUpdateData, onDeleteData, onPublish, onUnPublish }) 
           endAction = {
             <Button onClick={ () => {
               setVisibleDelete(false)
-              onDeleteData(data.id)
+              onDelete(data.id)
             }}
             variant="danger-light"
             startIcon={<Trash/>}

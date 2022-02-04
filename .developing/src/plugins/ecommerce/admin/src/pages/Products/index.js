@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import getTrad from '../../utils/getTrad';
 import RowTable from './RowTable';
 import Create from './Create';
-import CustomAlert from '../../components/Alert';
 import Filter from "./Filter";
 
 import Plus from '@strapi/icons/Plus';
@@ -33,7 +32,6 @@ const ProductsPage = () => {
   const [ unSortedData, setUnSortedData ] = useState([])
   const [ categories, setCategories ] = useState([]);
   const [ isVisible, setIsVisible ] = useState(false);
-  const [ alert, setAlert ] = useState(null);
   const [ timerId, setTimerId ] = useState(null);
 
 
@@ -84,30 +82,8 @@ const ProductsPage = () => {
     }).then(() => getTableData());
   }
 
-  const alertHandler = (params) => {
-    if (timerId) clearTimeout(timerId)
-
-    const newTimerId = setTimeout(() => {
-      setAlert(null)
-    }, 3000)
-
-    setTimerId(newTimerId)
-    setAlert(params)
-  }
-
   return (
     <main style={{position: 'relative'}}>
-      {
-        alert &&
-        <CustomAlert
-          isActive={!!alert}
-          closeAlert={() => setAlert(null)}
-          title={alert.title}
-          variant={alert.variant}
-          text={alert.text}
-          timerId={timerId}
-        />
-      }
       <HeaderLayout
         primaryAction={
           <Button
@@ -166,7 +142,6 @@ const ProductsPage = () => {
                       updateRowData = { (id, data) => updateTableData(id, data) }
                       deleteRow = { (idRow) => deleteRow(idRow) }
                       allCategories = { categories }
-                      publishAlert={(value) => alertHandler(value)}
                     />
                   </Tr>
                 )

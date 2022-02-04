@@ -16,7 +16,7 @@ import { IconButton } from '@strapi/design-system/IconButton';
 import { Box } from '@strapi/design-system/Box';
 import { Popover } from '@strapi/design-system/Popover';
 import { Badge } from '@strapi/design-system/Badge';
-import { SortIcon, stopPropagation, request } from '@strapi/helper-plugin';
+import { SortIcon, stopPropagation } from '@strapi/helper-plugin';
 import { Dialog, DialogBody, DialogFooter } from '@strapi/design-system/Dialog';
 import { Stack } from '@strapi/design-system/Stack';
 import { Button } from '@strapi/design-system/Button';
@@ -41,7 +41,7 @@ const ActionWrapper = styled.span`
 `;
 
 
-const RowTable = ({ rowData, updateRowData, deleteRow, allCategories, publishAlert }) => {
+const RowTable = ({ rowData, updateRowData, deleteRow, allCategories }) => {
   const [ toggleSwitch, setToggleSwitch ] = useState(!!rowData.publishedAt);
   const [ editOpen, setEditOpen ] = useState(false);
   const [ visible, setVisible ] = useState(false);
@@ -73,21 +73,6 @@ const RowTable = ({ rowData, updateRowData, deleteRow, allCategories, publishAle
 
   const handleTogglePopover = () => setVisible(prev => !prev);
 
-  const publishUpdate = async () => {
-    await request(`/ecommerce/products/${rowData.id}/publish`, {
-      method: 'PUT',
-    })
-      .then(() => publishAlert({ variant: 'success', title: 'Success', text: 'Product published' }))
-      .catch(() => publishAlert({ variant: 'danger', title: 'Error', text: 'Product has not been published' }));
-  }
-
-  const unPublishUpdate = async () => {
-    await request(`/ecommerce/products/${rowData.id}/un-publish`, {
-      method: 'PUT',
-    })
-      .then(() => publishAlert({ variant: 'success', title: 'Success', text: 'Product unpublished' }))
-      .catch(() => publishAlert({ variant: 'danger', title: 'Error', text: 'Product has not been unpublished' }));
-  }
 
   return (
     <>
@@ -153,16 +138,7 @@ const RowTable = ({ rowData, updateRowData, deleteRow, allCategories, publishAle
       <Td><Typography textColor="neutral800" fontWeight="bold">{ rowData.discount || 0  }%</Typography></Td>
       <Td>
         <Switch label="Published" selected={ toggleSwitch }
-          onChange = {
-            () => {
-              if (toggleSwitch) {
-                unPublishUpdate()
-              } else {
-                publishUpdate()
-              }
-              setToggleSwitch(!toggleSwitch)
-            }
-          }
+          onChange = { () => console.log(1) }
         />
       </Td>
       <Td>

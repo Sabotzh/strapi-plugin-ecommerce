@@ -7,6 +7,7 @@ import getTrad from "../../../utils/getTrad";
 
 import CollectionType from '@strapi/icons/CollectionType';
 import { useIntl } from 'react-intl';
+import { useNotification } from '@strapi/helper-plugin';
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
 import { Box } from "@strapi/design-system/Box";
 import { Stack } from "@strapi/design-system/Stack";
@@ -21,7 +22,7 @@ import { Button } from "@strapi/design-system/Button";
 import { Textarea } from '@strapi/design-system/Textarea';
 
 
-const Create = ({ tableData, createCategory, closeHandler }) => {
+const Create = ({ data, onCreate, onClose }) => {
   const { formatMessage } = useIntl();
 
   const nameLabel = formatMessage({
@@ -83,6 +84,8 @@ const Create = ({ tableData, createCategory, closeHandler }) => {
   const [ metaKeywords, setMetaKeywords ] = useState('');
   const [ metaDescription, setMetaDescription ] = useState('');
   const [ image, setImage ] = useState(null)
+
+  const notification = useNotification()
   const [ errors, setErrors] = useState({});
 
   const submitButtonHandler = () => {
@@ -90,16 +93,9 @@ const Create = ({ tableData, createCategory, closeHandler }) => {
       { name, shortDescription, description, metaTitle, metaKeywords, metaDescription },
       errors, setErrors);
 
-    // tableData.forEach(el => {
-    //   if (el.name === name) {
-    //     success = false;
-    //     validateErrors = ( { ...validateErrors, name: 'This name is used'} );
-    //   }
-    // })
-
     if (success) {
-      closeHandler();
-      createCategory({
+      onClose();
+      onCreate({
         name,
         parentCategory: selectParent,
         slug,
@@ -109,15 +105,16 @@ const Create = ({ tableData, createCategory, closeHandler }) => {
         metaTitle,
         metaDescription,
         metaKeywords,
-        publishedAt: published ? Date.now() : null,
+        publishedAt: published,
       });
     } else {
+      notification({ type: 'warning', message: 'Fill in all fields' })
       setErrors(validateErrors);
     }
   }
 
   return (
-    <ModalLayout onClose={ () => closeHandler() } labelledBy="Create">
+    <ModalLayout onClose={ () => onClose() } labelledBy="Create">
       <ModalHeader>
         <Stack horizontal size={2}>
           <CollectionType/>
@@ -173,7 +170,7 @@ const Create = ({ tableData, createCategory, closeHandler }) => {
                 onChange={ setSelectParent }
                 onClear={ () => setSelectParent(null) }
               >
-                { tableData.map((entry) => {
+                { data.map((entry) => {
                   return <Option value={ entry.id } key={entry.id}>{ entry.name }</Option>
                 })}
               </Select>
@@ -256,7 +253,7 @@ const Create = ({ tableData, createCategory, closeHandler }) => {
         </Box>
       </ModalBody>
       <ModalFooter
-        startActions = { <Button onClick = { () => closeHandler() } variant="tertiary">{ cancelTitle }</Button> }
+        startActions = { <Button onClick = { () => onClose() } variant="tertiary">{ cancelTitle }</Button> }
         endActions = { <Button onClick = { submitButtonHandler }>{ finishTitle }</Button> }
       />
     </ModalLayout>

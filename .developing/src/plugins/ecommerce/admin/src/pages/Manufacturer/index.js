@@ -64,7 +64,7 @@ const ManufacturerPage = () => {
     }).then(() => getData())
   }
 
-  const deleteData = async(id) => {
+  const remove = async(id) => {
     await request(`/ecommerce/manufacturer/${id}`, {
       method: 'DELETE'
     }).then(() => getData())
@@ -76,12 +76,12 @@ const ManufacturerPage = () => {
       method: 'PUT',
     })
       .then(() => {
-        notification({type: 'success', message: 'Product published'})
-        response = true
+        notification({ type: 'success', message: 'Manufacturer published' });
+        response = true;
       })
       .catch(() => {
-        notification({type: 'warning', message: 'Product has not been published'})
-        response = false
+        notification({ type: 'warning', message: 'Manufacturer has not been published' });
+        response = false;
       });
     return response
   }
@@ -92,12 +92,12 @@ const ManufacturerPage = () => {
       method: 'PUT',
     })
       .then(() => {
-        notification({type: 'success', message: 'Product unpublished'})
-        response = false
+        notification({ type: 'success', message: 'Manufacturer unpublished' });
+        response = false;
       })
       .catch(() => {
-        notification({type: 'warning', message: 'Product has not been unpublished'})
-        response = true
+        notification({ type: 'warning', message: 'Manufacturer has not been unpublished' });
+        response = true;
       });
     return response
   }
@@ -115,7 +115,7 @@ const ManufacturerPage = () => {
               startIcon={ <Plus/> }
               onClick={ () => setCreateVisible(true) }
             >
-              Add product
+              Add manufacturer
             </Button>
           }
           title={title}
@@ -161,8 +161,8 @@ const ManufacturerPage = () => {
                       <Tr key={entry.id}>
                         <RowTable
                           data = { entry }
-                          onDeleteData={ deleteData }
-                          onUpdateData={ update }
+                          onDelete={ remove }
+                          onUpdate={ update }
                           onPublish={ publish }
                           onUnPublish={ unPublish }
                         />
