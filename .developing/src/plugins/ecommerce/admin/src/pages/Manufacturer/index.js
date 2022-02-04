@@ -16,7 +16,7 @@ import { Table, Thead, Tbody, Tr, Th } from '@strapi/design-system/Table';
 import { Typography } from '@strapi/design-system/Typography';
 import { VisuallyHidden } from "@strapi/design-system/VisuallyHidden";
 import { Stack } from '@strapi/design-system/Stack';
-import { request } from '@strapi/helper-plugin';
+import { request, useNotification } from '@strapi/helper-plugin';
 
 
 const ManufacturerPage = () => {
@@ -25,7 +25,7 @@ const ManufacturerPage = () => {
   const [ data, setData ] = useState([])
   const [ createVisible, setCreateVisible ] = useState(false)
   const [ loader, setLoader ] = useState(false)
-
+  const notification = useNotification()
 
   const { formatMessage } = useIntl();
   const title = formatMessage({
@@ -54,11 +54,48 @@ const ManufacturerPage = () => {
   }
 
   const update = async(id, data) => {
-    console.log('update', data)
     await request(`/ecommerce/manufacturer/${id}`, {
       method: 'PUT',
       body: data
     }).then(() => getData())
+  }
+
+  const deleteData = async(id) => {
+    await request(`/ecommerce/manufacturer/${id}`, {
+      method: 'DELETE'
+    }).then(() => getData())
+  }
+
+  const publish = async(id) => {
+    let response
+    await request(`/ecommerce/manufacturer/${id}/publish`, {
+      method: 'PUT',
+    })
+      .then(() => {
+        notification({type: 'success', message: 'Product published'})
+        response = true
+      })
+      .catch(() => {
+        notification({type: 'warning', message: 'Product has not been published'})
+        response = false
+      });
+    return response
+  }
+
+  const unPublish = async(id) => {
+    let response
+    await request(`/ecommerce/manufacturer/${id}/un-publish`, {
+      method: 'PUT',
+    })
+      .then(() => {
+        notification({type: 'success', message: 'Product unpublished'})
+        response = false
+      })
+      .catch(() => {
+        notification({type: 'warning', message: 'Product has not been unpublished'})
+        response = true
+      });
+    return response
   }
 
   useEffect(() => {
@@ -120,15 +157,16 @@ const ManufacturerPage = () => {
                       <Tr key={entry.id}>
                         <RowTable
                           data = { entry }
-                          onDeleteData={ () => console.log("DELETE") }
+                          onDeleteData={ deleteData }
                           onUpdateData={ update }
+                          onPublish={ publish }
+                          onUnPublish={ unPublish }
                         />
                       </Tr>
                     )
                   }
                 </Tbody>
               </Table>
-
             }
           </Stack>
         </ContentLayout>

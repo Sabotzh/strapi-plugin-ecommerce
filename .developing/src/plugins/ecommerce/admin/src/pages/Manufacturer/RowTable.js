@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import Edit from './Edit';
+
 import Pencil from '@strapi/icons/Pencil';
 import Trash from '@strapi/icons/Trash';
 import ExclamationMarkCircle from '@strapi/icons/ExclamationMarkCircle';
-
-import Edit from './Edit';
 
 import { Td } from '@strapi/design-system/Table';
 import { Typography } from '@strapi/design-system/Typography';
@@ -12,33 +12,15 @@ import { Switch } from '@strapi/design-system/Switch';
 import { Flex } from '@strapi/design-system/Flex';
 import { IconButton } from '@strapi/design-system/IconButton';
 import { Box } from '@strapi/design-system/Box';
-import { request, useNotification } from '@strapi/helper-plugin';
 import { Dialog, DialogBody, DialogFooter } from '@strapi/design-system/Dialog';
 import { Stack } from '@strapi/design-system/Stack';
 import { Button } from '@strapi/design-system/Button';
 
 
-const RowTable = ({ data, onUpdateData, onDeleteData }) => {
+const RowTable = ({ data, onUpdateData, onDeleteData, onPublish, onUnPublish }) => {
   const [ toggleSwitch, setToggleSwitch ] = useState(!!data.publishedAt);
   const [ visibleEdit, setVisibleEdit ] = useState(false);
   const [ visibleDelete, setVisibleDelete ] = useState(false);
-  const notification = useNotification()
-
-  const publishUpdate = async () => {
-    await request(`/ecommerce/manufacturer/${data.id}/publish`, {
-      method: 'PUT',
-    })
-      .then(() => notification({ type: 'success', message: 'Product published' }))
-      .catch(() => notification({ type: 'warning', message: 'Product has not been published' }));
-  }
-
-  const unPublishUpdate = async () => {
-    await request(`/ecommerce/manufacturer/${data.id}/un-publish`, {
-      method: 'PUT',
-    })
-      .then(() => notification({ type: 'success', message: 'Product unpublished' }))
-      .catch(() => notification({ type: 'warning', message: 'Product has not been unpublished' }));
-  }
 
   return (
     <>
@@ -88,9 +70,11 @@ const RowTable = ({ data, onUpdateData, onDeleteData }) => {
           label="Published"
           selected={ toggleSwitch }
           onChange = {
-            () => {
-              toggleSwitch ?  unPublishUpdate() : publishUpdate()
+            async () => {
               setToggleSwitch(!toggleSwitch)
+              toggleSwitch
+                ? setToggleSwitch(await onUnPublish(data.id))
+                : setToggleSwitch(await onPublish(data.id))
             }
           }
         />

@@ -3,5 +3,5 @@ module.exports = ({ strapi }) => async (ctx) => {
 
   ctx.body = await strapi
     .query('plugin::ecommerce.manufacturer')
-    .update({ where: { id }, data: { publishedAt: Date.now() } });
+    .delete({ where: { id } });
 };
