@@ -50,7 +50,11 @@ const ManufacturerPage = () => {
     await request(`/ecommerce/manufacturer`, {
       method: 'POST',
       body: data,
-    }).then(() => getData())
+    }).then((res) => {
+      data.publishedAt
+        ? publish(res.id).then(() => getData())
+        : unPublish(res.id).then(() => getData())
+    })
   }
 
   const update = async(id, data) => {
