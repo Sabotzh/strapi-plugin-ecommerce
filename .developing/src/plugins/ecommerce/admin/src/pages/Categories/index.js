@@ -18,7 +18,6 @@ import { VisuallyHidden } from '@strapi/design-system/VisuallyHidden';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
 import { Button } from '@strapi/design-system/Button';
 import { Flex } from '@strapi/design-system/Flex';
-import axios from "axios";
 
 const CategoriesPage = () => {
   useFocusWhenNavigate();
@@ -37,7 +36,6 @@ const CategoriesPage = () => {
   const [ alert, setAlert ] = useState(null);
   const [ timerId, setTimerId ] = useState(null);
 
-  console.log(tableData)
   const filteredData = async (filter) => {
     if (!filter) return setTableData(unsortedSortedData)
 
@@ -147,7 +145,10 @@ const CategoriesPage = () => {
             <Grid>
               <GridItem col={3}>
                 <Select
-                  placeholder={'Sort by category'}
+                  placeholder={formatMessage({
+                    id: getTrad('categories.sort.title'),
+                    defaultMessage: 'Sort by category',
+                  })}
                   value={ sortBy }
                   onChange={ sortHandler }
                   onClear={ sortHandler }
@@ -161,17 +162,78 @@ const CategoriesPage = () => {
             <Thead>
               <Tr>
                 <Th><Typography variant="sigma">ID</Typography></Th>
-                <Th><Typography variant="sigma">Image</Typography></Th>
-                <Th><Typography variant="sigma">Name</Typography></Th>
-                <Th><Typography variant="sigma">Slug</Typography></Th>
-                <Th><Typography variant="sigma">Parent</Typography></Th>
+                <Th>
+                  <Typography variant="sigma">
+                    {
+                      formatMessage({
+                        id: getTrad('categories.table.header.image'),
+                        defaultMessage: 'Image',
+                      })
+                    }
+                  </Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">
+                    {
+                      formatMessage({
+                        id: getTrad('categories.table.header.name'),
+                        defaultMessage: 'Name',
+                      })
+                    }
+                  </Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">
+                    {
+                      formatMessage({
+                        id: getTrad('categories.table.header.slug'),
+                        defaultMessage: 'Slug',
+                      })
+                    }
+                  </Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">
+                    {
+                      formatMessage({
+                        id: getTrad('categories.table.header.parent'),
+                        defaultMessage: 'Parent',
+                      })
+                    }
+                  </Typography>
+                </Th>
                 <Th>
                   <Flex justifyContent={'center'}>
-                    <Typography variant="sigma">Category level</Typography>
+                    <Typography variant="sigma">
+                      {
+                        formatMessage({
+                          id: getTrad('categories.table.header.categoryLevel'),
+                          defaultMessage: 'Category Level',
+                        })
+                      }
+                    </Typography>
                   </Flex>
                 </Th>
-                <Th><Typography variant="sigma">Short description</Typography></Th>
-                <Th><Typography variant="sigma">Published</Typography></Th>
+                <Th>
+                  <Typography variant="sigma">
+                    {
+                      formatMessage({
+                        id: getTrad('categories.table.header.shortDescription'),
+                        defaultMessage: 'Short Description',
+                      })
+                    }
+                  </Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">
+                    {
+                      formatMessage({
+                        id: getTrad('categories.table.header.published'),
+                        defaultMessage: 'Published',
+                      })
+                    }
+                  </Typography>
+                </Th>
                 <Th><VisuallyHidden>Actions</VisuallyHidden></Th>
               </Tr>
             </Thead>

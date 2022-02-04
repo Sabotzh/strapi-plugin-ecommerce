@@ -1,6 +1,7 @@
 import React, {useState} from "react";
-
 import CollectionType from '@strapi/icons/CollectionType';
+
+import { useIntl } from 'react-intl';
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
 import { Box } from '@strapi/design-system/Box';
 import { Stack } from '@strapi/design-system/Stack';
@@ -16,9 +17,11 @@ import { ToggleCheckbox } from '@strapi/design-system/ToggleCheckbox';
 import validateCategories from "../../../utils/validate";
 import Wysiwyg from "../../../components/Wysiwyg/Wysiwyg";
 import InputImage from "../../../components/InputImage";
+import getTrad from "../../../utils/getTrad";
 
 
 const Edit = ({ data, onClose, onUpdateData }) => {
+  const { formatMessage } = useIntl();
   const [ name, setName ] = useState(data.name);
   const [ slug, setSlug ] = useState(data.slug);
   const [ shortDescription, setShortDescription ] = useState(data.shortDescription);
@@ -37,7 +40,13 @@ const Edit = ({ data, onClose, onUpdateData }) => {
         <Stack horizontal size={2}>
           <CollectionType/>
           <Breadcrumbs label="Category model, name field">
-            <Crumb>Manufacturer</Crumb>
+            <Crumb>
+              {
+              formatMessage({
+              id: getTrad('menu.manufacturer.name'),
+              defaultMessage: 'Categories',
+            })}
+            </Crumb>
             <Crumb>{ data.name }</Crumb>
           </Breadcrumbs>
         </Stack>
