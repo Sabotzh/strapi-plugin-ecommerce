@@ -4,6 +4,7 @@ const wishlist = require('./wishlist');
 const orders = require('./orders');
 const categories = require('./categories');
 const products = require('./products');
+const manufacturer = require('./manufacturer');
 
 module.exports = {
   customer,
@@ -12,4 +13,5 @@ module.exports = {
   orders,
   categories,
   products,
+  manufacturer,
 };

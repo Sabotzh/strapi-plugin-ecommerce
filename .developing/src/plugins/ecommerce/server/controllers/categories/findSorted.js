@@ -3,7 +3,7 @@ module.exports = ({ strapi }) => async(ctx) => {
 
   const categories = await strapi
     .query('plugin::ecommerce.category')
-    .findMany({ populate: { parent_category: true } });
+    .findMany({ populate: { parentCategory: true } });
 
   const reformattedCategories = {}
   // reform arr to obj
@@ -13,7 +13,7 @@ module.exports = ({ strapi }) => async(ctx) => {
   // add category and category_parent
   const sortCategories = (category) => {
     sortedCategories.push(category)
-    if (category.parent_category) sortCategories(reformattedCategories[category.parent_category.id])
+    if (category.parentCategory) sortCategories(reformattedCategories[category.parentCategory.id])
   }
 
   categories.map(category => {

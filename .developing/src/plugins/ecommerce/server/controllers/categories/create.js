@@ -37,26 +37,25 @@ module.exports = ({ strapi }) => async (ctx) => {
     data.slug = data.slug + '-' + randomIntFromInterval(1000, 9999);
   }
 
-  if (data.parent_category) {
+  if (data.parentCategory) {
     const parentCategory = await strapi
       .query('plugin::ecommerce.category')
-      .findOne({ where: { id: data.parent_category } });
-
-    if (parentCategory && parentCategory.category_level) {
-      data.category_level = parentCategory.category_level + 1;
+      .findOne({ where: { id: data.parentCategory } });
+    if (parentCategory && parentCategory.categoryLevel) {
+      data.categoryLevel = parentCategory.categoryLevel + 1;
     } else {
-      data.parent_category = null;
-      data.category_level = 1;
+      data.categoryLevel = null;
+      data.categoryLevel = 1;
     }
   } else {
-    data.category_level = 1;
+    data.categoryLevel = 1;
   }
 
   const category = await strapi
     .query('plugin::ecommerce.category')
     .create({ data });
 
-  category.parent_category = data.parent_category;
+  category.parent_category = data.parentCategory;
 
   ctx.body = category;
 };

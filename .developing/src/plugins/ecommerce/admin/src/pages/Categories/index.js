@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
-import Plus from '@strapi/icons/Plus';
-
 import getTrad from '../../utils/getTrad';
 import Create from './Create';
 import RowTable from './RowTable';
-import CustomAlert from '../../components/Alert'
 
+import Plus from '@strapi/icons/Plus';
 import { useIntl } from 'react-intl';
-import { useFocusWhenNavigate, request  } from '@strapi/helper-plugin';
+import { Loader } from '@strapi/design-system/Loader';
+import { useFocusWhenNavigate, request, useNotification  } from '@strapi/helper-plugin';
 import { ContentLayout, HeaderLayout } from '@strapi/design-system/Layout';
 import { Stack } from '@strapi/design-system/Stack';
 import { Option, Select } from '@strapi/design-system/Select';
@@ -19,6 +18,7 @@ import { Grid, GridItem } from '@strapi/design-system/Grid';
 import { Button } from '@strapi/design-system/Button';
 import { Flex } from '@strapi/design-system/Flex';
 
+
 const CategoriesPage = () => {
   useFocusWhenNavigate();
 
@@ -28,99 +28,117 @@ const CategoriesPage = () => {
     defaultMessage: 'Categories',
   });
 
-  const [ isCreateVisible, setIsCreateVisible ] = useState(false);
+  const [ data, setData] = useState([]);
+  const [ unsortedData, setUnsortedData ] = useState([])
+  const [ visibleCreate, setVisibleCreate ] = useState(false);
   const [ categories, setCategories ] = useState([])
   const [ sortBy, setSortBy ] = useState(null);
-  const [ tableData, setTableData] = useState([]);
-  const [ alert, setAlert ] = useState(null);
-  const [ timerId, setTimerId ] = useState(null);
+  const [ loader, setLoader ] = useState(true)
+  const notification = useNotification()
 
   const filteredData = async (filter) => {
-    if (!filter) filter = ''
+    console.log(filter)
+    if (!filter) {
+      setLoader(false)
+      return setData(unsortedData)
+    }
     await request(`/ecommerce/categories/${filter}`)
-      .then(async (res) => {
-        setTableData(res)
+      .then((res) => {
+        setData(res)
+        setLoader(false)
       });
   }
 
-  const getTableData = async () => {
+  const getData = async () => {
+    if (sortBy) return filteredData(sortBy)
+
     const qs = require('qs');
     const query = qs.stringify(
       { orderBy: { id: 'asc' }, populate: ['parentCategory', 'image'] },
       { encodeValuesOnly: true }
     );
-    if (sortBy) return filteredData(sortBy)
 
     await request(`/ecommerce/categories?${query}`)
       .then(async (res) => {
-        setTableData(res)
-        console.log(res)
+        setData(res)
+        setUnsortedData(res)
         setCategories(res.map(el => el.name))
+        setLoader(false)
       });
   }
 
   const sortHandler = (value) => {
-    console.log(value)
     setSortBy(value)
     filteredData(value)
-    //return getTableData()
   }
 
-  const updateTableData = async (id, updateData) => {
+  const update = async (id, updateData) => {
     await request(`/ecommerce/categories/${id}`, {
       method: 'PUT',
       body: updateData
-    }).then(() => getTableData());
+    }).then(() => getData());
   }
 
-  const createCategory = async (data) => {
+  const create = async (data) => {
     await request(`/ecommerce/categories`, {
       method: 'POST',
       body: data
-    }).then(() => {
-      getTableData();
+    }).then((res) => {
+      data.publishedAt
+        ? publish(res.id).then(() => getData())
+        : unPublish(res.id).then(() => getData())
     });
   }
 
   useEffect(async () => {
-    await getTableData();
+    await getData();
   }, [])
 
-  const deleteRow = async(id) => {
+  const remove = async(id) => {
     await request(`/ecommerce/categories/${id}`, {
       method: 'DELETE',
-    }).then(() => getTableData());
+    }).then(() => getData());
   }
 
-  const alertHandler = (params) => {
-    if (timerId) clearTimeout(timerId)
+  const publish = async(id) => {
+    let response
+    await request(`/ecommerce/categories/${id}/publish`, {
+      method: 'PUT',
+    })
+      .then(() => {
+        notification({ type: 'success', message: 'Category published' });
+        response = true;
+      })
+      .catch(() => {
+        notification({ type: 'warning', message: 'Category has not been published' });
+        response = false;
+      });
+    return response
+  }
 
-    const newTimerId = setTimeout(() => {
-      setAlert(null)
-    }, 3000)
-
-    setTimerId(newTimerId)
-    setAlert(params)
+  const unPublish = async(id) => {
+    let response
+    await request(`/ecommerce/categories/${id}/un-publish`, {
+      method: 'PUT',
+    })
+      .then(() => {
+        notification({ type: 'success', message: 'Category unpublished' });
+        response = false;
+      })
+      .catch(() => {
+        notification({ type: 'warning', message: 'Category has not been unpublished' });
+        response = true;
+      });
+    return response
   }
 
   return (
     <main style={{ position: 'relative' }}>
-      {
-        alert &&
-          <CustomAlert
-            isActive={!!alert}
-            closeAlert={() => setAlert(null)}
-            title={alert.title}
-            variant={alert.variant}
-            text={alert.text}
-            timerId={timerId}
-          />
-      }
       <HeaderLayout
         primaryAction={
           <Button
             startIcon={ <Plus/> }
-            onClick={ () => setIsCreateVisible(true) }
+            onClick={ () => setVisibleCreate(true) }
           >
             Add category
           </Button>
@@ -131,11 +149,11 @@ const CategoriesPage = () => {
           defaultMessage: 'Configure the ecommerce plugin',
         })}
       />
-      { isCreateVisible &&
+      { visibleCreate &&
         <Create
-          closeHandler = { () => setIsCreateVisible(false) }
-          tableData = { tableData }
-          createCategory = { createCategory }
+          onClose={ () => setVisibleCreate(false) }
+          data={ data }
+          onCreate={ create }
         />
       }
       <ContentLayout>
@@ -144,7 +162,10 @@ const CategoriesPage = () => {
             <Grid>
               <GridItem col={3}>
                 <Select
-                  placeholder={'Sort by category'}
+                  placeholder={formatMessage({
+                    id: getTrad('categories.sort.title'),
+                    defaultMessage: 'Sort by category',
+                  })}
                   value={ sortBy }
                   onChange={ sortHandler }
                   onClear={ sortHandler }
@@ -154,40 +175,114 @@ const CategoriesPage = () => {
               </GridItem>
             </Grid>
           </Stack>
-          <Table rowCount={10} colCount={7}>
-            <Thead>
-              <Tr>
-                <Th><Typography variant="sigma">ID</Typography></Th>
-                <Th><Typography variant="sigma">Image</Typography></Th>
-                <Th><Typography variant="sigma">Name</Typography></Th>
-                <Th><Typography variant="sigma">Slug</Typography></Th>
-                <Th><Typography variant="sigma">Parent</Typography></Th>
-                <Th>
-                  <Flex justifyContent={'center'}>
-                    <Typography variant="sigma">Category level</Typography>
-                  </Flex>
-                </Th>
-                <Th><Typography variant="sigma">Short description</Typography></Th>
-                <Th><Typography variant="sigma">Published</Typography></Th>
-                <Th><VisuallyHidden>Actions</VisuallyHidden></Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {
-                tableData.map(entry => {
-                  return <Tr key={entry.id}>
-                    <RowTable
-                      tableData = { tableData }
-                      rowData={ entry }
-                      updateRowData={(id, data) => updateTableData(id, data)}
-                      deleteRow={(idRow) => deleteRow(idRow)}
-                      publishAlert={(value) => alertHandler(value)}
-                    />
+          { loader
+            ?
+              <Flex
+                width={'100%'}
+                height={'300px'}
+                justifyContent={'center'}
+                alignItems={'center'}
+              >
+                <Loader/>
+              </Flex>
+            :
+              <Table rowCount={10} colCount={7}>
+                <Thead>
+                  <Tr>
+                    <Th><Typography variant="sigma">ID</Typography></Th>
+                    <Th>
+                      <Typography variant="sigma">
+                        {
+                          formatMessage({
+                            id: getTrad('categories.table.header.image'),
+                            defaultMessage: 'Image',
+                          })
+                        }
+                      </Typography>
+                    </Th>
+                    <Th>
+                      <Typography variant="sigma">
+                        {
+                          formatMessage({
+                            id: getTrad('categories.table.header.name'),
+                            defaultMessage: 'Name',
+                          })
+                        }
+                      </Typography>
+                    </Th>
+                    <Th>
+                      <Typography variant="sigma">
+                        {
+                          formatMessage({
+                            id: getTrad('categories.table.header.slug'),
+                            defaultMessage: 'Slug',
+                          })
+                        }
+                      </Typography>
+                    </Th>
+                    <Th>
+                      <Typography variant="sigma">
+                        {
+                          formatMessage({
+                            id: getTrad('categories.table.header.parent'),
+                            defaultMessage: 'Parent',
+                          })
+                        }
+                      </Typography>
+                    </Th>
+                    <Th>
+                      <Flex justifyContent={'center'}>
+                        <Typography variant="sigma">
+                          {
+                            formatMessage({
+                              id: getTrad('categories.table.header.categoryLevel'),
+                              defaultMessage: 'Category Level',
+                            })
+                          }
+                        </Typography>
+                      </Flex>
+                    </Th>
+                    <Th>
+                      <Typography variant="sigma">
+                        {
+                          formatMessage({
+                            id: getTrad('categories.table.header.shortDescription'),
+                            defaultMessage: 'Short Description',
+                          })
+                        }
+                      </Typography>
+                    </Th>
+                    <Th>
+                      <Typography variant="sigma">
+                        {
+                          formatMessage({
+                            id: getTrad('categories.table.header.published'),
+                            defaultMessage: 'Published',
+                          })
+                        }
+                      </Typography>
+                    </Th>
+                    <Th><VisuallyHidden>Actions</VisuallyHidden></Th>
                   </Tr>
-                })
-              }
-            </Tbody>
-          </Table>
+                </Thead>
+                <Tbody>
+                  {
+                    data.map(entry => {
+                      return <Tr key={entry.id}>
+                        <RowTable
+                          data={ data }
+                          rowData={ entry }
+                          onUpdate={ update }
+                          onDelete={ remove }
+                          onPublish={ publish }
+                          onUnPublish={ unPublish }
+                        />
+                      </Tr>
+                    })
+                  }
+                </Tbody>
+            </Table>
+          }
         </Stack>
       </ContentLayout>
     </main>

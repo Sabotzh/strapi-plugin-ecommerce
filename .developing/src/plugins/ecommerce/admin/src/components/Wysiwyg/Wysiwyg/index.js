@@ -34,7 +34,7 @@ const Wysiwyg = ({
   description,
   disabled,
   error,
-  intlLabel,
+  label,
   labelAction,
   name,
   onChange,
@@ -119,19 +119,13 @@ const Wysiwyg = ({
     : '';
 
   const errorMessage = error ? formatMessage({ id: error, defaultMessage: error }) : '';
-  const label = intlLabel.id
-    ? formatMessage(
-        { id: intlLabel.id, defaultMessage: intlLabel.defaultMessage },
-        { ...intlLabel.values }
-      )
-    : name;
 
   return (
     <>
       <Stack size={1}>
         <Stack horizontal size={1}>
           <Typography variant="pi" fontWeight="bold" textColor="neutral800">
-            {label}
+            { label }
             {required && <TypographyAsterisk textColor="danger600">*</TypographyAsterisk>}
           </Typography>
           {labelAction && <LabelAction paddingLeft={1}>{labelAction}</LabelAction>}
@@ -201,11 +195,7 @@ Wysiwyg.propTypes = {
   }),
   disabled: PropTypes.bool,
   error: PropTypes.string,
-  intlLabel: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    defaultMessage: PropTypes.string.isRequired,
-    values: PropTypes.object,
-  }).isRequired,
+  label: PropTypes.string.isRequired,
   labelAction: PropTypes.element,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,

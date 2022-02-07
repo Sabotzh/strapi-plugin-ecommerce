@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-
+import React, { useState } from 'react';
 import Edit from './Edit';
 
 import Pencil from '@strapi/icons/Pencil';
 import Trash from '@strapi/icons/Trash';
 import ExclamationMarkCircle from '@strapi/icons/ExclamationMarkCircle';
+
 import { Td } from '@strapi/design-system/Table';
 import { Typography } from '@strapi/design-system/Typography';
 import { Avatar, Initials } from '@strapi/design-system/Avatar';
@@ -17,8 +17,8 @@ import { Stack } from '@strapi/design-system/Stack';
 import { Button } from '@strapi/design-system/Button';
 
 
-const RowTable = ({ rowData, data, onUpdate, onDelete, onPublish, onUnPublish }) => {
-  const [ toggleSwitch, setToggleSwitch ] = useState(!!rowData.publishedAt);
+const RowTable = ({ data, onUpdate, onDelete, onPublish, onUnPublish }) => {
+  const [ toggleSwitch, setToggleSwitch ] = useState(!!data.publishedAt);
   const [ visibleEdit, setVisibleEdit ] = useState(false);
   const [ visibleDelete, setVisibleDelete ] = useState(false);
 
@@ -26,10 +26,9 @@ const RowTable = ({ rowData, data, onUpdate, onDelete, onPublish, onUnPublish })
     <>
       { visibleEdit &&
         <Edit
-          closeHandler = { () => setVisibleEdit(false) }
-          rowData = { rowData }
-          tableData = { data }
-          updateRowData = { (id, data) => onUpdate(id, data) }
+          onClose = { () => setVisibleEdit(false) }
+          data = { data }
+          onUpdateData = { onUpdate }
         />
       }
       <Dialog onClose={ () => setVisibleDelete(false) } title="Confirmation" isOpen={ visibleDelete }>
@@ -45,34 +44,27 @@ const RowTable = ({ rowData, data, onUpdate, onDelete, onPublish, onUnPublish })
             <Button onClick= { () => setVisibleDelete(false) } variant="tertiary">Cancel</Button>
           }
           endAction = {
-            <Button
-              onClick={ () => {
-                setVisibleDelete(false)
-                onDelete(rowData.id)
-              }}
-              variant="danger-light"
-              startIcon={<Trash/>}
+            <Button onClick={ () => {
+              setVisibleDelete(false)
+              onDelete(data.id)
+            }}
+            variant="danger-light"
+            startIcon={<Trash/>}
             >
               Confirm
             </Button>
           }
         />
       </Dialog>
-      <Td><Typography textColor="neutral800">{ rowData.id }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ data.id }</Typography></Td>
       <Td>
-        { rowData.image?.url
-          ? <Avatar src={rowData.image?.url} alt={data.name}/>
-          : <Initials>{ rowData.name.split(' ').map((word, i) => i < 2 ? word[0]: '').join('') }</Initials> }
+        { data.image?.url
+          ? <Avatar src={data.image?.url} alt={data.name}/>
+          : <Initials>{ data.name.split(' ').map((word, i) => i < 2 ? word[0]: '').join('') }</Initials> }
       </Td>
-      <Td><Typography textColor="neutral800">{ rowData.name }</Typography></Td>
-      <Td><Typography textColor="neutral800">{ rowData.slug }</Typography></Td>
-      <Td><Typography textColor="neutral800">{ rowData.parentCategory?.name }</Typography></Td>
-      <Td><Typography textColor="neutral800">
-        <Flex justifyContent={'center'}>
-          { rowData.categoryLevel }
-        </Flex>
-      </Typography></Td>
-      <Td><Typography textColor="neutral800">{ rowData.shortDescription }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ data.name }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ data.slug }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ data.shortDescription }</Typography></Td>
       <Td>
         <Switch
           label="Published"
@@ -81,8 +73,8 @@ const RowTable = ({ rowData, data, onUpdate, onDelete, onPublish, onUnPublish })
             async () => {
               setToggleSwitch(!toggleSwitch)
               toggleSwitch
-                ? setToggleSwitch(await onUnPublish(rowData.id))
-                : setToggleSwitch(await onPublish(rowData.id))
+                ? setToggleSwitch(await onUnPublish(data.id))
+                : setToggleSwitch(await onPublish(data.id))
             }
           }
         />

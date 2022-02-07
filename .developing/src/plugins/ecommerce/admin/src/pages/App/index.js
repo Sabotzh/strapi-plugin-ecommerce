@@ -6,7 +6,7 @@ import pluginId from '../../pluginId';
 import { useIntl } from 'react-intl';
 import { Helmet } from 'react-helmet';
 
-import { useFocusWhenNavigate, LoadingIndicatorPage } from '@strapi/helper-plugin';
+import { LoadingIndicatorPage } from '@strapi/helper-plugin';
 import { Layout } from '@strapi/design-system/Layout';
 
 import getTrad from '../../utils/getTrad';
@@ -15,12 +15,13 @@ import Navigation from '../../components/Navigation';
 import Dashboard from '../Dashboard';
 import Products from '../Products';
 import Categories from '../Categories';
+import Manufacturer from '../Manufacturer';
 import Customers from '../Customers';
 import Orders from '../Orders';
 import Settings from '../Settings';
 
 const App = () => {
-  useFocusWhenNavigate();
+  // useFocusWhenNavigate();
 
   const { formatMessage } = useIntl();
   const title = formatMessage({
@@ -45,6 +46,10 @@ const App = () => {
             <Route
               path={`/plugins/${pluginId}/categories`}
               component={Categories}
+            />
+            <Route
+              path={`/plugins/${pluginId}/manufacturer`}
+              component={Manufacturer}
             />
             <Route
               path={`/plugins/${pluginId}/customers`}
