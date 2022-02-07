@@ -16,7 +16,7 @@ module.exports = {
       visible: false,
     },
     'content-type-builder': {
-      visible: true,
+      visible: false,
     },
   },
   attributes: {
@@ -31,19 +31,23 @@ module.exports = {
       configurable: false,
     },
     shippingAddress: {
-      type: "string",
+      type: 'string',
       configurable: false,
     },
-    method: {
-      type: "string",
+    paymentMethod: {
+      type: 'string',
+      configurable: false,
+    },
+    paymentData: {
+      type: 'json',
       configurable: false,
     },
     status: {
-      type: "string",
+      type: 'string',
       configurable: false,
     },
     time: {
-      type: "datetime",
+      type: 'datetime',
       configurable: false,
     }
   },

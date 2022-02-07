@@ -16,7 +16,7 @@ module.exports = {
       visible: false,
     },
     'content-type-builder': {
-      visible: false,
+      visible: true,
     },
   },
   attributes: {
@@ -52,12 +52,8 @@ module.exports = {
       max: 50,
       configurable: false,
     },
-    cart: {
-      type: 'json',
-      configurable: false,
-    },
-    wishlist: {
-      type: 'json',
+    attachedToUser: {
+      type: 'string',
       configurable: false,
     },
   },

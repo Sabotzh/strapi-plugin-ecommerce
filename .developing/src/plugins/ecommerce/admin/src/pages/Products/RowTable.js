@@ -9,14 +9,14 @@ import Edit from './Edit';
 
 import { Td } from '@strapi/design-system/Table';
 import { Typography } from '@strapi/design-system/Typography';
-import { Avatar } from '@strapi/design-system/Avatar';
+import { Avatar, Initials } from '@strapi/design-system/Avatar';
 import { Switch } from '@strapi/design-system/Switch';
 import { Flex } from '@strapi/design-system/Flex';
 import { IconButton } from '@strapi/design-system/IconButton';
 import { Box } from '@strapi/design-system/Box';
 import { Popover } from '@strapi/design-system/Popover';
 import { Badge } from '@strapi/design-system/Badge';
-import { SortIcon, stopPropagation, request } from '@strapi/helper-plugin';
+import { SortIcon } from '@strapi/helper-plugin';
 import { Dialog, DialogBody, DialogFooter } from '@strapi/design-system/Dialog';
 import { Stack } from '@strapi/design-system/Stack';
 import { Button } from '@strapi/design-system/Button';
@@ -41,17 +41,17 @@ const ActionWrapper = styled.span`
 `;
 
 
-const RowTable = ({ rowData, updateRowData, deleteRow, allCategories }) => {
-  const [ toggleSwitch, setToggleSwitch ] = useState(!!rowData.publishedAt);
-  const [ editOpen, setEditOpen ] = useState(false);
-  const [ visible, setVisible ] = useState(false);
-  const [ isDeleteVisible, setIsDeleteVisible ] = useState(false);
+const RowTable = ({ data, onUpdate, onDelete, categories, onPublish, onUnPublish }) => {
+  const [ toggleSwitch, setToggleSwitch ] = useState(!!data.publishedAt);
+  const [ editVisible, setEditVisible ] = useState(false);
+  const [ categoriesVisible, setCategoriesVisible ] = useState(false);
+  const [ deleteVisible, setDeleteVisible ] = useState(false);
 
   const buttonRef = useRef();
 
   let badgeColor;
   let badgeBackgroundColor;
-  switch (rowData.status) {
+  switch (data.status) {
     case 'SELLING':
       badgeColor = '#4EB899';
       badgeBackgroundColor = '#DEF7EC';
@@ -66,36 +66,25 @@ const RowTable = ({ rowData, updateRowData, deleteRow, allCategories }) => {
   }
 
   const status = () => {
-    if (rowData.status === 'SELLING') return 'Selling';
-    if (rowData.status === 'ON_ORDER') return 'On order';
-    if (rowData.status === 'UNAVAILABLE') return 'Unavailable';
+    if (data.status === 'SELLING') return 'Selling';
+    if (data.status === 'ON_ORDER') return 'On order';
+    if (data.status === 'UNAVAILABLE') return 'Unavailable';
   }
 
-  const handleTogglePopover = () => setVisible(prev => !prev);
+  const handleTogglePopover = () => setCategoriesVisible(prev => !prev);
 
-  const publishUpdate = async () => {
-    await request(`/ecommerce/products/${rowData.id}/publish`, {
-      method: 'PUT',
-    });
-  }
-
-  const unPublishUpdate = async () => {
-    await request(`/ecommerce/products/${rowData.id}/un-publish`, {
-      method: 'PUT',
-    });
-  }
 
   return (
     <>
-      { editOpen &&
+      { editVisible &&
         <Edit
-          closeHandler = { () => setEditOpen(false) }
-          rowData = { rowData }
-          allCategories = { allCategories }
-          updateRowData = { (id, data) => updateRowData(id, data) }
+          onClose = { () => setEditVisible(false) }
+          data = { data }
+          allCategories = { categories }
+          onUpdate = { onUpdate }
         />
       }
-      <Dialog onClose={ () => setIsDeleteVisible(false) } title="Confirmation" isOpen={ isDeleteVisible }>
+      <Dialog onClose={ () => setDeleteVisible(false) } title="Confirmation" isOpen={ deleteVisible }>
         <DialogBody icon={<ExclamationMarkCircle />}>
           <Stack size={2}>
             <Flex justifyContent="center">
@@ -105,33 +94,39 @@ const RowTable = ({ rowData, updateRowData, deleteRow, allCategories }) => {
         </DialogBody>
         <DialogFooter
           startAction = {
-            <Button onClick= { () => setIsDeleteVisible(false) } variant="tertiary">Cancel</Button>
+            <Button onClick= { () => setDeleteVisible(false) } variant="tertiary">Cancel</Button>
           }
           endAction = {
-            <Button onClick={ () => deleteRow(rowData.id) } variant="danger-light" startIcon={<Trash/>}>Confirm</Button>
+            <Button onClick={ () => onDelete(data.id) } variant="danger-light" startIcon={<Trash/>}>Confirm</Button>
           }
         />
       </Dialog>
-      <Td><Typography textColor="neutral800">{ rowData.sku }</Typography></Td>
-      <Td><Avatar src = { rowData.icon } alt={''} /></Td>
-      <Td><Typography textColor="neutral800">{ rowData.name }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ data.id }</Typography></Td>
       <Td>
-        <Flex { ...stopPropagation }>
-          <RelationCountBadge>{ rowData.categories.length }</RelationCountBadge>
+        { data.image?.url
+        ? <Avatar src={data.image?.url} alt={data.name}/>
+        : <Initials>{ data.name.split(' ').map((word, i) => i < 2 ? word[0]: '').join('') }</Initials> }
+      </Td>
+      <Td><Typography textColor="neutral800">{ data.name }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ data.slug }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ data.sku }</Typography></Td>
+      <Td>
+        <Flex>
+          <RelationCountBadge>{ data.categories.length }</RelationCountBadge>
           <Typography>items</Typography>
-          { rowData.categories.length > 0 && (
+          { data.categories.length > 0 && (
             <ActionWrapper>
               <IconButton
                 onClick={ handleTogglePopover }
                 ref={ buttonRef }
                 noBorder
                 label='Display categories'
-                icon={ <SortIcon isUp={visible} /> }
+                icon={ <SortIcon isUp={categoriesVisible} /> }
               />
-              { visible && (
+              { categoriesVisible && (
                 <Popover source={ buttonRef } spacing={16} centered>
                   <ul style={{ width: '150px' }}>
-                    { rowData.categories.map((el, id) => {
+                    { data.categories.map((el, id) => {
                       return (
                       <Box key={id} padding={3} as="li">
                         <Typography textColor="neutral800">{ el.name }</Typography>
@@ -141,33 +136,31 @@ const RowTable = ({ rowData, updateRowData, deleteRow, allCategories }) => {
             </ActionWrapper>)}
         </Flex>
       </Td>
-      <Td><Typography textColor="neutral800" fontWeight="bold">$ { rowData.price }</Typography></Td>
-      <Td><Typography textColor="neutral800">{ rowData.quantity || 0 }</Typography></Td>
+      <Td><Typography textColor="neutral800" fontWeight="bold">$ { data.price }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ data.quantity || 0 }</Typography></Td>
       <Td><BadgeStyled color={ badgeColor } backgroundColor={ badgeBackgroundColor }>{ status() }</BadgeStyled></Td>
-      <Td><Typography textColor="neutral800" fontWeight="bold">{ rowData.discount || 0  }%</Typography></Td>
+      <Td><Typography textColor="neutral800" fontWeight="bold">{ data.discount || 0  }%</Typography></Td>
       <Td>
         <Switch label="Published" selected={ toggleSwitch }
           onChange = {
-            () => {
-              if (toggleSwitch) {
-                unPublishUpdate()
-              } else {
-                publishUpdate()
-              }
+            async () => {
               setToggleSwitch(!toggleSwitch)
+              toggleSwitch
+                ? setToggleSwitch(await onUnPublish(data.id))
+                : setToggleSwitch(await onPublish(data.id))
             }
           }
         />
       </Td>
       <Td>
         <Flex>
-          <IconButton onClick={ () => setEditOpen(true) } label="Edit" noBorder icon = { <Pencil /> }/>
+          <IconButton onClick={ () => setEditVisible(true) } label="Edit" noBorder icon = { <Pencil /> }/>
           <Box paddingLeft={1}>
             <IconButton
               label="Delete"
               noBorder
               icon={ <Trash/> }
-              onClick={ () => setIsDeleteVisible(true) }
+              onClick={ () => setDeleteVisible(true) }
             />
           </Box>
         </Flex>

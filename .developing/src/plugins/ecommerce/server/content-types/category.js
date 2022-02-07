@@ -26,7 +26,8 @@ module.exports = {
       required: false,
       allowedTypes: [
         'images'
-      ]
+      ],
+      configurable: false,
     },
     name: {
       type: 'string',

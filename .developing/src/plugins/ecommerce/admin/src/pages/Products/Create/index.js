@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
-import CollectionType from '@strapi/icons/CollectionType';
+import Wysiwyg from "../../../components/Wysiwyg/Wysiwyg";
+import InputImage from "../../../components/InputImage";
 import validate from '../../../utils/validate';
 
+import CollectionType from '@strapi/icons/CollectionType';
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
-import { request  } from '@strapi/helper-plugin';
 import { Box } from '@strapi/design-system/Box';
+import { useNotification } from '@strapi/helper-plugin';
 import { Stack } from '@strapi/design-system/Stack';
 import { Breadcrumbs, Crumb } from '@strapi/design-system/Breadcrumbs';
 import { Typography } from '@strapi/design-system/Typography';
@@ -17,11 +19,11 @@ import { NumberInput } from '@strapi/design-system/NumberInput';
 import { Button } from '@strapi/design-system/Button';
 import { Textarea } from "@strapi/design-system/Textarea";
 import { DatePicker } from '@strapi/design-system/DatePicker';
-
+import { ToggleCheckbox } from '@strapi/design-system/ToggleCheckbox';
 
 const statusArr = [ 'SELLING', 'ON_ORDER', 'UNAVAILABLE' ];
 
-const Edit = ({ closeHandler, postProduct, allCategories } ) => {
+const Edit = ({ onClose, onCreate, allCategories } ) => {
   const [ name, setName ] = useState('');
   const [ slug, setSlug ] = useState('');
   const [ sku, setSku ] = useState('');
@@ -33,40 +35,38 @@ const Edit = ({ closeHandler, postProduct, allCategories } ) => {
   const [ minQuantity, setMinQuantity ] = useState();
   const [ status, setStatus ] = useState(statusArr[0]);
   const [ discount, setDiscount ] = useState();
+  const [ published, setPublished ] = useState(false);
   const [ description, setDescription ] = useState('');
   const [ shortDescription, setShortDescription ] = useState('');
+  const [ image, setImage ] = useState(null);
   const [ metaTitle, setMetaTitle ] = useState('');
   const [ metaKeywords, setMetaKeywords ] = useState('');
   const [ metaDescription, setMetaDescription ] = useState('');
+
+  const notification = useNotification()
   const [ errors, setErrors] = useState({});
 
   const submitButtonHandler = async() => {
     setErrors({});
 
     let { success, validateErrors } = validate({
-      name, sku, slug, price, shortDescription, description, metaTitle, metaKeywords, metaDescription
+      name, sku, price, shortDescription, description, metaTitle, metaKeywords, metaDescription
     });
 
-    const categoryWithTheSameSlug = await request(`/ecommerce/products/by-slug/${slug}`).catch(() => {});
-    if (categoryWithTheSameSlug) {
-      success = false;
-      setErrors({ ...validateErrors, slug: 'This name is taken' });
-    }
-
     if (success) {
-      postProduct({
-        name, slug, sku, icon, categories, price, dateAvailable, quantity, min_quantity: minQuantity,
-        status, discount, description, short_description: shortDescription,
-        meta_description: metaDescription, meta_title: metaTitle, meta_keywords: metaKeywords,
+      onCreate({
+        name, slug, sku, icon, categories, price, dateAvailable, quantity, minQuantity, status, discount,
+        description, shortDescription, image, metaDescription, metaTitle, metaKeywords, publishedAt: published
       });
-      closeHandler();
+      onClose();
     } else {
+      notification({ type: 'warning', message: 'Fill in all fields' })
       setErrors(validateErrors);
     }
   }
 
   return (
-    <ModalLayout onClose={ () => closeHandler() } labelledBy="Edit">
+    <ModalLayout onClose={ () => onClose() } labelledBy="Edit">
       <ModalHeader>
         <Stack horizontal size={2}>
           <CollectionType/>
@@ -183,15 +183,39 @@ const Edit = ({ closeHandler, postProduct, allCategories } ) => {
                 selectedDateLabel={formattedDate => `Date picker, current is ${formattedDate}`}
               />
             </GridItem>
-            <GridItem col={12}>
-              <Textarea error={ errors.shortDescription } label="Short description" name="short description" onChange={e => setShortDescription(e.target.value)}>
+            <GridItem col={6}>
+              <Textarea
+                error={ errors.shortDescription }
+                label="Short description"
+                name="short description"
+                onChange={e => setShortDescription(e.target.value)}>
                 { shortDescription }
               </Textarea>
             </GridItem>
+            <GridItem col={6}>
+              <InputImage
+                label={'Image'}
+                selectedAsset={image}
+                deleteSelectedAsset={() => setImage(null)}
+                onFinish ={(image) => setImage(...image)}/>
+            </GridItem>
             <GridItem col={12}>
-              <Textarea error={ errors.description } label="Description" name="description" onChange={e => setDescription(e.target.value)}>
-                { description }
-              </Textarea>
+              <Wysiwyg
+                disabled={ false }
+                label={ 'Description' }
+                value={ description }
+                name='description'
+                onChange={ e => setDescription(e.target.value) }
+                error={ errors.description }
+              />
+            </GridItem>
+            <GridItem col={6}>
+              <Stack size={1}>
+                <Typography fontWeight={'bold'} variant={'pi'}>Published</Typography>
+                <ToggleCheckbox onLabel={'On'} offLabel={'Off'} checked={ published } onChange={() => {setPublished(!published)}}>
+                  Published
+                </ToggleCheckbox>
+              </Stack>
             </GridItem>
           </Grid>
           <Box paddingTop={5} paddingBottom={3}><Typography variant={'beta'}>SEO</Typography></Box>
@@ -223,7 +247,7 @@ const Edit = ({ closeHandler, postProduct, allCategories } ) => {
         </Box>
       </ModalBody>
       <ModalFooter
-        startActions = { <Button onClick = { closeHandler } variant="tertiary"> Cancel </Button> }
+        startActions = { <Button onClick = { onClose } variant="tertiary"> Cancel </Button> }
         endActions = { <Button onClick = { submitButtonHandler }> Finish </Button> }
       />
     </ModalLayout>

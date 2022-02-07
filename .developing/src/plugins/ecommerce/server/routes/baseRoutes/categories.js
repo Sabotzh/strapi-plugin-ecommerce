@@ -13,6 +13,12 @@ module.exports = [
   },
   {
     method: 'GET',
+    path: '/categories/:sort',
+    handler: 'categories.findSorted',
+    config: {},
+  },
+  {
+    method: 'GET',
     path: '/categories/:id',
     handler: 'categories.findOne',
     config: {},
