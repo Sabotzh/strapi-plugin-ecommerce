@@ -9,15 +9,15 @@ import TableLoader from '../../components/TableLoader'
 
 import Plus from '@strapi/icons/Plus';
 import { useIntl } from 'react-intl';
-import { useFocusWhenNavigate, request, useNotification  } from '@strapi/helper-plugin';
+import { request, useNotification  } from '@strapi/helper-plugin';
 import { HeaderLayout, ContentLayout } from '@strapi/design-system/Layout';
 import { Table, Thead, Tbody, Tr, Th, Td } from '@strapi/design-system/Table';
 import { Typography } from '@strapi/design-system/Typography';
 import { VisuallyHidden } from "@strapi/design-system/VisuallyHidden";
 import { Stack } from '@strapi/design-system/Stack';
 import { Button } from '@strapi/design-system/Button';
-import { EmptyStateLayout } from '@strapi/design-system/EmptyStateLayout';
 import { Grid } from '@strapi/design-system/Grid';
+import TableEmptyModal from '../../components/TableEmptyModal';
 
 
 const ProductsPage = () => {
@@ -192,26 +192,7 @@ const ProductsPage = () => {
                   )
               }
               {
-                !(data.length) && !loader && (
-                  <Tr>
-                    <Td colSpan={12}>
-                      <EmptyStateLayout
-                        shadow={null}
-                        icon={<Illo/>}
-                        content="No content found"
-                        action={
-                          <Button
-                            variant="secondary"
-                            startIcon={<Plus/>}
-                            onClick={ () => setCreateVisible(true) }
-                          >
-                            Add product
-                          </Button>
-                        }
-                      />
-                    </Td>
-                  </Tr>
-                )
+                !(data.length) && !loader && <TableEmptyModal col={12} onClick={ () => setCreateVisible(true) }/>
               }
             </Tbody>
           </Table>
