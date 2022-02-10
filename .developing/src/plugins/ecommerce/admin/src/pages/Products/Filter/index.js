@@ -22,7 +22,7 @@ const Filter = ({ filterValues, unSortedData, updateData, refFilter }) => {
     <>
       <GridItem col={3}>
         <Select
-          placeholder={ 'Sort by category' }
+          placeholder={ 'Filter by category' }
           value={ category }
           values={ filterValues[0] }
           onChange={ (value) => {
