@@ -83,7 +83,7 @@ const Navigation = () => {
     { id: 1, label: getTrad('dashboard.title'), link: 'dashboard', icon: <Dashboard /> },
     { id: 2, label: getTrad('products.title'), link: 'products', icon: <Products /> },
     { id: 3, label: getTrad('categories.title'), link: 'categories', icon: <Categories /> },
-    { id: 4, label: getTrad('manufacturer.title'), link: 'manufacturer', icon: <Manufacturer /> },
+    { id: 4, label: getTrad('manufacturer.title'), link: 'manufacturers', icon: <Manufacturer /> },
     { id: 5, label: getTrad('customers.title'), link: 'customers', icon: <Customers /> },
     { id: 6, label: getTrad('orders.title'), link: 'orders', icon: <Orders /> },
     { id: 7, label: getTrad('settings.title'), link: 'settings', icon: <Settings /> },

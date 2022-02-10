@@ -159,7 +159,7 @@ const ProductsPage = () => {
             <Thead>
               <Tr>
                 <Th><Typography variant="sigma">ID</Typography></Th>
-                <Th><Typography variant="sigma">Icon</Typography></Th>
+                <Th><Typography variant="sigma">Image</Typography></Th>
                 <Th><Typography variant="sigma">Product name</Typography></Th>
                 <Th><Typography variant="sigma">Slug</Typography></Th>
                 <Th><Typography variant="sigma">SKU</Typography></Th>

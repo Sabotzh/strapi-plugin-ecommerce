@@ -30,7 +30,7 @@ const ManufacturerPage = () => {
   const { formatMessage } = useIntl();
   const title = formatMessage({
     id: getTrad('manufacturer.title'),
-    defaultMessage: 'Manufacturer',
+    defaultMessage: 'Manufacturers',
   });
 
   const getData = async () => {

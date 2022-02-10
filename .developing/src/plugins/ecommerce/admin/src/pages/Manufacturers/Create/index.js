@@ -68,8 +68,8 @@ const Create = ({ data, onCreate, onClose }) => {
       <ModalHeader>
         <Stack horizontal size={2}>
           <CollectionType/>
-          <Breadcrumbs label="Category model, name field">
-            <Crumb>Manufacturer</Crumb>
+          <Breadcrumbs label="Manufacturers model, name field">
+            <Crumb>Manufacturers</Crumb>
           </Breadcrumbs>
         </Stack>
       </ModalHeader>
