@@ -180,7 +180,7 @@ const CategoriesPage = () => {
                 <Select
                   placeholder={formatMessage({
                     id: getTrad('categories.sort.title'),
-                    defaultMessage: 'Sort by category',
+                    defaultMessage: 'Filter by category',
                   })}
                   value={ sortBy }
                   onChange={ sortHandler }

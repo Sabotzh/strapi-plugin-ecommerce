@@ -100,6 +100,22 @@ const Edit = ({ onClose, onCreate, allCategories } ) => {
                 error={ errors.slug }
               />
             </GridItem>
+            <GridItem col={12}>
+              <InputImage
+                label={'Image'}
+                selectedAsset={image}
+                deleteSelectedAsset={() => setImage(null)}
+                onFinish ={(image) => setImage(...image)}/>
+            </GridItem>
+            <GridItem col={12}>
+              <Textarea
+                error={ errors.shortDescription }
+                label="Short description"
+                name="short description"
+                onChange={e => setShortDescription(e.target.value)}>
+                { shortDescription }
+              </Textarea>
+            </GridItem>
             <GridItem col={6}>
               <Select
                 label={'Category'}
@@ -122,11 +138,14 @@ const Edit = ({ onClose, onCreate, allCategories } ) => {
               />
             </GridItem>
             <GridItem col={3}>
-              <TextInput
-                name="icon"
-                label="Icon"
-                value={icon}
-                onChange={ e => setIcon(e.target.value) }
+              <DatePicker
+                onChange={ setDateAvailable }
+                selectedDate={ dateAvailable }
+                label="Date available"
+                name="dateAvailable"
+                clearLabel={'Clear the datepicker'}
+                onClear={ () => setDateAvailable(null) }
+                selectedDateLabel={formattedDate => `Date picker, current is ${formattedDate}`}
               />
             </GridItem>
             <GridItem col={6}>
@@ -171,33 +190,6 @@ const Edit = ({ onClose, onCreate, allCategories } ) => {
                 value={ minQuantity }
                 onValueChange={value => setMinQuantity(value)}
               />
-            </GridItem>
-            <GridItem col={3}>
-              <DatePicker
-                onChange={ setDateAvailable }
-                selectedDate={ dateAvailable }
-                label="Date available"
-                name="dateAvailable"
-                clearLabel={'Clear the datepicker'}
-                onClear={ () => setDateAvailable(null) }
-                selectedDateLabel={formattedDate => `Date picker, current is ${formattedDate}`}
-              />
-            </GridItem>
-            <GridItem col={6}>
-              <Textarea
-                error={ errors.shortDescription }
-                label="Short description"
-                name="short description"
-                onChange={e => setShortDescription(e.target.value)}>
-                { shortDescription }
-              </Textarea>
-            </GridItem>
-            <GridItem col={6}>
-              <InputImage
-                label={'Image'}
-                selectedAsset={image}
-                deleteSelectedAsset={() => setImage(null)}
-                onFinish ={(image) => setImage(...image)}/>
             </GridItem>
             <GridItem col={12}>
               <Wysiwyg

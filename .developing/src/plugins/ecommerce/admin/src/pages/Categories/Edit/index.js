@@ -15,6 +15,7 @@ import { Textarea } from '@strapi/design-system/Textarea';
 
 import validateCategories from "../../../utils/validate";
 import Wysiwyg from "../../../components/Wysiwyg/Wysiwyg";
+import InputImage from "../../../components/InputImage";
 
 
 const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
@@ -26,6 +27,7 @@ const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
   const [ metaTitle, setMetaTitle ] = useState(rowData.metaTitle);
   const [ metaKeywords, setMetaKeywords ] = useState(rowData.metaKeywords);
   const [ metaDescription, setMetaDescription ] = useState(rowData.metaDescription);
+  const [ image, setImage ] = useState(rowData.image);
 
   const [ errors, setErrors] = useState({});
 
@@ -64,6 +66,24 @@ const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
                 onChange={ e => setSlug(e.target.value) }
               />
             </GridItem>
+            <GridItem col={12}>
+              <InputImage
+                label='Image'
+                selectedAsset={ image }
+                deleteSelectedAsset={ () => setImage(null) }
+                onFinish={ (image) => setImage(...image) }
+              />
+            </GridItem>
+            <GridItem col={12}>
+              <Textarea
+                error={ errors.shortDescription }
+                label="Short description"
+                name="shortDescription"
+                onChange={e => setShortDescription(e.target.value)}
+              >
+                { shortDescription }
+              </Textarea>
+            </GridItem>
             <GridItem col={6}>
               <Select
                 label='Parent'
@@ -79,19 +99,9 @@ const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
               </Select>
             </GridItem>
             <GridItem col={12}>
-              <Textarea
-                error={ errors.shortDescription }
-                label="Short description"
-                name="shortDescription"
-                onChange={e => setShortDescription(e.target.value)}
-              >
-                { shortDescription }
-              </Textarea>
-            </GridItem>
-            <GridItem col={12}>
               <Wysiwyg
                 disabled={ false }
-                intlLabel={ { id: 'id', defaultMessage: 'Description', values: undefined } }
+                label={ 'Description' }
                 value={ description }
                 name="rich-text"
                 onChange={ e => setDescription(e.target.value) }
@@ -99,7 +109,7 @@ const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
               />
             </GridItem>
           </Grid>
-          <Box paddingTop={5} paddingBottom={3}><Typography variant={'beta'}>SEO</Typography></Box>
+          <Box paddingTop={9} paddingBottom={3}><Typography variant={'beta'}>SEO</Typography></Box>
           <Divider/>
           <Box paddingTop={5}>
             <Grid gap={5}>
@@ -138,6 +148,7 @@ const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
             closeHandler()
             updateRowData(rowData.id, {
               name,
+              image,
               parentCategory: selectParent,
               slug,
               shortDescription,

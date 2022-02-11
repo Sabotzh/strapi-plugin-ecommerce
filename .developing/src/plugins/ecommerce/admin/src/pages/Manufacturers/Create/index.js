@@ -97,17 +97,22 @@ const Create = ({ data, onCreate, onClose }) => {
                 onChange={ e => setSlug(e.target.value) }
               />
             </GridItem>
-            <GridItem col={6}>
-              <Textarea error={ errors.shortDescription } label="Short description" name="shortDescription" onChange={e => setShortDescription(e.target.value)}>
-                { shortDescription }
-              </Textarea>
-            </GridItem>
-            <GridItem col={6}>
+            <GridItem col={12}>
               <InputImage
                 label={'Image'}
                 selectedAsset={image}
                 deleteSelectedAsset={() => setImage(null)}
                 onFinish ={(image) => setImage(...image)}/>
+            </GridItem>
+            <GridItem col={12}>
+              <Textarea
+                error={ errors.shortDescription }
+                label="Short description"
+                name="shortDescription"
+                onChange={e => setShortDescription(e.target.value)}
+              >
+                { shortDescription }
+              </Textarea>
             </GridItem>
             <GridItem col={12}>
               <Wysiwyg
@@ -129,7 +134,7 @@ const Create = ({ data, onCreate, onClose }) => {
             </GridItem>
           </Grid>
         </Box>
-        <Box paddingTop={5} paddingBottom={3}><Typography variant={'beta'}>SEO</Typography></Box>
+        <Box paddingTop={9} paddingBottom={3}><Typography variant={'beta'}>SEO</Typography></Box>
         <Divider/>
         <Box paddingTop={5}>
           <Grid gap={5}>

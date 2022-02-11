@@ -161,6 +161,24 @@ const Create = ({ data, onCreate, onClose }) => {
                 onChange={ e => setSlug(e.target.value) }
               />
             </GridItem>
+            <GridItem col={12}>
+              <InputImage
+                label={ imageLabel }
+                selectedAsset={ image }
+                deleteSelectedAsset={ () => setImage(null) }
+                onFinish={ (image) => setImage(...image) }
+              />
+            </GridItem>
+            <GridItem col={12}>
+              <Textarea
+                error={ errors.shortDescription }
+                label={ shortDescriptionLabel }
+                name="shortDescription"
+                onChange={e => setShortDescription(e.target.value)}
+              >
+                { shortDescription }
+              </Textarea>
+            </GridItem>
             <GridItem col={6}>
               <Select
                 label={ parentLabel }
@@ -188,24 +206,6 @@ const Create = ({ data, onCreate, onClose }) => {
                 </ToggleCheckbox>
               </Stack>
             </GridItem>
-            <GridItem col={6}>
-              <Textarea
-                error={ errors.shortDescription }
-                label={ shortDescriptionLabel }
-                name="shortDescription"
-                onChange={e => setShortDescription(e.target.value)}
-              >
-                { shortDescription }
-              </Textarea>
-            </GridItem>
-            <GridItem col={6} paddingTop={5}>
-              <InputImage
-                label={ imageLabel }
-                selectedAsset={ image }
-                deleteSelectedAsset={ () => setImage(null) }
-                onFinish={ (image) => setImage(...image) }
-              />
-            </GridItem>
             <GridItem col={12}>
               <Wysiwyg
                 disabled={ false }
@@ -218,7 +218,7 @@ const Create = ({ data, onCreate, onClose }) => {
             </GridItem>
           </Grid>
         </Box>
-        <Box paddingTop={5} paddingBottom={3}><Typography variant={'beta'}>SEO</Typography></Box>
+        <Box paddingTop={9} paddingBottom={3}><Typography variant={'beta'}>SEO</Typography></Box>
         <Divider/>
         <Box paddingTop={5}>
           <Grid gap={5}>

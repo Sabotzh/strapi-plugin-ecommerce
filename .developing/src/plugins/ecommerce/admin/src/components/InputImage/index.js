@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import axios from "axios";
+import { ext } from "../../utils/getExt";
 
-import { Flex } from '@strapi/design-system/Flex';
-import { Box } from '@strapi/design-system/Box';
-import { Stack } from '@strapi/design-system/Stack';
-import { request } from '@strapi/helper-plugin';
 import AssetDialog from "../AssetDialog"
-import { Field, FieldLabel, FieldHint, FieldError, FieldInput, FieldAction } from '@strapi/design-system/Field';
 import { EmptyInput } from './EmptyInput'
 import { InputActions } from "./InputActions";
 import { EditAssetDialog } from "../EditAssetDialog";
 import { UploadAssetDialog } from "../UploadAssetDialog/UploadAssetDialog";
-import { ext } from "../../utils/getExt";
-import axios from "axios";
+import PropTypes from 'prop-types';
+import { Flex } from '@strapi/design-system/Flex';
+import { Box } from '@strapi/design-system/Box';
+import { Stack } from '@strapi/design-system/Stack';
+import { request } from '@strapi/helper-plugin';
+import { Field, FieldLabel, FieldError } from '@strapi/design-system/Field';
 import { ConfirmDialog } from '@strapi/helper-plugin';
 
 
@@ -24,9 +24,7 @@ const InputImage = ({ onFinish, selectedAsset, deleteSelectedAsset, label, error
   const [ uploadError, setUploadError ] = useState(false)
   const [ data, setData ] = useState([])
   const [ editableAsset, setEditableAsset ] = useState(undefined)
-
   const [ selectDelete, setSelectDelete ] = useState(undefined)
-
 
   const getData = async () => {
     const qs = require('qs');
@@ -69,7 +67,7 @@ const InputImage = ({ onFinish, selectedAsset, deleteSelectedAsset, label, error
           borderWidth= '1px'
           borderColor={ !error ? 'neutral300' : 'danger600'}
           borderRadius="4px"
-          style={{ height: '10rem', position: 'relative' }}
+          style={{ height: '13rem', position: 'relative' }}
           background={"neutral100"}
           padding={2}
           paddingBottom={4}

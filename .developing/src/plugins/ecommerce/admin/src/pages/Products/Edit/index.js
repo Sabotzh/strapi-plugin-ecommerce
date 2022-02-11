@@ -26,8 +26,8 @@ const statusArr = [ 'SELLING', 'ON_ORDER', 'UNAVAILABLE' ];
 const Edit = ({ data, onClose, onUpdate, allCategories } ) => {
   const [ name, setName ] = useState(data.name);
   const [ slug, setSlug ] = useState(data.slug);
+  const [ image, setImage ] = useState(data.image);
   const [ sku, setSku ] = useState(data.sku);
-  const [ icon, setIcon ] = useState(data.icon);
   const [ categories, setCategories ] = useState(data.categories.map(el => el.id));
   const [ price, setPrice ] = useState(data.price || undefined);
   const [ dateAvailable, setDateAvailable ] = useState(null);//data.dateAvailable
@@ -41,7 +41,6 @@ const Edit = ({ data, onClose, onUpdate, allCategories } ) => {
   const [ metaTitle, setMetaTitle ] = useState(data.metaTitle);
   const [ metaKeywords, setMetaKeywords ] = useState(data.metaKeywords);
   const [ metaDescription, setMetaDescription ] = useState(data.metaDescription);
-  const [ image, setImage ] = useState(data.image)
   const [ errors, setErrors] = useState({});
 
   const submitButtonHandler = async() => {
@@ -61,7 +60,7 @@ const Edit = ({ data, onClose, onUpdate, allCategories } ) => {
 
     if (success) {
       onUpdate(data.id, {
-        name, slug, sku, icon, categories, price, dateAvailable, quantity, minQuantity, status, discount,
+        name, slug, sku, categories, price, dateAvailable, quantity, minQuantity, status, discount,
         description, shortDescription, metaDescription,metaTitle, metaKeywords, image
       });
       onClose();
@@ -106,6 +105,23 @@ const Edit = ({ data, onClose, onUpdate, allCategories } ) => {
                 error={ errors.slug }
               />
             </GridItem>
+            <GridItem col={12}>
+              <InputImage
+                label={'Image'}
+                error={''}
+                selectedAsset={image}
+                deleteSelectedAsset={() => setImage(null)}
+                onFinish ={(image) => setImage(...image)}/>
+            </GridItem>
+            <GridItem col={12}>
+              <Textarea
+                error={ errors.shortDescription }
+                label="Short description"
+                name="short description"
+                onChange={e => setShortDescription(e.target.value)}>
+                { shortDescription }
+              </Textarea>
+            </GridItem>
             <GridItem col={6}>
               <Select
                 label={'Category'}
@@ -128,11 +144,14 @@ const Edit = ({ data, onClose, onUpdate, allCategories } ) => {
               />
             </GridItem>
             <GridItem col={3}>
-              <TextInput
-                name="icon"
-                label="Icon"
-                value={icon}
-                onChange={ e => setIcon(e.target.value) }
+              <DatePicker
+                onChange={ setDateAvailable }
+                selectedDate={ dateAvailable }
+                label="Date available"
+                name="dateAvailable"
+                clearLabel={'Clear the datepicker'}
+                onClear={ () => setDateAvailable(null) }
+                selectedDateLabel={formattedDate => `Date picker, current is ${formattedDate}`}
               />
             </GridItem>
             <GridItem col={6}>
@@ -178,30 +197,6 @@ const Edit = ({ data, onClose, onUpdate, allCategories } ) => {
                 onValueChange={value => setMinQuantity(value)}
               />
             </GridItem>
-            <GridItem col={3}>
-              <DatePicker
-                onChange={ setDateAvailable }
-                selectedDate={ dateAvailable }
-                label="Date available"
-                name="dateAvailable"
-                clearLabel={'Clear the datepicker'}
-                onClear={ () => setDateAvailable(null) }
-                selectedDateLabel={formattedDate => `Date picker, current is ${formattedDate}`}
-              />
-            </GridItem>
-            <GridItem col={6}>
-              <Textarea error={ errors.shortDescription } label="Short description" name="short description" onChange={e => setShortDescription(e.target.value)}>
-                { shortDescription }
-              </Textarea>
-            </GridItem>
-            <GridItem col={6}>
-              <InputImage
-                label={'Image'}
-                error={''}
-                selectedAsset={image}
-                deleteSelectedAsset={() => setImage(null)}
-                onFinish ={(image) => setImage(...image)}/>
-            </GridItem>
             <GridItem col={12}>
               <Wysiwyg
                 disabled={ false }
@@ -221,7 +216,7 @@ const Edit = ({ data, onClose, onUpdate, allCategories } ) => {
               </Stack>
             </GridItem>
           </Grid>
-          <Box paddingTop={5} paddingBottom={3}><Typography variant={'beta'}>SEO</Typography></Box>
+          <Box paddingTop={9} paddingBottom={3}><Typography variant={'beta'}>SEO</Typography></Box>
           <Grid gap={5}>
             <GridItem col={6}>
               <TextInput
