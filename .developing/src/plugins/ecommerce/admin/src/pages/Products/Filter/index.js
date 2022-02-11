@@ -1,19 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useImperativeHandle  } from 'react';
 
 import { GridItem } from '@strapi/design-system/Grid';
 
 import Select from "../../../components/Select";
 import filter from "./filter"
 
-const Filter = ({ filterValues, unSortedData, updateData }) => {
+const Filter = ({ filterValues, unSortedData, updateData, refFilter }) => {
   const [ category, setCategory ] = useState('');
   const [ price, setPrice ] = useState('');
+
+  useImperativeHandle(refFilter, () => ({
+    runFilter() {
+      if (!price && !category) return false
+      filter(unSortedData, updateData, category, price)
+      console.log(updateData)
+      return true
+    }
+  }))
 
   return (
     <>
       <GridItem col={3}>
         <Select
-          placeholder={ 'Sort by category' }
+          placeholder={ 'Filter by category' }
           value={ category }
           values={ filterValues[0] }
           onChange={ (value) => {

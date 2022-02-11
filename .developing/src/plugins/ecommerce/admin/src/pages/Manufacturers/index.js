@@ -5,10 +5,10 @@ import { useIntl } from 'react-intl';
 import RowTable from './RowTable';
 import Create from './Create'
 import getTrad from '../../utils/getTrad';
+import TableLoader from '../../components/TableLoader';
+import TableEmptyModal from '../../components/TableEmptyModal';
 
 import Plus from '@strapi/icons/Plus';
-import { Loader } from '@strapi/design-system/Loader';
-import { Flex } from '@strapi/design-system/Flex';
 import { useFocusWhenNavigate } from '@strapi/helper-plugin';
 import { HeaderLayout, ContentLayout } from '@strapi/design-system/Layout';
 import { Button } from '@strapi/design-system/Button';
@@ -24,17 +24,16 @@ const ManufacturerPage = () => {
 
   const [ data, setData ] = useState([])
   const [ createVisible, setCreateVisible ] = useState(false)
-  const [ loader, setLoader ] = useState(false)
+  const [ loader, setLoader ] = useState(true)
   const notification = useNotification()
 
   const { formatMessage } = useIntl();
   const title = formatMessage({
     id: getTrad('manufacturer.title'),
-    defaultMessage: 'Manufacturer',
+    defaultMessage: 'Manufacturers',
   });
 
   const getData = async () => {
-    setLoader(true)
     const query = qs.stringify(
       { orderBy: { id: 'asc' }, populate: ['image'] },
       { encodeValuesOnly: true }
@@ -133,30 +132,24 @@ const ManufacturerPage = () => {
         )}
         <ContentLayout>
           <Stack size={7}>
-            { loader
-              ?
-                <Flex
-                  width={'100%'}
-                  height={'300px'}
-                  justifyContent={'center'}
-                  alignItems={'center'}
-                >
-                  <Loader/>
-                </Flex>
-              : <Table colCount={9} rowCount={15}>
-                <Thead>
-                  <Tr>
-                    <Th><Typography variant="sigma">ID</Typography></Th>
-                    <Th><Typography variant="sigma">Image</Typography></Th>
-                    <Th><Typography variant="sigma">Name</Typography></Th>
-                    <Th><Typography variant="sigma">Slug</Typography></Th>
-                    <Th><Typography variant="sigma">Short Description</Typography></Th>
-                    <Th><Typography variant="sigma">Published</Typography></Th>
-                    <Th><VisuallyHidden>Actions</VisuallyHidden></Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {
+            <Table colCount={9} rowCount={15}>
+              <Thead>
+                <Tr>
+                  <Th><Typography variant="sigma">ID</Typography></Th>
+                  <Th><Typography variant="sigma">Image</Typography></Th>
+                  <Th><Typography variant="sigma">Name</Typography></Th>
+                  <Th><Typography variant="sigma">Slug</Typography></Th>
+                  <Th><Typography variant="sigma">Short Description</Typography></Th>
+                  <Th><Typography variant="sigma">Published</Typography></Th>
+                  <Th><VisuallyHidden>Actions</VisuallyHidden></Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {
+                  loader && <TableLoader col={7}/>
+                }
+                {
+                  !loader &&
                     data.map(entry =>
                       <Tr key={entry.id}>
                         <RowTable
@@ -168,10 +161,13 @@ const ManufacturerPage = () => {
                         />
                       </Tr>
                     )
-                  }
-                </Tbody>
-              </Table>
-            }
+                }
+                {
+                  !(data.length) && !loader &&
+                  <TableEmptyModal col={9} onClick={ () => setCreateVisible(true) }/>
+                }
+              </Tbody>
+            </Table>
           </Stack>
         </ContentLayout>
       </main>
