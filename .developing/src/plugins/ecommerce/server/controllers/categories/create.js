@@ -13,7 +13,7 @@ module.exports = ({ strapi }) => async (ctx) => {
 
   const categoryWithTheSameName = await strapi
     .query('plugin::ecommerce.category')
-    .findOne({ where: { name: { $contains: data.name } }});
+    .findOne({ where: { name: data.name }});
   if (categoryWithTheSameName) {
     ctx.status = 400;
     ctx.body = `Field "name" must be unique`
