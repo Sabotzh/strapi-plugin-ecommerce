@@ -15,7 +15,7 @@ import Navigation from '../../components/Navigation';
 import Dashboard from '../Dashboard';
 import Products from '../Products';
 import Categories from '../Categories';
-import Manufacturer from '../Manufacturer';
+import Manufacturers from '../Manufacturers';
 import Customers from '../Customers';
 import Orders from '../Orders';
 import Settings from '../Settings';
@@ -48,8 +48,8 @@ const App = () => {
               component={Categories}
             />
             <Route
-              path={`/plugins/${pluginId}/manufacturer`}
-              component={Manufacturer}
+              path={`/plugins/${pluginId}/manufacturers`}
+              component={Manufacturers}
             />
             <Route
               path={`/plugins/${pluginId}/customers`}

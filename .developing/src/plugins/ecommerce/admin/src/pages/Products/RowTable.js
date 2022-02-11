@@ -48,6 +48,14 @@ const RowTable = ({ data, onUpdate, onDelete, categories, onPublish, onUnPublish
   const [ deleteVisible, setDeleteVisible ] = useState(false);
 
   const buttonRef = useRef();
+  const handleTogglePopover = () => setCategoriesVisible(prev => !prev);
+
+
+  document.addEventListener('mouseup', (e) => {
+    if (buttonRef.current !== e.target) setCategoriesVisible(false)
+  })
+
+
 
   let badgeColor;
   let badgeBackgroundColor;
@@ -70,8 +78,6 @@ const RowTable = ({ data, onUpdate, onDelete, categories, onPublish, onUnPublish
     if (data.status === 'ON_ORDER') return 'On order';
     if (data.status === 'UNAVAILABLE') return 'Unavailable';
   }
-
-  const handleTogglePopover = () => setCategoriesVisible(prev => !prev);
 
 
   return (

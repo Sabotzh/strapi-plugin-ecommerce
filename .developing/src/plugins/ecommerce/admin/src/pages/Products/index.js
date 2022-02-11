@@ -1,36 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import getTrad from '../../utils/getTrad';
 import RowTable from './RowTable';
 import Create from './Create';
-import Filter from "./Filter";
+import Filter from './Filter';
+import Illo from '../../components/Illo'
+import TableLoader from '../../components/TableLoader'
 
 import Plus from '@strapi/icons/Plus';
 import { useIntl } from 'react-intl';
-import { useFocusWhenNavigate, request, useNotification  } from '@strapi/helper-plugin';
+import { request, useNotification  } from '@strapi/helper-plugin';
 import { HeaderLayout, ContentLayout } from '@strapi/design-system/Layout';
-import { Table, Thead, Tbody, Tr, Th } from '@strapi/design-system/Table';
+import { Table, Thead, Tbody, Tr, Th, Td } from '@strapi/design-system/Table';
 import { Typography } from '@strapi/design-system/Typography';
 import { VisuallyHidden } from "@strapi/design-system/VisuallyHidden";
 import { Stack } from '@strapi/design-system/Stack';
 import { Button } from '@strapi/design-system/Button';
 import { Grid } from '@strapi/design-system/Grid';
+import TableEmptyModal from '../../components/TableEmptyModal';
 
 
 const ProductsPage = () => {
-  useFocusWhenNavigate();
-
-  const { formatMessage } = useIntl();
-  const title = formatMessage({
-    id: getTrad('products.title'),
-    defaultMessage: 'Products',
-  });
-
-  const [ data, setData ] = useState([]);
-  const [ unSortedData, setUnSortedData ] = useState([])
-  const [ categories, setCategories ] = useState([]);
   const [ createVisible, setCreateVisible ] = useState(false);
-  const notification = useNotification()
+  const [ unSortedData, setUnSortedData ] = useState([]);
+  const [ categories, setCategories ] = useState([]);
+  const [ loader, setLoader ] = useState(true);
+  const [ data, setData ] = useState([]);
+  const notification = useNotification();
+  const { formatMessage } = useIntl();
+  const filter = useRef();
 
   const getData = async () => {
     const qs = require('qs');
@@ -43,6 +41,11 @@ const ProductsPage = () => {
       .then((res) => {
         setData(res)
         setUnSortedData(res)
+        if (filter.current.runFilter(data)) {
+          setLoader(false)
+          return
+        }
+        setLoader(false)
       });
   }
 
@@ -126,7 +129,10 @@ const ProductsPage = () => {
             Add product
           </Button>
         }
-        title={title}
+        title={formatMessage({
+          id: getTrad('products.title'),
+          defaultMessage: 'Products',
+        })}
         subtitle={formatMessage({
           id: getTrad('products.description'),
           defaultMessage: 'Configure the ecommerce plugin',
@@ -146,14 +152,14 @@ const ProductsPage = () => {
               filterValues={ [categories, [{ id: 1, name: 'Low to High' }, { id: 2, name: 'High to Low' }]] }
               unSortedData={ unSortedData }
               updateData={ setData }
+              refFilter={ filter }
             />
           </Grid>
-
-          <Table colCount={9} rowCount={15}>
+          <Table colCount={12} rowCount={15}>
             <Thead>
               <Tr>
                 <Th><Typography variant="sigma">ID</Typography></Th>
-                <Th><Typography variant="sigma">Icon</Typography></Th>
+                <Th><Typography variant="sigma">Image</Typography></Th>
                 <Th><Typography variant="sigma">Product name</Typography></Th>
                 <Th><Typography variant="sigma">Slug</Typography></Th>
                 <Th><Typography variant="sigma">SKU</Typography></Th>
@@ -168,18 +174,25 @@ const ProductsPage = () => {
             </Thead>
             <Tbody>
               {
-                data.map(entry =>
-                  <Tr key={entry.id}>
-                    <RowTable
-                      data = { entry }
-                      onUpdate = { update }
-                      onDelete = { remove }
-                      categories = { categories }
-                      onPublish={ publish }
-                      onUnPublish={ unPublish }
-                    />
-                  </Tr>
-                )
+                loader && <TableLoader col={12}/>
+              }
+              {
+                !loader &&
+                  data.map(entry =>
+                    <Tr key={entry.id}>
+                      <RowTable
+                        data={entry}
+                        onUpdate={update}
+                        onDelete={remove}
+                        categories={categories}
+                        onPublish={publish}
+                        onUnPublish={unPublish}
+                      />
+                    </Tr>
+                  )
+              }
+              {
+                !(data.length) && !loader && <TableEmptyModal col={12} onClick={ () => setCreateVisible(true) }/>
               }
             </Tbody>
           </Table>

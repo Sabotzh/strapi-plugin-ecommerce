@@ -43,8 +43,8 @@ const Edit = ({ data, onClose, onUpdateData }) => {
             <Crumb>
               {
               formatMessage({
-              id: getTrad('menu.manufacturer.name'),
-              defaultMessage: 'Categories',
+              id: getTrad('menu.manufacturers.name'),
+              defaultMessage: 'Manufacturers',
             })}
             </Crumb>
             <Crumb>{ data.name }</Crumb>
