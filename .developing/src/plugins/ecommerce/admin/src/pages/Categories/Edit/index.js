@@ -12,6 +12,7 @@ import { Grid, GridItem } from '@strapi/design-system/Grid';
 import { Option, Select } from "@strapi/design-system/Select";
 import { Button } from '@strapi/design-system/Button';
 import { Textarea } from '@strapi/design-system/Textarea';
+import { ToggleCheckbox } from '@strapi/design-system/ToggleCheckbox';
 
 import validateCategories from "../../../utils/validate";
 import Wysiwyg from "../../../components/Wysiwyg/Wysiwyg";
@@ -21,6 +22,7 @@ import InputImage from "../../../components/InputImage";
 const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
   const [ name, setName ] = useState(rowData.name);
   const [ selectParent, setSelectParent ] = useState(rowData.parentCategory?.id);
+  const [ published, setPublished ] = useState(!!rowData.publishedAt);
   const [ slug, setSlug ] = useState(rowData.slug);
   const [ shortDescription, setShortDescription ] = useState(rowData.shortDescription);
   const [ description, setDescription ] = useState(rowData.description);
@@ -57,7 +59,7 @@ const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
                 error={ errors.name }
               />
             </GridItem>
-            <GridItem col={5}>
+            <GridItem col={6}>
               <TextInput
                 placeholder='Slug'
                 label='Slug'
@@ -97,6 +99,19 @@ const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
                   return <Option value={entry.id} key={entry.id}>{ entry.name }</Option>
                 })}
               </Select>
+            </GridItem>
+            <GridItem col={6}>
+              <Stack size={1}>
+                <Typography fontWeight={'bold'} variant={'pi'}>{ 'Published' }</Typography>
+                <ToggleCheckbox
+                  onLabel={'On'}
+                  offLabel={'Off'}
+                  checked={ published }
+                  onChange={() => { setPublished(!published) }}
+                >
+                  { 'Published' }
+                </ToggleCheckbox>
+              </Stack>
             </GridItem>
             <GridItem col={12}>
               <Wysiwyg
@@ -156,6 +171,7 @@ const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
               metaTitle,
               metaDescription,
               metaKeywords,
+              publishedAt: published,
             })
           } else {
             setErrors(validateErrors)
