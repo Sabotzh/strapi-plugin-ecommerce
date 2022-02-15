@@ -65,7 +65,25 @@ const Edit = ({ data, onClose, onUpdate }) => {
           <Divider/>
           <Box paddingTop={5}>
             <Grid gap={5}>
-              <GridItem col={4}>
+              <GridItem col={6}>
+                <TextInput
+                  name="email"
+                  label="Email"
+                  value={ email }
+                  onChange={ e => setEmail(e.target.value) }
+                  error={ errors.email }
+                />
+              </GridItem>
+              <GridItem col={6}>
+                <TextInput
+                  name="phone"
+                  label="Phone"
+                  value={ phone }
+                  onChange={ e => setPhone(e.target.value) }
+                  error={ errors.phone }
+                />
+              </GridItem>
+              <GridItem col={6}>
                 <TextInput
                   label="First name"
                   name="firstName"
@@ -76,16 +94,7 @@ const Edit = ({ data, onClose, onUpdate }) => {
                   error={ errors.firstname }
                 />
               </GridItem>
-              <GridItem col={4}>
-                <TextInput
-                  name="secondName"
-                  label="Second name"
-                  value={ middlename }
-                  onChange={ e => setMiddlename(e.target.value) }
-                  error={ errors.middlename }
-                />
-              </GridItem>
-              <GridItem col={4}>
+              <GridItem col={6}>
                 <TextInput
                   name="lastName"
                   label="Last name"
@@ -94,22 +103,13 @@ const Edit = ({ data, onClose, onUpdate }) => {
                   error={ errors.lastname }
                 />
               </GridItem>
-              <GridItem col={4}>
+              <GridItem col={6}>
                 <TextInput
-                  name="email"
-                  label="Email"
-                  value={ email }
-                  onChange={ e => setEmail(e.target.value) }
-                  error={ errors.email }
-                />
-              </GridItem>
-              <GridItem col={4}>
-                <TextInput
-                  name="phone"
-                  label="Phone"
-                  value={ phone }
-                  onChange={ e => setPhone(e.target.value) }
-                  error={ errors.phone }
+                  name="secondName"
+                  label="Second name"
+                  value={ middlename }
+                  onChange={ e => setMiddlename(e.target.value) }
+                  error={ errors.middlename }
                 />
               </GridItem>
             </Grid>
