@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 
 import getTrad from '../../utils/getTrad';
@@ -9,7 +9,7 @@ import TableEmptyModal from '../../components/TableEmptyModal';
 
 import Plus from '@strapi/icons/Plus';
 import { useIntl } from 'react-intl';
-import { useFocusWhenNavigate, request, useNotification  } from '@strapi/helper-plugin';
+import { request, useFocusWhenNavigate, useNotification } from '@strapi/helper-plugin';
 import { ContentLayout, HeaderLayout } from '@strapi/design-system/Layout';
 import { Stack } from '@strapi/design-system/Stack';
 import { Option, Select } from '@strapi/design-system/Select';
@@ -33,25 +33,25 @@ const CategoriesPage = () => {
   const [ data, setData] = useState([]);
   const [ unsortedData, setUnsortedData ] = useState([]);
   const [ createVisible, setCreateVisible ] = useState(false);
-  const [ categories, setCategories ] = useState([])
+  const [ categories, setCategories ] = useState([]);
   const [ sortBy, setSortBy ] = useState(null);
   const [ loader, setLoader ] = useState(true);
   const notification = useNotification()
 
   const filteredData = async (filter) => {
     if (!filter) {
-      setLoader(false)
-      return setData(unsortedData)
+      setLoader(false);
+      return setData(unsortedData);
     }
     await request(`/ecommerce/categories/${filter}`)
       .then((res) => {
-        setData(res)
-        setLoader(false)
+        setData(res);
+        setLoader(false);
       });
   }
 
   const getData = async () => {
-    if (sortBy) return filteredData(sortBy)
+    if (sortBy) return filteredData(sortBy);
 
     const qs = require('qs');
     const query = qs.stringify(
@@ -61,49 +61,51 @@ const CategoriesPage = () => {
 
     await request(`/ecommerce/categories?${query}`)
       .then(async (res) => {
-        setData(res)
-        setUnsortedData(res)
-        setCategories(res.map(el => el.name))
-        setLoader(false)
+        setData(res);
+        setUnsortedData(res);
+        setCategories(res.map(el => el.name));
+        setLoader(false);
       });
   }
 
   const sortHandler = (value) => {
-    setSortBy(value)
-    filteredData(value)
+    setSortBy(value);
+    filteredData(value);
   }
 
-  const update = async (id, updateData) => {
-    await request(`/ecommerce/categories/${id}`, {
-      method: 'PUT',
-      body: updateData
-    }).then(() => getData());
+  const update = async (id, data) => {
+    return await axios({
+      method: 'put',
+      url: `http://localhost:1337/api/ecommerce/categories/${id}`,
+      data
+    })
+      .then(async () => {
+        await getData()
+        return true
+      })
+      .catch(error => {
+        notification({ type: 'warning', message: error.response.data })
+        return false
+      });
   }
 
   const create = async (data) => {
-    // await request(`/ecommerce/categories`, {
-    //   method: 'POST',
-    //   body: data
-    // }).then((res) => {
-    //   data.publishedAt
-    //     ? publish(res.id).then(() => getData())
-    //     : unPublish(res.id).then(() => getData())
-    // })
-    axios({
+    return await axios({
       method: 'post',
       url: 'http://localhost:1337/api/ecommerce/categories',
       data
     })
-      .then((res) => {
-        console.log('res', res)
+      .then(async (res) => {
         data.publishedAt
-          ? publish(res.data.id).then(() => getData())
-          : unPublish(res.data.id).then(() => getData())
+          ? await publish(res.data.id, true)
+          : await unPublish(res.data.id, true)
+        await getData()
+        return true
       })
       .catch((error) => {
-        console.log(error.response)
-        console.log(error.response.data)
-      });
+        notification({ type: 'warning', message: error.response.data })
+        return false
+      })
   }
 
   useEffect(async () => {
@@ -116,33 +118,33 @@ const CategoriesPage = () => {
     }).then(() => getData());
   }
 
-  const publish = async(id) => {
+  const publish = async(id, silence) => {
     let response
     await request(`/ecommerce/categories/${id}/publish`, {
       method: 'PUT',
     })
       .then(() => {
-        notification({ type: 'success', message: 'Category published' });
+        !silence && notification({ type: 'success', message: 'Category published' });
         response = true;
       })
       .catch(() => {
-        notification({ type: 'warning', message: 'Category has not been published' });
+        !silence && notification({ type: 'warning', message: 'Category has not been published' });
         response = false;
       });
     return response
   }
 
-  const unPublish = async(id) => {
+  const unPublish = async(id, silence) => {
     let response
     await request(`/ecommerce/categories/${id}/un-publish`, {
       method: 'PUT',
     })
       .then(() => {
-        notification({ type: 'success', message: 'Category unpublished' });
+        !silence && notification({ type: 'success', message: 'Category unpublished' });
         response = false;
       })
       .catch(() => {
-        notification({ type: 'warning', message: 'Category has not been unpublished' });
+        !silence && notification({ type: 'warning', message: 'Category has not been unpublished' });
         response = true;
       });
     return response
@@ -180,7 +182,7 @@ const CategoriesPage = () => {
                 <Select
                   placeholder={formatMessage({
                     id: getTrad('categories.sort.title'),
-                    defaultMessage: 'Sort by category',
+                    defaultMessage: 'Filter by category',
                   })}
                   value={ sortBy }
                   onChange={ sortHandler }

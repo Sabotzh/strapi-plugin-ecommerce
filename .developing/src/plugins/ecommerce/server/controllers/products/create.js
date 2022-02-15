@@ -10,8 +10,19 @@ module.exports = ({ strapi }) => async (ctx) => {
     return;
   }
 
+  const productWithTheSameName = await strapi
+    .query('plugin::ecommerce.product')
+    .findOne({ where: { name: data.name }});
+  if (productWithTheSameName) {
+    ctx.status = 400;
+    ctx.body = `Field "name" must be unique`
+    return
+  }
+
+  console.log(data)
+
   delete data.id;
-  delete data.category_level;
+  delete data.categoryLevel;
   delete data.createdAt;
   delete data.updatedAt;
   delete data.publishedAt;

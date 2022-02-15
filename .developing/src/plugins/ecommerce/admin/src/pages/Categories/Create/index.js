@@ -20,6 +20,7 @@ import { Option, Select } from "@strapi/design-system/Select";
 import { ToggleCheckbox } from '@strapi/design-system/ToggleCheckbox';
 import { Button } from "@strapi/design-system/Button";
 import { Textarea } from '@strapi/design-system/Textarea';
+import PopupLoader from "../../../components/PopupLoader";
 
 
 const Create = ({ data, onCreate, onClose }) => {
@@ -87,14 +88,15 @@ const Create = ({ data, onCreate, onClose }) => {
 
   const notification = useNotification()
   const [ errors, setErrors] = useState({});
+  const [ loader, setLoader ] = useState(false)
 
-  const submitButtonHandler = () => {
+  const submitButtonHandler = async () => {
     let { success, validateErrors } = validateCategories(
       { name, shortDescription, description, metaTitle, metaKeywords, metaDescription },
       errors, setErrors);
 
     if (success) {
-      onClose();
+      setLoader(true)
       onCreate({
         name,
         parentCategory: selectParent,
@@ -106,9 +108,13 @@ const Create = ({ data, onCreate, onClose }) => {
         metaDescription,
         metaKeywords,
         publishedAt: published,
-      });
+      })
+        .then((res) => {
+          setLoader(false)
+          if (res) onClose()
+        })
     } else {
-      notification({ type: 'warning', message: 'Fill in all fields' })
+      notification({ type: 'warning', message: 'Fill in all required fields' })
       setErrors(validateErrors);
     }
   }
@@ -130,132 +136,134 @@ const Create = ({ data, onCreate, onClose }) => {
           </Breadcrumbs>
         </Stack>
       </ModalHeader>
-      <ModalBody>
-        <Box paddingTop={4} paddingBottom={3}>
-          <Typography variant={'beta'}>
-            {
-              formatMessage({
-                id: getTrad('modal.input.title'),
-                defaultMessage: 'Base Data',
-              })
-            }
-          </Typography>
-        </Box>
-        <Divider/>
-        <Box paddingTop={5}>
-          <Grid gap={5}>
-            <GridItem col={6}>
-              <TextInput
-                label={ nameLabel }
-                name="name"
-                value={ name }
-                onChange={ e => setName(e.target.value) }
-                error={ errors.name }
-              />
-            </GridItem>
-            <GridItem col={6}>
-              <TextInput
-                label={ slugLabel }
-                name="slug"
-                value={ slug }
-                onChange={ e => setSlug(e.target.value) }
-              />
-            </GridItem>
-            <GridItem col={6}>
-              <Select
-                label={ parentLabel }
-                placeholder={ parentLabel }
-                name='parent'
-                value={ selectParent }
-                onChange={ setSelectParent }
-                onClear={ () => setSelectParent(null) }
-              >
-                { data.map((entry) => {
-                  return <Option value={ entry.id } key={entry.id}>{ entry.name }</Option>
-                })}
-              </Select>
-            </GridItem>
-            <GridItem col={6}>
-              <Stack size={1}>
-                <Typography fontWeight={'bold'} variant={'pi'}>{ publishedLabel }</Typography>
-                <ToggleCheckbox
-                  onLabel={'On'}
-                  offLabel={'Off'}
-                  checked={ published }
-                  onChange={() => { setPublished(!published) }}
+      <PopupLoader loader={loader}>
+        <ModalBody>
+          <Box paddingTop={4} paddingBottom={3}>
+            <Typography variant={'beta'}>
+              {
+                formatMessage({
+                  id: getTrad('modal.input.title'),
+                  defaultMessage: 'Base Data',
+                })
+              }
+            </Typography>
+          </Box>
+          <Divider/>
+          <Box paddingTop={5}>
+            <Grid gap={5}>
+              <GridItem col={6}>
+                <TextInput
+                  label={ nameLabel }
+                  name="name"
+                  value={ name }
+                  onChange={ e => setName(e.target.value) }
+                  error={ errors.name }
+                />
+              </GridItem>
+              <GridItem col={6}>
+                <TextInput
+                  label={ slugLabel }
+                  name="slug"
+                  value={ slug }
+                  onChange={ e => setSlug(e.target.value) }
+                />
+              </GridItem>
+              <GridItem col={12}>
+                <InputImage
+                  label={ imageLabel }
+                  selectedAsset={ image }
+                  deleteSelectedAsset={ () => setImage(null) }
+                  onFinish={ (image) => setImage(...image) }
+                />
+              </GridItem>
+              <GridItem col={12}>
+                <Textarea
+                  error={ errors.shortDescription }
+                  label={ shortDescriptionLabel }
+                  name="shortDescription"
+                  onChange={e => setShortDescription(e.target.value)}
                 >
-                  { publishedLabel }
-                </ToggleCheckbox>
-              </Stack>
-            </GridItem>
-            <GridItem col={6}>
-              <Textarea
-                error={ errors.shortDescription }
-                label={ shortDescriptionLabel }
-                name="shortDescription"
-                onChange={e => setShortDescription(e.target.value)}
-              >
-                { shortDescription }
-              </Textarea>
-            </GridItem>
-            <GridItem col={6} paddingTop={5}>
-              <InputImage
-                label={ imageLabel }
-                selectedAsset={ image }
-                deleteSelectedAsset={ () => setImage(null) }
-                onFinish={ (image) => setImage(...image) }
-              />
-            </GridItem>
-            <GridItem col={12}>
-              <Wysiwyg
-                disabled={ false }
-                label={ descriptionLabel }
-                value={ description }
-                name="rich-text"
-                onChange={ e => setDescription(e.target.value) }
-                error={ errors.description }
-              />
-            </GridItem>
-          </Grid>
-        </Box>
-        <Box paddingTop={5} paddingBottom={3}><Typography variant={'beta'}>SEO</Typography></Box>
-        <Divider/>
-        <Box paddingTop={5}>
-          <Grid gap={5}>
-            <GridItem col={6}>
-              <TextInput
-                label={ metaTitleLabel }
-                name="metaTitle"
-                value={ metaTitle }
-                onChange={ e => setMetaTitle(e.target.value) }
-                error={ errors.metaTitle }
-              />
-            </GridItem>
-            <GridItem col={6}>
-              <TextInput
-                label={ metaKeywordsLabel }
-                name="metaKeywords"
-                value={ metaKeywords }
-                onChange={ e => setMetaKeywords(e.target.value) }
-                error={ errors.metaKeywords }
-              />
-            </GridItem>
-            <GridItem col={12}>
-              <Textarea
-                error={ errors.metaDescription }
-                label={ metaDescriptionLabel }
-                name="metaDescription"
-                onChange={e => setMetaDescription(e.target.value)}>
-                { metaDescription }
-              </Textarea>
-            </GridItem>
-          </Grid>
-        </Box>
-      </ModalBody>
-      <ModalFooter
-        startActions = { <Button onClick = { () => onClose() } variant="tertiary">{ cancelTitle }</Button> }
-        endActions = { <Button onClick = { submitButtonHandler }>{ finishTitle }</Button> }
-      />
+                  { shortDescription }
+                </Textarea>
+              </GridItem>
+              <GridItem col={6}>
+                <Select
+                  label={ parentLabel }
+                  placeholder={ parentLabel }
+                  name='parent'
+                  value={ selectParent }
+                  onChange={ setSelectParent }
+                  onClear={ () => setSelectParent(null) }
+                >
+                  { data.map((entry) => {
+                    return <Option value={ entry.id } key={entry.id}>{ entry.name }</Option>
+                  })}
+                </Select>
+              </GridItem>
+              <GridItem col={6}>
+                <Stack size={1}>
+                  <Typography fontWeight={'bold'} variant={'pi'}>{ publishedLabel }</Typography>
+                  <ToggleCheckbox
+                    onLabel={'On'}
+                    offLabel={'Off'}
+                    checked={ published }
+                    onChange={() => { setPublished(!published) }}
+                  >
+                    { publishedLabel }
+                  </ToggleCheckbox>
+                </Stack>
+              </GridItem>
+              <GridItem col={12}>
+                <Wysiwyg
+                  disabled={ false }
+                  label={ descriptionLabel }
+                  value={ description }
+                  name="rich-text"
+                  onChange={ e => setDescription(e.target.value) }
+                  error={ errors.description }
+                />
+              </GridItem>
+            </Grid>
+          </Box>
+          <Box paddingTop={9} paddingBottom={3}><Typography variant={'beta'}>SEO</Typography></Box>
+          <Divider/>
+          <Box paddingTop={5}>
+            <Grid gap={5}>
+              <GridItem col={6}>
+                <TextInput
+                  label={ metaTitleLabel }
+                  name="metaTitle"
+                  value={ metaTitle }
+                  onChange={ e => setMetaTitle(e.target.value) }
+                  error={ errors.metaTitle }
+                />
+              </GridItem>
+              <GridItem col={6}>
+                <TextInput
+                  label={ metaKeywordsLabel }
+                  name="metaKeywords"
+                  value={ metaKeywords }
+                  onChange={ e => setMetaKeywords(e.target.value) }
+                  error={ errors.metaKeywords }
+                />
+              </GridItem>
+              <GridItem col={12}>
+                <Textarea
+                  error={ errors.metaDescription }
+                  label={ metaDescriptionLabel }
+                  name="metaDescription"
+                  onChange={e => setMetaDescription(e.target.value)}>
+                  { metaDescription }
+                </Textarea>
+              </GridItem>
+            </Grid>
+          </Box>
+        </ModalBody>
+        <ModalFooter
+          startActions = { <Button onClick = { () => onClose() } variant="tertiary">{ cancelTitle }</Button> }
+          endActions = { <Button onClick = { submitButtonHandler }>{ finishTitle }</Button> }
+        />
+      </PopupLoader>
     </ModalLayout>
   );
 }

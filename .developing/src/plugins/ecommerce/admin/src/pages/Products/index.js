@@ -4,7 +4,6 @@ import getTrad from '../../utils/getTrad';
 import RowTable from './RowTable';
 import Create from './Create';
 import Filter from './Filter';
-import Illo from '../../components/Illo'
 import TableLoader from '../../components/TableLoader'
 
 import Plus from '@strapi/icons/Plus';
@@ -18,6 +17,7 @@ import { Stack } from '@strapi/design-system/Stack';
 import { Button } from '@strapi/design-system/Button';
 import { Grid } from '@strapi/design-system/Grid';
 import TableEmptyModal from '../../components/TableEmptyModal';
+import axios from "axios";
 
 
 const ProductsPage = () => {
@@ -62,11 +62,20 @@ const ProductsPage = () => {
   }, []);
 
 
-  const update = async (id, updateData) => {
-    await request(`/ecommerce/products/${id}`, {
-      method: 'PUT',
-      body: updateData
-    }).then(() => getData());
+  const update = async (id, data) => {
+    return await axios({
+      method: 'put',
+      url: `http://localhost:1337/api/ecommerce/products/${id}`,
+      data
+    })
+      .then(async () => {
+        await getData()
+        return true
+      })
+      .catch(error => {
+        notification({ type: 'warning', message: error.response.data })
+        return false
+      });
   }
 
   const remove = async(id) => {
@@ -76,43 +85,51 @@ const ProductsPage = () => {
   }
 
   const create = async(data) => {
-    await request(`/ecommerce/products`, {
-      method: 'POST',
-      body: data
-    }).then((res) => {
-      data.publishedAt
-        ? publish(res.id).then(() => getData())
-        : unPublish(res.id).then(() => getData())
-    });
+    return await axios({
+      method: 'post',
+      url: 'http://localhost:1337/api/ecommerce/products',
+      data
+    })
+      .then(async (res) => {
+        data.publishedAt
+          ? await publish(res.data.id, true)
+          : await unPublish(res.data.id, true)
+        await getData()
+        return true
+      })
+      .catch((error) => {
+        notification({ type: 'warning', message: error.response.data })
+        return false
+      })
   }
 
-  const publish = async(id) => {
+  const publish = async(id, silence) => {
     let response
     await request(`/ecommerce/products/${id}/publish`, {
       method: 'PUT',
     })
       .then(() => {
-        notification({ type: 'success', message: 'Product published' });
+        !silence && notification({ type: 'success', message: 'Product published' });
         response = true;
       })
       .catch(() => {
-        notification({ type: 'warning', message: 'Product has not been published' });
+        !silence && notification({ type: 'warning', message: 'Product has not been published' });
         response = false;
       });
     return response
   }
 
-  const unPublish = async(id) => {
+  const unPublish = async(id, silence) => {
     let response
     await request(`/ecommerce/products/${id}/un-publish`, {
       method: 'PUT',
     })
       .then(() => {
-        notification({ type: 'success', message: 'Product unpublished' });
+        !silence && notification({ type: 'success', message: 'Product unpublished' });
         response = false;
       })
       .catch(() => {
-        notification({ type: 'warning', message: 'Product has not been unpublished' });
+        !silence && notification({ type: 'warning', message: 'Product has not been unpublished' });
         response = true;
       });
     return response

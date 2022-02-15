@@ -4,7 +4,7 @@ const randomIntFromInterval = require('../../utils/randomIntFromInterval');
 
 module.exports = ({ strapi }) => async (ctx) => {
   const data = ctx.request.body;
-  console.log('ff', data)
+
   if (!data.name) {
     ctx.status = 400;
     ctx.body = `Field "name" required`;
@@ -13,7 +13,7 @@ module.exports = ({ strapi }) => async (ctx) => {
 
   const manufacturerWithTheSameName = await strapi
     .query('plugin::ecommerce.manufacturer')
-    .findOne({ where: { name: { $contains: data.name } }});
+    .findOne({ where: { name: data.name }});
   if (manufacturerWithTheSameName) {
     ctx.status = 400;
     ctx.body = `Field "name" must be unique`

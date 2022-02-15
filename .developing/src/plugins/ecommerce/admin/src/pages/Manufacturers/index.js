@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-const qs = require('qs');
-import { useIntl } from 'react-intl';
+import axios from "axios";
 
 import RowTable from './RowTable';
 import Create from './Create'
@@ -9,6 +8,8 @@ import TableLoader from '../../components/TableLoader';
 import TableEmptyModal from '../../components/TableEmptyModal';
 
 import Plus from '@strapi/icons/Plus';
+const qs = require('qs');
+import { useIntl } from 'react-intl';
 import { useFocusWhenNavigate } from '@strapi/helper-plugin';
 import { HeaderLayout, ContentLayout } from '@strapi/design-system/Layout';
 import { Button } from '@strapi/design-system/Button';
@@ -46,21 +47,38 @@ const ManufacturerPage = () => {
   }
 
   const create = async(data) => {
-    await request(`/ecommerce/manufacturer`, {
-      method: 'POST',
-      body: data,
-    }).then((res) => {
-      data.publishedAt
-        ? publish(res.id).then(() => getData())
-        : unPublish(res.id).then(() => getData())
+    return await axios({
+      method: 'post',
+      url: 'http://localhost:1337/api/ecommerce/manufacturer',
+      data
     })
+      .then(async (res) => {
+        data.publishedAt
+          ? await publish(res.data.id, true)
+          : await unPublish(res.data.id, true)
+        await getData()
+        return true
+      })
+      .catch((error) => {
+        notification({ type: 'warning', message: error.response.data })
+        return false
+      })
   }
 
   const update = async(id, data) => {
-    await request(`/ecommerce/manufacturer/${id}`, {
-      method: 'PUT',
-      body: data
-    }).then(() => getData())
+    return await axios({
+      method: 'put',
+      url: `http://localhost:1337/api/ecommerce/manufacturer/${id}`,
+      data
+    })
+      .then(async () => {
+        await getData()
+        return true
+      })
+      .catch(error => {
+        notification({ type: 'warning', message: error.response.data })
+        return false
+      })
   }
 
   const remove = async(id) => {
@@ -69,33 +87,33 @@ const ManufacturerPage = () => {
     }).then(() => getData())
   }
 
-  const publish = async(id) => {
+  const publish = async(id, silence) => {
     let response
     await request(`/ecommerce/manufacturer/${id}/publish`, {
       method: 'PUT',
     })
       .then(() => {
-        notification({ type: 'success', message: 'Manufacturer published' });
+        !silence && notification({ type: 'success', message: 'Manufacturer published' });
         response = true;
       })
       .catch(() => {
-        notification({ type: 'warning', message: 'Manufacturer has not been published' });
+        !silence && notification({ type: 'warning', message: 'Manufacturer has not been published' });
         response = false;
       });
     return response
   }
 
-  const unPublish = async(id) => {
+  const unPublish = async(id, silence) => {
     let response
     await request(`/ecommerce/manufacturer/${id}/un-publish`, {
       method: 'PUT',
     })
       .then(() => {
-        notification({ type: 'success', message: 'Manufacturer unpublished' });
+        !silence && notification({ type: 'success', message: 'Manufacturer unpublished' });
         response = false;
       })
       .catch(() => {
-        notification({ type: 'warning', message: 'Manufacturer has not been unpublished' });
+        !silence && notification({ type: 'warning', message: 'Manufacturer has not been unpublished' });
         response = true;
       });
     return response
