@@ -41,7 +41,7 @@ const ActionWrapper = styled.span`
 `;
 
 
-const RowTable = ({ data, onUpdate, onDelete, categories, onPublish, onUnPublish }) => {
+const RowTable = ({ data, onUpdate, onDelete, categories, manufacturers, onPublish, onUnPublish }) => {
   const [ toggleSwitch, setToggleSwitch ] = useState(!!data.publishedAt);
   const [ editVisible, setEditVisible ] = useState(false);
   const [ categoriesVisible, setCategoriesVisible ] = useState(false);
@@ -50,12 +50,9 @@ const RowTable = ({ data, onUpdate, onDelete, categories, onPublish, onUnPublish
   const buttonRef = useRef();
   const handleTogglePopover = () => setCategoriesVisible(prev => !prev);
 
-
   document.addEventListener('mouseup', (e) => {
     if (buttonRef.current !== e.target) setCategoriesVisible(false)
   })
-
-
 
   let badgeColor;
   let badgeBackgroundColor;
@@ -79,7 +76,6 @@ const RowTable = ({ data, onUpdate, onDelete, categories, onPublish, onUnPublish
     if (data.status === 'UNAVAILABLE') return 'Unavailable';
   }
 
-
   return (
     <>
       { editVisible &&
@@ -87,6 +83,7 @@ const RowTable = ({ data, onUpdate, onDelete, categories, onPublish, onUnPublish
           onClose = { () => setEditVisible(false) }
           data = { data }
           allCategories = { categories }
+          allManufacturers = { manufacturers }
           onUpdate = { onUpdate }
         />
       }
@@ -142,6 +139,7 @@ const RowTable = ({ data, onUpdate, onDelete, categories, onPublish, onUnPublish
             </ActionWrapper>)}
         </Flex>
       </Td>
+      <Td><Typography textColor="neutral800">{ data.manufacturer?.name }</Typography></Td>
       <Td><Typography textColor="neutral800" fontWeight="bold">$ { data.price }</Typography></Td>
       <Td><Typography textColor="neutral800">{ data.quantity || 0 }</Typography></Td>
       <Td><BadgeStyled color={ badgeColor } backgroundColor={ badgeBackgroundColor }>{ status() }</BadgeStyled></Td>

@@ -24,13 +24,15 @@ import PopupLoader from "../../../components/PopupLoader";
 
 const statusArr = [ 'SELLING', 'ON_ORDER', 'UNAVAILABLE' ];
 
-const Edit = ({ onClose, onCreate, allCategories }) => {
+const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
+  console.log(allManufacturers)
   const [ name, setName ] = useState('');
   const [ slug, setSlug ] = useState('');
   const [ sku, setSku ] = useState('');
   const [ categories, setCategories ] = useState([]);
   const [ price, setPrice ] = useState();
   const [ dateAvailable, setDateAvailable ] = useState();
+  const [ manufacturer, setManufacturer ] = useState();
   const [ quantity, setQuantity ] = useState();
   const [ minQuantity, setMinQuantity ] = useState();
   const [ status, setStatus ] = useState(statusArr[0]);
@@ -57,8 +59,8 @@ const Edit = ({ onClose, onCreate, allCategories }) => {
     if (success) {
       setLoader(true)
       onCreate({
-        name, slug, sku, categories, price, dateAvailable, quantity, minQuantity, status, discount,
-        description, shortDescription, image, metaDescription, metaTitle, metaKeywords, publishedAt: published
+        name, slug, sku, categories, price, dateAvailable, quantity, minQuantity, status, discount, description,
+        shortDescription, image, metaDescription, metaTitle, metaKeywords, publishedAt: published, manufacturer
       })
         .then((res) => {
           setLoader(false)
@@ -180,6 +182,20 @@ const Edit = ({ onClose, onCreate, allCategories }) => {
                   value={discount}
                   onValueChange={ e => setDiscount(e.target.value) }
                 />
+              </GridItem>
+              <GridItem col={6}>
+                <Select
+                  label={ "Manufacturer" }
+                  placeholder={ "Manufacturer" }
+                  name='manufacturer'
+                  value={ manufacturer }
+                  onChange={ setManufacturer }
+                  onClear={ () => setManufacturer(null) }
+                >
+                  { allManufacturers.map((entry) => {
+                    return <Option value={ entry.id } key={entry.id}>{ entry.name }</Option>
+                  })}
+                </Select>
               </GridItem>
               <GridItem col={3}>
                 <NumberInput

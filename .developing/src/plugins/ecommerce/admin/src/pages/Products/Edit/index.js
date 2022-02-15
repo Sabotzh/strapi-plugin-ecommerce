@@ -23,7 +23,7 @@ import { ToggleCheckbox } from '@strapi/design-system/ToggleCheckbox';
 
 const statusArr = [ 'SELLING', 'ON_ORDER', 'UNAVAILABLE' ];
 
-const Edit = ({ data, onClose, onUpdate, allCategories } ) => {
+const Edit = ({ data, onClose, onUpdate, allCategories, allManufacturers }) => {
   const [ name, setName ] = useState(data.name);
   const [ slug, setSlug ] = useState(data.slug);
   const [ image, setImage ] = useState(data.image);
@@ -32,6 +32,7 @@ const Edit = ({ data, onClose, onUpdate, allCategories } ) => {
   const [ price, setPrice ] = useState(data.price || undefined);
   const [ dateAvailable, setDateAvailable ] = useState(null);//data.dateAvailable
   const [ published, setPublished ] = useState(!!data.publishedAt);
+  const [ manufacturer, setManufacturer ] = useState(data.manufacturer?.id);
   const [ quantity, setQuantity ] = useState(data.quantity || undefined);
   const [ minQuantity, setMinQuantity ] = useState(data.minQuantity || undefined);
   const [ status, setStatus ] = useState(data.status);
@@ -56,7 +57,7 @@ const Edit = ({ data, onClose, onUpdate, allCategories } ) => {
       setLoader(true)
       onUpdate(data.id, {
         name, slug, sku, categories, price, dateAvailable, quantity, minQuantity, status, discount,
-        description, shortDescription, metaDescription,metaTitle, metaKeywords, image
+        description, shortDescription, metaDescription,metaTitle, metaKeywords, image, manufacturer
       })
         .then(res => {
           setLoader(false)
@@ -179,6 +180,20 @@ const Edit = ({ data, onClose, onUpdate, allCategories } ) => {
                   value={ discount }
                   onValueChange={ value => setDiscount(value) }
                 />
+              </GridItem>
+              <GridItem col={6}>
+                <Select
+                  label={ "Manufacturer" }
+                  placeholder={ "Manufacturer" }
+                  name='manufacturer'
+                  value={ manufacturer }
+                  onChange={ setManufacturer }
+                  onClear={ () => setManufacturer(null) }
+                >
+                  { allManufacturers.map((entry) => {
+                    return <Option value={ entry.id } key={entry.id}>{ entry.name }</Option>
+                  })}
+                </Select>
               </GridItem>
               <GridItem col={3}>
                 <NumberInput

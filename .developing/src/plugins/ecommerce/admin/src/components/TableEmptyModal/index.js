@@ -14,13 +14,15 @@ export default ({ col, onClick }) => {
         icon={<Illo/>}
         content="No content found"
         action={
-          <Button
-            variant="secondary"
-            startIcon={<Plus/>}
-            onClick={ onClick }
-          >
-            Add product
-          </Button>
+          onClick ?
+            <Button
+              variant="secondary"
+              startIcon={<Plus/>}
+              onClick={ onClick }
+            >
+              Add product
+            </Button> :
+            null
         }
       />
     </Td>

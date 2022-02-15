@@ -96,6 +96,12 @@ module.exports = {
       target: 'plugin::ecommerce.product',
       configurable: false,
     },
+    manufacturer: {
+      type: 'relation',
+      relation: 'manyToOne',
+      target: 'plugin::ecommerce.manufacturer',
+      configurable: false,
+    },
     metaTitle: {
       type: 'string',
       configurable: false,

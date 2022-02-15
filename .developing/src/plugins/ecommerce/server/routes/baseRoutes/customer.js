@@ -6,9 +6,21 @@ module.exports = [
     config: {},
   },
   {
+    method: 'GET',
+    path: '/customers/admin-panel',
+    handler: 'customer.find',
+    config: {},
+  },
+  {
     method: 'PUT',
     path: '/customer',
     handler: 'customer.update',
+    config: {},
+  },
+  {
+    method: 'PUT',
+    path: '/customer/admin-panel/:id',
+    handler: 'customer.updateFromAdminPanel',
     config: {},
   },
   {

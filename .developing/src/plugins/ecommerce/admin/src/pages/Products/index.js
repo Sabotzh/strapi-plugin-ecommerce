@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
+import axios from "axios";
 
 import getTrad from '../../utils/getTrad';
 import RowTable from './RowTable';
 import Create from './Create';
 import Filter from './Filter';
 import TableLoader from '../../components/TableLoader'
+import TableEmptyModal from '../../components/TableEmptyModal';
 
 import Plus from '@strapi/icons/Plus';
 import { useIntl } from 'react-intl';
@@ -16,14 +18,13 @@ import { VisuallyHidden } from "@strapi/design-system/VisuallyHidden";
 import { Stack } from '@strapi/design-system/Stack';
 import { Button } from '@strapi/design-system/Button';
 import { Grid } from '@strapi/design-system/Grid';
-import TableEmptyModal from '../../components/TableEmptyModal';
-import axios from "axios";
 
 
 const ProductsPage = () => {
   const [ createVisible, setCreateVisible ] = useState(false);
   const [ unSortedData, setUnSortedData ] = useState([]);
   const [ categories, setCategories ] = useState([]);
+  const [ manufacturers, setManufacturers ] = useState([]);
   const [ loader, setLoader ] = useState(true);
   const [ data, setData ] = useState([]);
   const notification = useNotification();
@@ -33,7 +34,7 @@ const ProductsPage = () => {
   const getData = async () => {
     const qs = require('qs');
     const query = qs.stringify(
-      { orderBy: { id: 'asc' }, populate: ['categories', 'image'] },
+      { orderBy: { id: 'asc' }, populate: ['categories', 'image', 'manufacturer'] },
       { encodeValuesOnly: true }
     );
 
@@ -51,14 +52,19 @@ const ProductsPage = () => {
 
   const getCategories = async () => {
     await request(`/ecommerce/categories`)
+      .then((res) => setCategories(res));
+  }
+
+  const getManufacturers = async () => {
+    await request(`/ecommerce/manufacturer`)
       .then((res) => {
-        setCategories(res);
+        console.log(res)
+        setManufacturers(res)
       });
   }
 
   useEffect(async () => {
-    await getData();
-    await getCategories();
+    Promise.all([getData(), getCategories(), getManufacturers()])
   }, []);
 
 
@@ -159,6 +165,7 @@ const ProductsPage = () => {
         <Create
           onClose={ () => setCreateVisible(false) }
           allCategories={ categories }
+          allManufacturers={ manufacturers }
           onCreate={ create }
         />
       }
@@ -181,6 +188,7 @@ const ProductsPage = () => {
                 <Th><Typography variant="sigma">Slug</Typography></Th>
                 <Th><Typography variant="sigma">SKU</Typography></Th>
                 <Th><Typography variant="sigma">Category</Typography></Th>
+                <Th><Typography variant="sigma">Manufacturer</Typography></Th>
                 <Th><Typography variant="sigma">Price</Typography></Th>
                 <Th><Typography variant="sigma">Quantity</Typography></Th>
                 <Th><Typography variant="sigma">Status</Typography></Th>
@@ -202,6 +210,7 @@ const ProductsPage = () => {
                         onUpdate={update}
                         onDelete={remove}
                         categories={categories}
+                        manufacturers={manufacturers}
                         onPublish={publish}
                         onUnPublish={unPublish}
                       />
