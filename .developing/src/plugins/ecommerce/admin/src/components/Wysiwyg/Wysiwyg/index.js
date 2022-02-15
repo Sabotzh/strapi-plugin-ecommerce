@@ -188,22 +188,14 @@ Wysiwyg.defaultProps = {
 };
 
 Wysiwyg.propTypes = {
-  description: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    defaultMessage: PropTypes.string.isRequired,
-    values: PropTypes.object,
-  }),
+  description: PropTypes.string,
   disabled: PropTypes.bool,
   error: PropTypes.string,
   label: PropTypes.string.isRequired,
   labelAction: PropTypes.element,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  placeholder: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    defaultMessage: PropTypes.string.isRequired,
-    values: PropTypes.object,
-  }),
+  placeholder: PropTypes.string,
   required: PropTypes.bool,
   value: PropTypes.string,
 };

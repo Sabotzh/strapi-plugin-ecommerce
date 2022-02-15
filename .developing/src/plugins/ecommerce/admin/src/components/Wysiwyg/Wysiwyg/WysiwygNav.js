@@ -46,6 +46,10 @@ const WysiwygNav = ({
     setVisiblePopover(prev => !prev);
   };
 
+  document.addEventListener('mouseup', (e) => {
+    if (buttonMoreRef.current !== e.target) setVisiblePopover(false)
+  })
+
   if (isPreviewMode) {
     return (
       <Box padding={2} background="neutral100">
@@ -149,7 +153,7 @@ const WysiwygNav = ({
           />
           {visiblePopover && (
             <Popover centered source={buttonMoreRef} spacing={4} id="popover">
-              <FocusTrap onEscape={handleTogglePopover}>
+              <FocusTrap onEscape={handleTogglePopover} restoreFocus={false}>
                 <Flex>
                   <IconButtonGroupMargin>
                     <CustomIconButton

@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+const qs = require('qs');
 
 import getTrad from '../../utils/getTrad';
 import Create from './Create';
@@ -52,8 +53,6 @@ const CategoriesPage = () => {
 
   const getData = async () => {
     if (sortBy) return filteredData(sortBy);
-
-    const qs = require('qs');
     const query = qs.stringify(
       { orderBy: { id: 'asc' }, populate: ['parentCategory', 'image'] },
       { encodeValuesOnly: true }
@@ -193,109 +192,109 @@ const CategoriesPage = () => {
               </GridItem>
             </Grid>
           </Stack>
-            <Table rowCount={10} colCount={7}>
-              <Thead>
-                <Tr>
-                  <Th><Typography variant="sigma">ID</Typography></Th>
-                  <Th>
+          <Table rowCount={10} colCount={7}>
+            <Thead>
+              <Tr>
+                <Th><Typography variant="sigma">ID</Typography></Th>
+                <Th>
+                  <Typography variant="sigma">
+                    {
+                      formatMessage({
+                        id: getTrad('categories.table.header.image'),
+                        defaultMessage: 'Image',
+                      })
+                    }
+                  </Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">
+                    {
+                      formatMessage({
+                        id: getTrad('categories.table.header.name'),
+                        defaultMessage: 'Name',
+                      })
+                    }
+                  </Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">
+                    {
+                      formatMessage({
+                        id: getTrad('categories.table.header.slug'),
+                        defaultMessage: 'Slug',
+                      })
+                    }
+                  </Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">
+                    {
+                      formatMessage({
+                        id: getTrad('categories.table.header.parent'),
+                        defaultMessage: 'Parent',
+                      })
+                    }
+                  </Typography>
+                </Th>
+                <Th>
+                  <Flex justifyContent={'center'}>
                     <Typography variant="sigma">
                       {
                         formatMessage({
-                          id: getTrad('categories.table.header.image'),
-                          defaultMessage: 'Image',
+                          id: getTrad('categories.table.header.categoryLevel'),
+                          defaultMessage: 'Category Level',
                         })
                       }
                     </Typography>
-                  </Th>
-                  <Th>
-                    <Typography variant="sigma">
-                      {
-                        formatMessage({
-                          id: getTrad('categories.table.header.name'),
-                          defaultMessage: 'Name',
-                        })
-                      }
-                    </Typography>
-                  </Th>
-                  <Th>
-                    <Typography variant="sigma">
-                      {
-                        formatMessage({
-                          id: getTrad('categories.table.header.slug'),
-                          defaultMessage: 'Slug',
-                        })
-                      }
-                    </Typography>
-                  </Th>
-                  <Th>
-                    <Typography variant="sigma">
-                      {
-                        formatMessage({
-                          id: getTrad('categories.table.header.parent'),
-                          defaultMessage: 'Parent',
-                        })
-                      }
-                    </Typography>
-                  </Th>
-                  <Th>
-                    <Flex justifyContent={'center'}>
-                      <Typography variant="sigma">
-                        {
-                          formatMessage({
-                            id: getTrad('categories.table.header.categoryLevel'),
-                            defaultMessage: 'Category Level',
-                          })
-                        }
-                      </Typography>
-                    </Flex>
-                  </Th>
-                  <Th>
-                    <Typography variant="sigma">
-                      {
-                        formatMessage({
-                          id: getTrad('categories.table.header.shortDescription'),
-                          defaultMessage: 'Short Description',
-                        })
-                      }
-                    </Typography>
-                  </Th>
-                  <Th>
-                    <Typography variant="sigma">
-                      {
-                        formatMessage({
-                          id: getTrad('categories.table.header.published'),
-                          defaultMessage: 'Published',
-                        })
-                      }
-                    </Typography>
-                  </Th>
-                  <Th><VisuallyHidden>Actions</VisuallyHidden></Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {
-                  loader && <TableLoader col={9}/>
-                }
-                {
-                  !loader &&
-                    data.map(entry => {
-                      return <Tr key={entry.id}>
-                        <RowTable
-                          data={ data }
-                          rowData={ entry }
-                          onUpdate={ update }
-                          onDelete={ remove }
-                          onPublish={ publish }
-                          onUnPublish={ unPublish }
-                        />
-                      </Tr>
-                    })
-                }
-                {
-                  !(data.length) && !loader &&
-                  <TableEmptyModal col={9} onClick={ () => setCreateVisible(true) }/>
-                }
-              </Tbody>
+                  </Flex>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">
+                    {
+                      formatMessage({
+                        id: getTrad('categories.table.header.shortDescription'),
+                        defaultMessage: 'Short Description',
+                      })
+                    }
+                  </Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">
+                    {
+                      formatMessage({
+                        id: getTrad('categories.table.header.published'),
+                        defaultMessage: 'Published',
+                      })
+                    }
+                  </Typography>
+                </Th>
+                <Th><VisuallyHidden>Actions</VisuallyHidden></Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {
+                loader && <TableLoader col={9}/>
+              }
+              {
+                !loader &&
+                  data.map(entry => {
+                    return <Tr key={entry.id}>
+                      <RowTable
+                        data={ data }
+                        rowData={ entry }
+                        onUpdate={ update }
+                        onDelete={ remove }
+                        onPublish={ publish }
+                        onUnPublish={ unPublish }
+                      />
+                    </Tr>
+                  })
+              }
+              {
+                !(data.length) && !loader &&
+                <TableEmptyModal col={9} onClick={ () => setCreateVisible(true) }/>
+              }
+            </Tbody>
           </Table>
         </Stack>
       </ContentLayout>
