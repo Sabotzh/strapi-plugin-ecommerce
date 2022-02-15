@@ -6,6 +6,12 @@ module.exports = [
     config: {},
   },
   {
+    method: 'GET',
+    path: '/customers',
+    handler: 'customer.find',
+    config: {},
+  },
+  {
     method: 'PUT',
     path: '/customer',
     handler: 'customer.update',
