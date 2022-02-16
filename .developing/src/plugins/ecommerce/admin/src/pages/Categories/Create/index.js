@@ -4,6 +4,8 @@ import Wysiwyg from "../../../components/Wysiwyg/Wysiwyg";
 import validateCategories from "../../../utils/validate";
 import InputImage from "../../../components/InputImage"
 import getTrad from "../../../utils/getTrad";
+import PopupLoader from '../../../components/PopupLoader';
+import ImportSlug from '../../../components/InputSlug';
 
 import CollectionType from '@strapi/icons/CollectionType';
 import { useIntl } from 'react-intl';
@@ -20,7 +22,7 @@ import { Option, Select } from "@strapi/design-system/Select";
 import { ToggleCheckbox } from '@strapi/design-system/ToggleCheckbox';
 import { Button } from "@strapi/design-system/Button";
 import { Textarea } from '@strapi/design-system/Textarea';
-import PopupLoader from "../../../components/PopupLoader";
+
 
 
 const Create = ({ data, onCreate, onClose }) => {
@@ -161,11 +163,15 @@ const Create = ({ data, onCreate, onClose }) => {
                 />
               </GridItem>
               <GridItem col={6}>
-                <TextInput
-                  label={ slugLabel }
-                  name="slug"
+                <ImportSlug
+                  placeholder='Slug'
+                  label='Slug'
+                  name='Slug'
                   value={ slug }
-                  onChange={ e => setSlug(e.target.value) }
+                  onChange={ setSlug }
+                  relationName={ name }
+                  id={ -1 }
+                  url={ 'categories/create-slug' }
                 />
               </GridItem>
               <GridItem col={12}>

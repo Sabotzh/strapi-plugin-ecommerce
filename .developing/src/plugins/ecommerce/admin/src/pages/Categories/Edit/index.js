@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
 
+import validateCategories from '../../../utils/validate';
+import InputSlug from '../../../components/InputSlug';
+import Wysiwyg from '../../../components/Wysiwyg/Wysiwyg';
+import InputImage from '../../../components/InputImage';
+import PopupLoader from '../../../components/PopupLoader';
+
 import CollectionType from '@strapi/icons/CollectionType';
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
 import { Box } from '@strapi/design-system/Box';
@@ -14,11 +20,7 @@ import { Option, Select } from "@strapi/design-system/Select";
 import { Button } from '@strapi/design-system/Button';
 import { Textarea } from '@strapi/design-system/Textarea';
 import { ToggleCheckbox } from '@strapi/design-system/ToggleCheckbox';
-
-import validateCategories from '../../../utils/validate';
-import Wysiwyg from '../../../components/Wysiwyg/Wysiwyg';
-import InputImage from '../../../components/InputImage';
-import PopupLoader from '../../../components/PopupLoader';
+import ImportSlug from "../../../components/InputSlug";
 
 
 const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
@@ -100,12 +102,15 @@ const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
                 />
               </GridItem>
               <GridItem col={6}>
-                <TextInput
+                <ImportSlug
                   placeholder='Slug'
                   label='Slug'
                   name='Slug'
-                  value={slug}
-                  onChange={e => setSlug(e.target.value)}
+                  value={ slug }
+                  onChange={ setSlug }
+                  relationName={ name }
+                  id={ rowData.id }
+                  url={ 'categories/create-slug' }
                 />
               </GridItem>
               <GridItem col={12}>
@@ -189,9 +194,13 @@ const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
                   />
                 </GridItem>
                 <GridItem col={12}>
-                  <Textarea error={errors.metaDescription} label="Meta_description" name="metaDescription"
-                            onChange={e => setMetaDescription(e.target.value)}>
-                    {metaDescription}
+                  <Textarea
+                    error={errors.metaDescription}
+                    label="Meta_description"
+                    name="metaDescription"
+                    onChange={e => setMetaDescription(e.target.value)}
+                  >
+                    { metaDescription }
                   </Textarea>
                 </GridItem>
               </Grid>

@@ -47,4 +47,10 @@ module.exports = [
     handler: 'products.unPublish',
     config: {},
   },
+  {
+    method: 'POST',
+    path: '/products/create-slug',
+    handler: 'products.createSlug',
+    config: {},
+  },
 ];

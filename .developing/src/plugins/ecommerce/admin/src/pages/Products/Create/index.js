@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import Wysiwyg from "../../../components/Wysiwyg/Wysiwyg";
 import InputImage from "../../../components/InputImage";
 import validate from '../../../utils/validate';
+import PopupLoader from '../../../components/PopupLoader';
+import ImportSlug from '../../../components/InputSlug';
 
 import CollectionType from '@strapi/icons/CollectionType';
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
@@ -20,12 +22,11 @@ import { Button } from '@strapi/design-system/Button';
 import { Textarea } from "@strapi/design-system/Textarea";
 import { DatePicker } from '@strapi/design-system/DatePicker';
 import { ToggleCheckbox } from '@strapi/design-system/ToggleCheckbox';
-import PopupLoader from "../../../components/PopupLoader";
+
 
 const statusArr = [ 'SELLING', 'ON_ORDER', 'UNAVAILABLE' ];
 
 const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
-  console.log(allManufacturers)
   const [ name, setName ] = useState('');
   const [ slug, setSlug ] = useState('');
   const [ sku, setSku ] = useState('');
@@ -100,12 +101,15 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
                 />
               </GridItem>
               <GridItem col={6}>
-                <TextInput
-                  name="slug"
-                  label="Slug"
+                <ImportSlug
+                  placeholder='Slug'
+                  label='Slug'
+                  name='Slug'
                   value={ slug }
-                  onChange={ e => setSlug(e.target.value) }
-                  error={ errors.slug }
+                  onChange={ setSlug }
+                  relationName={ name }
+                  id={ -1 }
+                  url={ 'products/create-slug' }
                 />
               </GridItem>
               <GridItem col={12}>

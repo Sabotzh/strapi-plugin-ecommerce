@@ -1,6 +1,6 @@
-import React, {useState} from "react";
-import CollectionType from '@strapi/icons/CollectionType';
+import React, { useState } from 'react';
 
+import CollectionType from '@strapi/icons/CollectionType';
 import { useIntl } from 'react-intl';
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
 import { Box } from '@strapi/design-system/Box';
@@ -14,6 +14,7 @@ import { Button } from '@strapi/design-system/Button';
 import { Textarea } from '@strapi/design-system/Textarea';
 import { ToggleCheckbox } from '@strapi/design-system/ToggleCheckbox';
 
+import ImportSlug from '../../../components/InputSlug'
 import validateCategories from '../../../utils/validate';
 import Wysiwyg from '../../../components/Wysiwyg/Wysiwyg';
 import InputImage from '../../../components/InputImage';
@@ -96,12 +97,15 @@ const Edit = ({ data, onClose, onUpdateData }) => {
                 />
               </GridItem>
               <GridItem col={6}>
-                <TextInput
+                <ImportSlug
                   placeholder='Slug'
                   label='Slug'
                   name='Slug'
                   value={ slug }
-                  onChange={ e => setSlug(e.target.value) }
+                  onChange={ setSlug }
+                  relationName={ name }
+                  id={ data.id }
+                  url={ 'manufacturer/create-slug' }
                 />
               </GridItem>
               <GridItem col={12}>

@@ -18,6 +18,7 @@ import Wysiwyg from "../../../components/Wysiwyg/Wysiwyg";
 import validateCategories from "../../../utils/validate";
 import InputImage from "../../../components/InputImage"
 import PopupLoader from "../../../components/PopupLoader";
+import ImportSlug from "../../../components/InputSlug";
 
 const Create = ({ onCreate, onClose }) => {
   const [ name, setName ] = useState('');
@@ -89,12 +90,15 @@ const Create = ({ onCreate, onClose }) => {
                 />
               </GridItem>
               <GridItem col={6}>
-                <TextInput
-                  placeholder="Slug"
-                  label="Slug"
-                  name="slug"
+                <ImportSlug
+                  placeholder='Slug'
+                  label='Slug'
+                  name='Slug'
                   value={ slug }
-                  onChange={ e => setSlug(e.target.value) }
+                  onChange={ setSlug }
+                  relationName={ name }
+                  id={ -1 }
+                  url={ 'manufacturer/create-slug' }
                 />
               </GridItem>
               <GridItem col={12}>
