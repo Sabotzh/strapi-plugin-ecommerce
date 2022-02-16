@@ -1,24 +1,25 @@
 import React, { useState } from "react";
 
+import Wysiwyg from '../../../components/Wysiwyg/Wysiwyg';
+import validateCategories from '../../../utils/validate';
+import InputImage from '../../../components/InputImage';
+import PopupLoader from '../../../components/PopupLoader';
+import InputSlug from '../../../components/InputSlug';
+
 import CollectionType from '@strapi/icons/CollectionType';
 import { useNotification } from '@strapi/helper-plugin';
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
-import { Box } from "@strapi/design-system/Box";
-import { Stack } from "@strapi/design-system/Stack";
+import { Box } from '@strapi/design-system/Box';
+import { Stack } from '@strapi/design-system/Stack';
 import { Breadcrumbs, Crumb } from '@strapi/design-system/Breadcrumbs';
-import { Typography } from "@strapi/design-system/Typography";
-import { Divider } from "@strapi/design-system/Divider";
-import { Grid, GridItem } from "@strapi/design-system/Grid";
-import { TextInput } from "@strapi/design-system/TextInput";
-import { Button } from "@strapi/design-system/Button";
+import { Typography } from '@strapi/design-system/Typography';
+import { Divider } from '@strapi/design-system/Divider';
+import { Grid, GridItem } from '@strapi/design-system/Grid';
+import { TextInput } from '@strapi/design-system/TextInput';
+import { Button } from '@strapi/design-system/Button';
 import { Textarea } from '@strapi/design-system/Textarea';
 import { ToggleCheckbox } from '@strapi/design-system/ToggleCheckbox';
 
-import Wysiwyg from "../../../components/Wysiwyg/Wysiwyg";
-import validateCategories from "../../../utils/validate";
-import InputImage from "../../../components/InputImage"
-import PopupLoader from "../../../components/PopupLoader";
-import ImportSlug from "../../../components/InputSlug";
 
 const Create = ({ onCreate, onClose }) => {
   const [ name, setName ] = useState('');
@@ -90,7 +91,7 @@ const Create = ({ onCreate, onClose }) => {
                 />
               </GridItem>
               <GridItem col={6}>
-                <ImportSlug
+                <InputSlug
                   placeholder='Slug'
                   label='Slug'
                   name='Slug'

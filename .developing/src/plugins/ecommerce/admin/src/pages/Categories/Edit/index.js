@@ -20,7 +20,6 @@ import { Option, Select } from "@strapi/design-system/Select";
 import { Button } from '@strapi/design-system/Button';
 import { Textarea } from '@strapi/design-system/Textarea';
 import { ToggleCheckbox } from '@strapi/design-system/ToggleCheckbox';
-import ImportSlug from "../../../components/InputSlug";
 
 
 const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
@@ -102,7 +101,7 @@ const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
                 />
               </GridItem>
               <GridItem col={6}>
-                <ImportSlug
+                <InputSlug
                   placeholder='Slug'
                   label='Slug'
                   name='Slug'

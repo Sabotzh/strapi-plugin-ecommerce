@@ -4,7 +4,7 @@ import PopupLoader from '../../../components/PopupLoader';
 import InputImage from '../../../components/InputImage';
 import Wysiwyg from '../../../components/Wysiwyg/Wysiwyg';
 import validate from '../../../utils/validate';
-import ImportSlug from '../../../components/InputSlug';
+import InputSlug from '../../../components/InputSlug';
 
 import CollectionType from '@strapi/icons/CollectionType';
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
@@ -99,7 +99,7 @@ const Edit = ({ data, onClose, onUpdate, allCategories, allManufacturers }) => {
                 />
               </GridItem>
               <GridItem col={6}>
-                <ImportSlug
+                <InputSlug
                   placeholder='Slug'
                   label='Slug'
                   name='Slug'

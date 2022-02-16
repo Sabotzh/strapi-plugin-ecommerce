@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
 
+import InputSlug from '../../../components/InputSlug'
+import validateCategories from '../../../utils/validate';
+import Wysiwyg from '../../../components/Wysiwyg/Wysiwyg';
+import InputImage from '../../../components/InputImage';
+import getTrad from '../../../utils/getTrad';
+import PopupLoader from '../../../components/PopupLoader';
+
 import CollectionType from '@strapi/icons/CollectionType';
 import { useIntl } from 'react-intl';
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
@@ -13,13 +20,6 @@ import { Grid, GridItem } from '@strapi/design-system/Grid';
 import { Button } from '@strapi/design-system/Button';
 import { Textarea } from '@strapi/design-system/Textarea';
 import { ToggleCheckbox } from '@strapi/design-system/ToggleCheckbox';
-
-import ImportSlug from '../../../components/InputSlug'
-import validateCategories from '../../../utils/validate';
-import Wysiwyg from '../../../components/Wysiwyg/Wysiwyg';
-import InputImage from '../../../components/InputImage';
-import getTrad from '../../../utils/getTrad';
-import PopupLoader from '../../../components/PopupLoader';
 
 
 const Edit = ({ data, onClose, onUpdateData }) => {
@@ -97,7 +97,7 @@ const Edit = ({ data, onClose, onUpdateData }) => {
                 />
               </GridItem>
               <GridItem col={6}>
-                <ImportSlug
+                <InputSlug
                   placeholder='Slug'
                   label='Slug'
                   name='Slug'

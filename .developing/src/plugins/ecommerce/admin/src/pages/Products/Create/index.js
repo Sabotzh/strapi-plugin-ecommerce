@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
-import Wysiwyg from "../../../components/Wysiwyg/Wysiwyg";
-import InputImage from "../../../components/InputImage";
+import Wysiwyg from '../../../components/Wysiwyg/Wysiwyg';
+import InputImage from '../../../components/InputImage';
 import validate from '../../../utils/validate';
 import PopupLoader from '../../../components/PopupLoader';
-import ImportSlug from '../../../components/InputSlug';
+import InputSlug from '../../../components/InputSlug';
 
 import CollectionType from '@strapi/icons/CollectionType';
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
@@ -31,13 +31,13 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
   const [ slug, setSlug ] = useState('');
   const [ sku, setSku ] = useState('');
   const [ categories, setCategories ] = useState([]);
-  const [ price, setPrice ] = useState();
+  const [ price, setPrice ] = useState(0);
   const [ dateAvailable, setDateAvailable ] = useState();
   const [ manufacturer, setManufacturer ] = useState();
-  const [ quantity, setQuantity ] = useState();
-  const [ minQuantity, setMinQuantity ] = useState();
+  const [ quantity, setQuantity ] = useState(0);
+  const [ minQuantity, setMinQuantity ] = useState(0);
   const [ status, setStatus ] = useState(statusArr[0]);
-  const [ discount, setDiscount ] = useState();
+  const [ discount, setDiscount ] = useState(0);
   const [ published, setPublished ] = useState(false);
   const [ description, setDescription ] = useState('');
   const [ shortDescription, setShortDescription ] = useState('');
@@ -94,14 +94,12 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
                   label="Name"
                   name="name"
                   value={ name }
-                  onChange={ e => {
-                    setName(e.target.value)
-                  }}
+                  onChange={ e => setName(e.target.value) }
                   error={ errors.name }
                 />
               </GridItem>
               <GridItem col={6}>
-                <ImportSlug
+                <InputSlug
                   placeholder='Slug'
                   label='Slug'
                   name='Slug'
@@ -117,7 +115,7 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
                   label={'Image'}
                   selectedAsset={image}
                   deleteSelectedAsset={() => setImage(null)}
-                  onFinish ={(image) => setImage(...image)}/>
+                  onFinish={(image) => setImage(...image)}/>
               </GridItem>
               <GridItem col={12}>
                 <Textarea
@@ -175,7 +173,7 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
                   name="price"
                   label="Price"
                   value={price}
-                  onValueChange={value => setPrice(value)}
+                  onValueChange={setPrice}
                   error={ errors.price }
                 />
               </GridItem>
@@ -184,7 +182,7 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
                   name="discount"
                   label="Discount %"
                   value={discount}
-                  onValueChange={ e => setDiscount(e.target.value) }
+                  onValueChange={ setDiscount }
                 />
               </GridItem>
               <GridItem col={6}>
