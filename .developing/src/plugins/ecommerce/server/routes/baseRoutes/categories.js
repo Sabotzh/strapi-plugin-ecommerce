@@ -53,4 +53,10 @@ module.exports = [
     handler: 'categories.unPublish',
     config: {},
   },
+  {
+    method: 'POST',
+    path: '/categories/create-slug',
+    handler: 'categories.createSlug',
+    config: {},
+  },
 ];

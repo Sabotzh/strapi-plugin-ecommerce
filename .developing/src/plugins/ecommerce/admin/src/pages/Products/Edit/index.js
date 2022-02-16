@@ -4,6 +4,7 @@ import PopupLoader from '../../../components/PopupLoader';
 import InputImage from '../../../components/InputImage';
 import Wysiwyg from '../../../components/Wysiwyg/Wysiwyg';
 import validate from '../../../utils/validate';
+import ImportSlug from '../../../components/InputSlug';
 
 import CollectionType from '@strapi/icons/CollectionType';
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
@@ -20,6 +21,7 @@ import { Button } from '@strapi/design-system/Button';
 import { Textarea } from '@strapi/design-system/Textarea';
 import { DatePicker } from '@strapi/design-system/DatePicker';
 import { ToggleCheckbox } from '@strapi/design-system/ToggleCheckbox';
+
 
 const statusArr = [ 'SELLING', 'ON_ORDER', 'UNAVAILABLE' ];
 
@@ -97,12 +99,15 @@ const Edit = ({ data, onClose, onUpdate, allCategories, allManufacturers }) => {
                 />
               </GridItem>
               <GridItem col={6}>
-                <TextInput
-                  name="slug"
-                  label="Slug"
+                <ImportSlug
+                  placeholder='Slug'
+                  label='Slug'
+                  name='Slug'
                   value={ slug }
-                  onChange={ e => setSlug(e.target.value) }
-                  error={ errors.slug }
+                  onChange={ setSlug }
+                  relationName={ name }
+                  id={ data.id }
+                  url={ 'products/create-slug' }
                 />
               </GridItem>
               <GridItem col={12}>

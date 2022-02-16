@@ -3,7 +3,8 @@ const create = require('./create');
 const update = require('./update');
 const remove = require('./remove');
 const publish = require('./publish');
-const unPublish = require('./unPublish')
+const unPublish = require('./unPublish');
+const createSlug = require('./createSlug');
 
 
 module.exports = (globalCtx) => ({
@@ -13,4 +14,5 @@ module.exports = (globalCtx) => ({
   remove: remove(globalCtx),
   publish: publish(globalCtx),
   unPublish: unPublish(globalCtx),
+  createSlug: createSlug(globalCtx),
 });

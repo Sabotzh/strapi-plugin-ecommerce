@@ -24,7 +24,7 @@ const ImportSlug = ({ name, label, value, onChange, error, relationName, url, id
     const res = await axios({
       method: 'post',
       url: 'http://localhost:1337/api/ecommerce/' + url,
-      data: { id, slug: slugify(relationName) }
+      data: { id, slug: slugify(relationName).toLowerCase() }
     })
     onChange(res.data.slug)
     setIsLoading(false);

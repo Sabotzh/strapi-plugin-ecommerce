@@ -35,4 +35,10 @@ module.exports = [
     handler: 'manufacturer.unPublish',
     config: {},
   },
+  {
+    method: 'POST',
+    path: '/manufacturer/create-slug',
+    handler: 'manufacturer.createSlug',
+    config: {},
+  },
 ];
