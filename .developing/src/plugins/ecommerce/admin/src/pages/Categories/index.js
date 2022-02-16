@@ -75,7 +75,7 @@ const CategoriesPage = () => {
   const update = async (id, data) => {
     return await axios({
       method: 'put',
-      url: `http://localhost:1337/api/ecommerce/categories/${id}`,
+      url: `${strapi.backendURL}/ecommerce/categories/${id}`,
       data
     })
       .then(async () => {
@@ -91,7 +91,7 @@ const CategoriesPage = () => {
   const create = async (data) => {
     return await axios({
       method: 'post',
-      url: 'http://localhost:1337/api/ecommerce/categories',
+      url: `${strapi.backendURL}/ecommerce/categories`,
       data
     })
       .then(async (res) => {

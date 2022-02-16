@@ -3,11 +3,12 @@ import React, { useState } from 'react';
 import PopupLoader from '../../../components/PopupLoader';
 import InputImage from '../../../components/InputImage';
 import Wysiwyg from '../../../components/Wysiwyg/Wysiwyg';
-import validate from '../../../utils/validate';
+import validate, {numberValidate} from '../../../utils/validate';
 import InputSlug from '../../../components/InputSlug';
 
 import CollectionType from '@strapi/icons/CollectionType';
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
+import { useNotification } from '@strapi/helper-plugin';
 import { Box } from '@strapi/design-system/Box';
 import { Stack } from '@strapi/design-system/Stack';
 import { Breadcrumbs, Crumb } from '@strapi/design-system/Breadcrumbs';
@@ -45,17 +46,19 @@ const Edit = ({ data, onClose, onUpdate, allCategories, allManufacturers }) => {
   const [ metaKeywords, setMetaKeywords ] = useState(data.metaKeywords);
   const [ metaDescription, setMetaDescription ] = useState(data.metaDescription);
 
+  const notification = useNotification();
   const [ errors, setErrors] = useState({});
   const [ loader, setLoader ] = useState(false)
 
   const submitButtonHandler = async() => {
     setErrors({});
 
-    let { success, validateErrors } = validate({
-      name, sku, slug, price, shortDescription, description, metaTitle, metaKeywords, metaDescription
-    }, errors, setErrors);
+    const requireValidateResult = validate({
+      name, sku, price, shortDescription, description, metaTitle, metaKeywords, metaDescription
+    });
+    const numberValidateResult = numberValidate({ price, quantity, minQuantity, discount })
 
-    if (success) {
+    if (requireValidateResult.success && numberValidateResult.success) {
       setLoader(true)
       onUpdate(data.id, {
         name, slug, sku, categories, price, dateAvailable, quantity, minQuantity, status, discount,
@@ -66,7 +69,8 @@ const Edit = ({ data, onClose, onUpdate, allCategories, allManufacturers }) => {
           if (res) onClose()
         });
     } else {
-      setErrors(validateErrors);
+      notification({ type: 'warning', message: 'Fill in all fields' })
+      setErrors(Object.assign({}, numberValidateResult.validateErrors, requireValidateResult.validateErrors));
     }
   }
 
@@ -184,6 +188,7 @@ const Edit = ({ data, onClose, onUpdate, allCategories, allManufacturers }) => {
                   label="Discount %"
                   value={ discount }
                   onValueChange={ value => setDiscount(value) }
+                  error={ errors.discount }
                 />
               </GridItem>
               <GridItem col={6}>
@@ -206,6 +211,7 @@ const Edit = ({ data, onClose, onUpdate, allCategories, allManufacturers }) => {
                   label="Quantity"
                   value={quantity}
                   onValueChange={ value => setQuantity(value) }
+                  error={ errors.quantity }
                 />
               </GridItem>
               <GridItem col={3}>
@@ -214,6 +220,7 @@ const Edit = ({ data, onClose, onUpdate, allCategories, allManufacturers }) => {
                   label="Min_Quantity"
                   value={ minQuantity }
                   onValueChange={value => setMinQuantity(value)}
+                  error={ errors.minQuantity }
                 />
               </GridItem>
               <GridItem col={12}>

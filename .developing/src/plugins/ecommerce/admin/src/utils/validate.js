@@ -1,14 +1,33 @@
-export default (obj) => {
+const validateLength = (value, min, max, onError) => {
+  if (!value) return '';
+
+  if (value.trim().length < min) {
+    onError()
+    return 'This value is too short.';
+  }
+  if (value.trim().length > max) {
+    onError()
+    return 'This value is too long.';
+  }
+}
+
+export default (objElems) => {
   let validateErrors = {};
   let success = true;
 
-  // if (obj.name.trim().length < 3 || obj.name.trim().length > 50) {
-  //   validateErrors = { ...validateErrors, name: 'This value is too short.' };
-  //   success = false;
-  // }
+  const onError = () => {
+    success = false
+  }
 
-  Object.entries(obj).forEach(([key, value]) => {
-    if (typeof value === "string") value = value.trim();
+  validateErrors.name = validateLength(objElems.name, 1, 50, onError);
+  validateErrors.shortDescription = validateLength(objElems.shortDescription, 10, 500, onError);
+  validateErrors.description = validateLength(objElems.description, 10, 5000, onError);
+  validateErrors.metaTitle = validateLength(objElems.metaTitle, 1, 50, onError);
+  validateErrors.metaDescription = validateLength(objElems.metaDescription, 10, 500, onError);
+
+  Object.entries(objElems).forEach(([key, value]) => {
+    if (typeof value === 'string') value = value.trim();
+
     if (!value) {
       validateErrors = { ...validateErrors, [key]: 'This value is required.'};
       success = false;
@@ -17,3 +36,29 @@ export default (obj) => {
 
   return { success, validateErrors };
 }
+
+export const numberValidate = (objElems) => {
+  let validateErrors = {};
+  let success = true;
+  Object.entries(objElems).forEach(([key, value]) => {
+    if (!value) return
+
+    try {
+      value = Number(value)
+    } catch {
+      validateErrors = { ...validateErrors, [key]: 'This is not a number.'};
+      success = false;
+      return
+    }
+
+    if (value < 0) {
+      validateErrors = { ...validateErrors, [key]: 'The value is too low.'};
+      success = false;
+    }
+  })
+
+  console.log(validateErrors)
+  return { success, validateErrors }
+}
+
+

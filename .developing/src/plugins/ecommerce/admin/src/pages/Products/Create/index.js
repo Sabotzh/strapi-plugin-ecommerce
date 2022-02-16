@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Wysiwyg from '../../../components/Wysiwyg/Wysiwyg';
 import InputImage from '../../../components/InputImage';
 import validate from '../../../utils/validate';
+import { numberValidate } from '../../../utils/validate';
 import PopupLoader from '../../../components/PopupLoader';
 import InputSlug from '../../../components/InputSlug';
 
@@ -46,18 +47,20 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
   const [ metaKeywords, setMetaKeywords ] = useState('');
   const [ metaDescription, setMetaDescription ] = useState('');
 
-  const notification = useNotification()
+  const notification = useNotification();
   const [ errors, setErrors] = useState({});
-  const [ loader, setLoader ] = useState(false)
+  const [ loader, setLoader ] = useState(false);
 
   const submitButtonHandler = async() => {
     setErrors({});
 
-    let { success, validateErrors } = validate({
+    const requireValidateResult = validate({
       name, sku, price, shortDescription, description, metaTitle, metaKeywords, metaDescription
     });
 
-    if (success) {
+    const numberValidateResult = numberValidate({ price, quantity, minQuantity, discount })
+
+    if (requireValidateResult.success && numberValidateResult.success) {
       setLoader(true)
       onCreate({
         name, slug, sku, categories, price, dateAvailable, quantity, minQuantity, status, discount, description,
@@ -69,7 +72,7 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
         })
     } else {
       notification({ type: 'warning', message: 'Fill in all fields' })
-      setErrors(validateErrors);
+      setErrors(Object.assign(numberValidateResult.validateErrors, requireValidateResult.validateErrors));
     }
   }
 
@@ -173,7 +176,7 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
                   name="price"
                   label="Price"
                   value={price}
-                  onValueChange={setPrice}
+                  onValueChange={ setPrice }
                   error={ errors.price }
                 />
               </GridItem>
@@ -183,6 +186,7 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
                   label="Discount %"
                   value={discount}
                   onValueChange={ setDiscount }
+                  error={ errors.discount }
                 />
               </GridItem>
               <GridItem col={6}>
@@ -205,6 +209,7 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
                   label="Quantity"
                   value={quantity}
                   onValueChange={value => setQuantity(value)}
+                  error={ errors.quantity }
                 />
               </GridItem>
               <GridItem col={3}>
@@ -213,6 +218,7 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
                   label="Min_Quantity"
                   value={ minQuantity }
                   onValueChange={value => setMinQuantity(value)}
+                  error={ errors.minQuantity }
                 />
               </GridItem>
               <GridItem col={12}>
