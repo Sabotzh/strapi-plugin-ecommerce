@@ -66,7 +66,7 @@ const RowTable = ({ rowData, data, onUpdate, onDelete, onPublish, onUnPublish })
       </Td>
       <Td><Typography textColor="neutral800">{ rowData.name }</Typography></Td>
       <Td><Typography textColor="neutral800">{ rowData.slug }</Typography></Td>
-      <Td><Typography textColor="neutral800">{ rowData.parentCategory?.name }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ rowData.parentCategory?.name || '-' }</Typography></Td>
       <Td><Typography textColor="neutral800">
         <Flex justifyContent={'center'}>
           { rowData.categoryLevel }

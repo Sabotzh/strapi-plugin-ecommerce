@@ -41,6 +41,20 @@ module.exports = ({ strapi }) => async (ctx) => {
     return
   }
 
+  if (data.parentCategory) {
+    const parentCategory = await strapi
+      .query('plugin::ecommerce.category')
+      .findOne({ where: { id: data.parentCategory } });
+    if (parentCategory && parentCategory.categoryLevel) {
+      data.categoryLevel = parentCategory.categoryLevel + 1;
+    } else {
+      data.categoryLevel = null;
+      data.categoryLevel = 1;
+    }
+  } else {
+    data.categoryLevel = 1;
+  }
+
   ctx.body = await strapi
     .query('plugin::ecommerce.category')
     .update({ where: { id }, data });
