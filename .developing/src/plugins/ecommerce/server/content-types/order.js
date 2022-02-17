@@ -49,6 +49,10 @@ module.exports = {
     time: {
       type: 'datetime',
       configurable: false,
-    }
+    },
+    price: {
+      type: 'integer',
+      configurable: false,
+    },
   },
 };
