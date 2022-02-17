@@ -8,7 +8,6 @@ import TableLoader from '../../components/TableLoader';
 import TableEmptyModal from '../../components/TableEmptyModal';
 
 import Plus from '@strapi/icons/Plus';
-const qs = require('qs');
 import { useIntl } from 'react-intl';
 import { useFocusWhenNavigate } from '@strapi/helper-plugin';
 import { HeaderLayout, ContentLayout } from '@strapi/design-system/Layout';
@@ -18,15 +17,16 @@ import { Typography } from '@strapi/design-system/Typography';
 import { VisuallyHidden } from "@strapi/design-system/VisuallyHidden";
 import { Stack } from '@strapi/design-system/Stack';
 import { request, useNotification } from '@strapi/helper-plugin';
+const qs = require('qs');
 
 
 const ManufacturerPage = () => {
   useFocusWhenNavigate();
 
-  const [ data, setData ] = useState([])
-  const [ createVisible, setCreateVisible ] = useState(false)
-  const [ loader, setLoader ] = useState(true)
-  const notification = useNotification()
+  const [ data, setData ] = useState([]);
+  const [ createVisible, setCreateVisible ] = useState(false);
+  const [ loader, setLoader ] = useState(true);
+  const notification = useNotification();
 
   const { formatMessage } = useIntl();
   const title = formatMessage({

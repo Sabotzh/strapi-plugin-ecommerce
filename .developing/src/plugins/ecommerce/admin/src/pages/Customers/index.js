@@ -34,7 +34,6 @@ const ProductsPage = () => {
   const getData = async () => {
     await request(`/ecommerce/customers/admin-panel`)
       .then((res) => {
-        console.log(res)
         setData(res.filter(el => !el.isShadow))
         setUnsortedData(res)
         setLoader(false)

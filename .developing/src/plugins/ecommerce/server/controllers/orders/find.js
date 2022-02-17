@@ -1,3 +1,5 @@
-module.exports = ({ strapi }) => (ctx) => {
-  ctx.body = { message: 'orders find' };
+module.exports = ({ strapi }) => async (ctx) => {
+  ctx.body = await strapi
+    .query('plugin::ecommerce.order')
+    .findMany(ctx.query);
 };

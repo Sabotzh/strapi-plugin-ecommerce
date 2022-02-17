@@ -17,4 +17,10 @@ module.exports = [
     handler: 'orders.create',
     config: {},
   },
+  {
+    method: 'PUT',
+    path: '/orders/status/:id',
+    handler: 'orders.status',
+    config: {},
+  },
 ];

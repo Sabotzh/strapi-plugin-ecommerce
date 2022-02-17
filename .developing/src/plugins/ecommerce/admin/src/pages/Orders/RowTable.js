@@ -17,35 +17,34 @@ const BadgeStyled = styled(Badge)`
   }
 `;
 
-const RowTable = (props) => {
-  const rowData = props.rowData;
-
+const RowTable = ({ data, onStatusChange }) => {
   let badgeColor;
   let badgeBackgroundColor;
-  switch (rowData.status) {
-    case 'pending':
+  switch (data.status) {
+    case 'PENDING':
       badgeColor = '#DCA433';
       badgeBackgroundColor = '#FDF6B2';
       break;
-    case 'delivered':
+    case 'DELIVERED':
       badgeColor = '#4EB899';
       badgeBackgroundColor = '#DEF7EC';
       break;
-    case 'processing':
+    case 'PROCESSING':
       badgeColor = '#4F9FFA';
       badgeBackgroundColor = '#E1EFFE';
   }
 
+  const time = new Date(data.time).toDateString().slice(4).split(' ').join(', ')
   return (
     <>
-      <Td><Typography fontWeight={'bold'} textColor="neutral800">{ rowData.id }</Typography></Td>
-      <Td><Typography textColor="neutral800">{ rowData.time }</Typography></Td>
-      <Td><Typography textColor="neutral800">{ rowData.address }</Typography></Td>
-      <Td><Typography textColor="neutral800">{ rowData.phone }</Typography></Td>
-      <Td><Typography fontWeight={'bold'} textColor="neutral800">{ rowData.method }</Typography></Td>
-      <Td><Typography fontWeight={'bold'} textColor="neutral800">{ rowData.amount }</Typography></Td>
-      <Td><BadgeStyled color={ badgeColor } backgroundColor={ badgeBackgroundColor}>{ rowData.status }</BadgeStyled></Td>
-      <Td><Edit rowData = { rowData } updateRowData = { props.updateRowData }/></Td>
+      <Td><Typography fontWeight={'bold'} textColor="neutral800">{ data.id }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ time }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ data.shippingAddress }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ data.customer?.phone || '-' }</Typography></Td>
+      <Td><Typography fontWeight={'bold'} textColor="neutral800">{ data.paymentMethod }</Typography></Td>
+      <Td><Typography fontWeight={'bold'} textColor="neutral800">${ data.price }</Typography></Td>
+      <Td><BadgeStyled color={ badgeColor } backgroundColor={ badgeBackgroundColor}>{ data.status }</BadgeStyled></Td>
+      <Td><Edit data = { data } onStatusChange = { onStatusChange }/></Td>
     </>
   )
 }

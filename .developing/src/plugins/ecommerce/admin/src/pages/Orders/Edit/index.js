@@ -1,16 +1,16 @@
-import {Option, Select} from '@strapi/design-system/Select';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import { Option, Select } from '@strapi/design-system/Select';
 
-const Edit = ({ rowData, updateRowData }) => {
+const Edit = ({ data, onStatusChange }) => {
   const [ action, setAction] = useState();
   return (
     <Select
       placeholder={'Status'}
       value={ action }
-      onChange={ (value) => updateRowData({ ...rowData, status: value }, rowData.id) }
+      onChange={ (value) => onStatusChange(data.id, value) }
       onClear={ () => setAction(null) }
     >
-      { ['pending', 'delivered', 'processing'].map((entry, id) => <Option value={entry} key={id}>{ entry }</Option>) }
+      { ['PENDING', 'DELIVERED', 'PROCESSING'].map((entry, id) => <Option value={entry} key={id}>{ entry }</Option>) }
     </Select>
   );
 }
