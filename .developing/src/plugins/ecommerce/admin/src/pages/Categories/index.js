@@ -80,6 +80,7 @@ const CategoriesPage = () => {
     })
       .then(async () => {
         await getData()
+        notification({ type: 'success', message: 'Category updated' });
         return { success: true }
       })
       .catch(error => {
@@ -99,6 +100,7 @@ const CategoriesPage = () => {
           ? await publish(res.data.id, true)
           : await unPublish(res.data.id, true)
         await getData()
+        notification({ type: 'success', message: 'Category created' });
         return { success: true }
       })
       .catch((error) => {

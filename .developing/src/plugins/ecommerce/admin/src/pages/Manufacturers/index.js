@@ -57,6 +57,7 @@ const ManufacturerPage = () => {
           ? await publish(res.data.id, true)
           : await unPublish(res.data.id, true)
         await getData()
+        notification({ type: 'success', message: 'Manufacturer created' });
         return { success: true }
       })
       .catch((error) => {
@@ -72,12 +73,13 @@ const ManufacturerPage = () => {
       data
     })
       .then(async () => {
-        await getData()
-        return { success: true }
+        await getData();
+        notification({ type: 'success', message: 'Manufacturer updated' });
+        return { success: true };
       })
       .catch(error => {
-        notification({ type: 'warning', message: 'Manufacturer not updated' })
-        return { success: false, data: error.response.data }
+        notification({ type: 'warning', message: 'Manufacturer not updated' });
+        return { success: false, data: error.response.data };
       })
   }
 

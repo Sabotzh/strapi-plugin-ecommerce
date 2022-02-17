@@ -54,10 +54,11 @@ const ProductsPage = () => {
     })
       .then(async () => {
         await getData()
+        notification({ type: 'success', message: 'Customer updated' });
         return true
       })
-      .catch(error => {
-        notification({ type: 'warning', message: error.response.data })
+      .catch(() => {
+        notification({ type: 'success', message: 'Customer not updated' });
         return false
       });
   }
