@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import styled from 'styled-components';
 import { Box } from '@strapi/design-system/Box';
 import { KeyboardNavigable } from '@strapi/design-system/KeyboardNavigable';
@@ -32,24 +31,21 @@ export const ImageList = ({
           const isSelected = Boolean(
             selectedAssets.find(currentAsset => currentAsset.id === asset.id)
           );
-
           return (
-            <>
-              <ImageAssetCard
-                id={asset.id}
-                key={asset.id}
-                name={asset.name}
-                asset={asset}
-                alt={asset.alternativeText || asset.name}
-                extension={getFileExtension(asset.ext)}
-                height={asset.height}
-                width={asset.width}
-                thumbnail={prefixFileUrlWithBackendUrl(asset?.formats?.thumbnail?.url || asset.url)}
-                onEdit={onEditAsset}
-                onSelect={onSelectAsset}
-                selected={isSelected}
-              />
-            </>
+            <ImageAssetCard
+              id={asset.id}
+              key={asset.id}
+              name={asset.name}
+              asset={asset}
+              alt={asset.alternativeText || asset.name}
+              extension={getFileExtension(asset.ext)}
+              height={asset.height}
+              width={asset.width}
+              thumbnail={prefixFileUrlWithBackendUrl(asset?.formats?.thumbnail?.url || asset.url)}
+              onEdit={onEditAsset}
+              onSelect={onSelectAsset}
+              selected={isSelected}
+            />
           );
         })}
 
@@ -69,12 +65,4 @@ ImageList.defaultProps = {
   onEditAsset: undefined,
   selectedAsset: [],
   size: 'S',
-};
-
-ImageList.propTypes = {
-  assets: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  onEditAsset: PropTypes.func,
-  selectedAsset: PropTypes.array,
-  onSelectAsset: PropTypes.func.isRequired,
-  size: PropTypes.oneOf(['S', 'M']),
 };

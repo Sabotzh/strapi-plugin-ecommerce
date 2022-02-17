@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import getTrad from '../../utils/getTrad';
 
-import PropTypes from 'prop-types';
 import Pencil from '@strapi/icons/Pencil';
 import { IconButton } from '@strapi/design-system/IconButton';
 import { useIntl } from 'react-intl';
@@ -81,17 +80,4 @@ ImageAssetCard.defaultProps = {
   onEdit: undefined,
   onSelect: undefined,
   size: 'M',
-};
-
-ImageAssetCard.propTypes = {
-  alt: PropTypes.string.isRequired,
-  extension: PropTypes.string.isRequired,
-  height: PropTypes.number,
-  name: PropTypes.string.isRequired,
-  onEdit: PropTypes.func,
-  onSelect: PropTypes.func,
-  width: PropTypes.number,
-  thumbnail: PropTypes.string.isRequired,
-  selected: PropTypes.bool,
-  size: PropTypes.oneOf(['S', 'M']),
 };

@@ -1,5 +1,9 @@
 import React, { useState, useRef } from 'react';
-import PropTypes from 'prop-types';
+
+import { ImageAssetCard } from "../../AssetDialog/ImageAssetCard";
+import { UploadingAssetCard } from "../UploadingAssetCard";
+import getTrad from '../../../utils/getTrad';
+
 import { ModalHeader, ModalBody, ModalFooter } from '@strapi/design-system/ModalLayout';
 import { Typography } from '@strapi/design-system/Typography';
 import { Button } from '@strapi/design-system/Button';
@@ -8,9 +12,6 @@ import { Flex } from '@strapi/design-system/Flex';
 import { Stack } from '@strapi/design-system/Stack';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
 import { KeyboardNavigable } from '@strapi/design-system/KeyboardNavigable';
-import { ImageAssetCard } from "../../AssetDialog/ImageAssetCard";
-import { UploadingAssetCard } from "../UploadingAssetCard";
-import getTrad from '../../../utils/getTrad';
 import { getFileExtension, prefixFileUrlWithBackendUrl } from '@strapi/helper-plugin'
 
 const Status = {
@@ -165,14 +166,4 @@ export const PendingAssetStep = ({
 
 PendingAssetStep.defaultProps = {
   addUploadedFiles: undefined,
-};
-
-PendingAssetStep.propTypes = {
-  addUploadedFiles: PropTypes.func,
-  assets: PropTypes.array.isRequired,
-  onClose: PropTypes.func.isRequired,
-  onEditAsset: PropTypes.func.isRequired,
-  onClickAddAsset: PropTypes.func.isRequired,
-  onUploadSucceed: PropTypes.func.isRequired,
-  onCancelUpload: PropTypes.func.isRequired,
 };

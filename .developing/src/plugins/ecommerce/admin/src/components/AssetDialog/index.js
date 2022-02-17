@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { ModalLayout, ModalBody } from '@strapi/design-system/ModalLayout';
 import { Flex } from '@strapi/design-system/Flex';
 import { Box } from '@strapi/design-system/Box';
@@ -150,14 +149,4 @@ AssetDialog.defaultProps = {
   assets: [],
   loading: false,
   error: false
-};
-
-AssetDialog.propTypes = {
-  allowedTypes: PropTypes.arrayOf(PropTypes.string),
-  initiallySelectedAssets: PropTypes.array,
-  onFinish: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired,
-  size: PropTypes.oneOf(['S', 'M']),
-  assets: PropTypes.array,
-  deleteAsset: PropTypes.func
 };

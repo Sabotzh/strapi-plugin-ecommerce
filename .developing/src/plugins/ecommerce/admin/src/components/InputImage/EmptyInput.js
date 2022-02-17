@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from "styled-components";
-import PropTypes from 'prop-types';
 
 import { Flex } from '@strapi/design-system/Flex';
 import { useIntl } from 'react-intl';
@@ -49,8 +48,4 @@ export const EmptyInput = ({ onClick }) => {
       })}
     </TextAlignTypography>
   </Flex>
-}
-
-EmptyInput.propTypes = {
-  onFinish: PropTypes.func.require,
 };

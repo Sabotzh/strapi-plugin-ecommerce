@@ -7,7 +7,7 @@ import { EmptyInput } from './EmptyInput'
 import { InputActions } from "./InputActions";
 import { EditAssetDialog } from "../EditAssetDialog";
 import { UploadAssetDialog } from "../UploadAssetDialog/UploadAssetDialog";
-import PropTypes from 'prop-types';
+
 import { Flex } from '@strapi/design-system/Flex';
 import { Box } from '@strapi/design-system/Box';
 import { Stack } from '@strapi/design-system/Stack';
@@ -76,7 +76,7 @@ const InputImage = ({ onFinish, selectedAsset, deleteSelectedAsset, label, error
           alignItems="center"
         >
           <ConfirmDialog
-            isOpen={selectDelete}
+            isOpen={!!selectDelete}
             onConfirm={() => deleteAsset(selectDelete)}
             onToggleDialog={() => setSelectDelete(undefined)}
           />
@@ -162,10 +162,4 @@ export default InputImage
 
 InputImage.defaultProps = {
   selectedAsset: undefined,
-};
-
-InputImage.propTypes = {
-  onFinish: PropTypes.func.require,
-  selectedAsset: PropTypes.object,
-  deleteSelectedAsset: PropTypes.func.require,
 };

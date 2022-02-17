@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 
 import Wysiwyg from '../../../components/Wysiwyg/Wysiwyg';
 import InputImage from '../../../components/InputImage';
-import validate from '../../../utils/validate';
-import { numberValidate } from '../../../utils/validate';
+import validate, { numberValidate } from '../../../utils/validate';
 import PopupLoader from '../../../components/PopupLoader';
 import InputSlug from '../../../components/InputSlug';
 
@@ -27,7 +26,7 @@ import { ToggleCheckbox } from '@strapi/design-system/ToggleCheckbox';
 
 const statusArr = [ 'SELLING', 'ON_ORDER', 'UNAVAILABLE' ];
 
-const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
+const Create = ({ onClose, onCreate, allCategories, allManufacturers }) => {
   const [ name, setName ] = useState('');
   const [ slug, setSlug ] = useState('');
   const [ sku, setSku ] = useState('');
@@ -72,7 +71,6 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
     })
       .then((res) => {
         setLoader(false)
-        console.log(res.data)
         if (!res.success) return setErrors(res.data);
         onClose()
       })
@@ -121,7 +119,8 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
                   label={'Image'}
                   selectedAsset={image}
                   deleteSelectedAsset={() => setImage(null)}
-                  onFinish={(image) => setImage(...image)}/>
+                  onFinish={(image) => setImage(...image)}
+                />
               </GridItem>
               <GridItem col={12}>
                 <Textarea
@@ -280,4 +279,4 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
   );
 };
 
-export default Edit;
+export default Create;

@@ -61,7 +61,7 @@ const RowTable = ({ rowData, data, onUpdate, onDelete, onPublish, onUnPublish })
       <Td><Typography textColor="neutral800">{ rowData.id }</Typography></Td>
       <Td>
         { rowData.image?.url
-          ? <Avatar src={rowData.image?.url} alt={data.name}/>
+          ? <Avatar src={rowData.image?.url} alt={rowData.name}/>
           : <Initials>{ rowData.name.split(' ').map((word, i) => i < 2 ? word[0]: '').join('') }</Initials> }
       </Td>
       <Td><Typography textColor="neutral800">{ rowData.name }</Typography></Td>

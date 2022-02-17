@@ -1,6 +1,5 @@
 import React from 'react'
 
-import PropTypes from 'prop-types';
 import { Flex } from '@strapi/design-system/Flex';
 import { Loader } from '@strapi/design-system/Loader';
 
@@ -27,7 +26,3 @@ const PopupLoader = ({ loader, children }) => {
 }
 
 export default PopupLoader
-
-PopupLoader.propTypes = {
-  loader: PropTypes.bool.require,
-};

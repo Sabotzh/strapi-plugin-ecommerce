@@ -38,7 +38,6 @@ const OrdersPage = () => {
     getData()
   }, [])
 
-
   const changeStatus = async (id, status) => {
     return await axios({
       method: 'put',

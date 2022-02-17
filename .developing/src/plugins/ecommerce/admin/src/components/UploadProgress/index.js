@@ -1,6 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
+
 import Cross from '@strapi/icons/Cross';
 import { Typography } from '@strapi/design-system/Typography';
 import { Box } from '@strapi/design-system/Box';
@@ -76,10 +76,4 @@ export const UploadProgress = ({ onCancel, progress, error }) => {
 UploadProgress.defaultProps = {
   error: undefined,
   progress: 0,
-};
-
-UploadProgress.propTypes = {
-  error: PropTypes.instanceOf(Error),
-  onCancel: PropTypes.func.isRequired,
-  progress: PropTypes.number,
 };
