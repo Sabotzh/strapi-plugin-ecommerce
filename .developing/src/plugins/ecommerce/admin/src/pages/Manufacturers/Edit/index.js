@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import InputSlug from '../../../components/InputSlug'
-import validateCategories from '../../../utils/validate';
+import validate from '../../../utils/validate';
 import Wysiwyg from '../../../components/Wysiwyg/Wysiwyg';
 import InputImage from '../../../components/InputImage';
 import getTrad from '../../../utils/getTrad';
@@ -10,6 +10,7 @@ import PopupLoader from '../../../components/PopupLoader';
 import CollectionType from '@strapi/icons/CollectionType';
 import { useIntl } from 'react-intl';
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
+import { useNotification } from '@strapi/helper-plugin';
 import { Box } from '@strapi/design-system/Box';
 import { Stack } from '@strapi/design-system/Stack';
 import { Breadcrumbs, Crumb } from '@strapi/design-system/Breadcrumbs';
@@ -34,33 +35,37 @@ const Edit = ({ data, onClose, onUpdateData }) => {
   const [ metaKeywords, setMetaKeywords ] = useState(data.metaKeywords);
   const [ metaDescription, setMetaDescription ] = useState(data.metaDescription);
 
+  const notification = useNotification()
   const [ errors, setErrors] = useState({});
   const [ loader, setLoader ] = useState(false)
 
   const submitButtonHandler = () => {
-    const { success, validateErrors } = validateCategories(
-      { name, shortDescription, description, metaTitle, metaKeywords, metaDescription },
-      errors, setErrors
-    )
-    if (success) {
-      setLoader(true)
-      onUpdateData(data.id, {
-        name,
-        slug,
-        shortDescription,
-        description,
-        image,
-        metaTitle,
-        metaDescription,
-        metaKeywords,
-      })
-        .then(res => {
-          setLoader(false)
-          if (res) onClose()
-        });
-    } else {
+    const { success, validateErrors } = validate(
+      { name, shortDescription, description, metaTitle, metaKeywords, metaDescription }
+    );
+
+    if (!success) {
+      notification({ type: 'warning', message: 'Fill in all required fields' })
       setErrors(validateErrors)
+      return
     }
+
+    setLoader(true)
+    onUpdateData(data.id, {
+      name,
+      slug,
+      shortDescription,
+      description,
+      image,
+      metaTitle,
+      metaDescription,
+      metaKeywords,
+    })
+      .then((res) => {
+        setLoader(false)
+        if (!res.success) return setErrors(res.data);
+        onClose()
+      });
   }
 
   return (
@@ -106,6 +111,7 @@ const Edit = ({ data, onClose, onUpdateData }) => {
                   relationName={ name }
                   id={ data.id }
                   url={ 'manufacturer/create-slug' }
+                  error={ errors.slug }
                 />
               </GridItem>
               <GridItem col={12}>

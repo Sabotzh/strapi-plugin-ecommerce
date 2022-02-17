@@ -26,7 +26,7 @@ const RowTable = ({ rowData, data, onUpdate, onDelete, onPublish, onUnPublish })
     <>
       { visibleEdit &&
         <Edit
-          closeHandler = { () => setVisibleEdit(false) }
+          onClose = { () => setVisibleEdit(false) }
           rowData = { rowData }
           tableData = { data }
           updateRowData = { (id, data) => onUpdate(id, data) }

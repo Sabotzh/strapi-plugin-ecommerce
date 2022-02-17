@@ -38,30 +38,32 @@ const Create = ({ onCreate, onClose }) => {
 
   const submitButtonHandler = () => {
     let { success, validateErrors } = validateCategories(
-      { name, shortDescription, description, metaTitle, metaKeywords, metaDescription },
-      errors, setErrors);
+      { name, slug, shortDescription, description, metaTitle, metaKeywords, metaDescription }
+    );
 
-    if (success) {
-      setLoader(true);
-      onCreate({
-        name,
-        slug,
-        image,
-        publishedAt: published,
-        shortDescription,
-        description,
-        metaTitle,
-        metaDescription,
-        metaKeywords,
-      })
-        .then((res) => {
-          setLoader(false)
-          if (res) onClose()
-        });
-    } else {
-      notification({ type: 'warning', message: 'Fill in all fields' })
-      setErrors(validateErrors);
+    if (!success) {
+      notification({ type: 'warning', message: 'Fill in all required fields' })
+      setErrors(validateErrors)
+      return
     }
+
+    setLoader(true);
+    onCreate({
+      name,
+      slug,
+      image,
+      publishedAt: published,
+      shortDescription,
+      description,
+      metaTitle,
+      metaDescription,
+      metaKeywords,
+    })
+      .then((res) => {
+        setLoader(false)
+        if (!res.success) return setErrors(res.data);
+        onClose()
+      });
   }
 
   return (
@@ -100,6 +102,7 @@ const Create = ({ onCreate, onClose }) => {
                   relationName={ name }
                   id={ -1 }
                   url={ 'manufacturer/create-slug' }
+                  error={ errors.slug }
                 />
               </GridItem>
               <GridItem col={12}>

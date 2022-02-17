@@ -76,11 +76,11 @@ const ProductsPage = () => {
     })
       .then(async () => {
         await getData()
-        return true
+        return { success: true }
       })
       .catch(error => {
-        notification({ type: 'warning', message: error.response.data })
-        return false
+        notification({ type: 'warning', message: 'Product not updated' })
+        return { success: false, data: error.response.data }
       });
   }
 
@@ -101,11 +101,11 @@ const ProductsPage = () => {
           ? await publish(res.data.id, true)
           : await unPublish(res.data.id, true)
         await getData()
-        return true
+        return { success: true }
       })
       .catch((error) => {
-        notification({ type: 'warning', message: error.response.data })
-        return false
+        notification({ type: 'warning', message: 'Product not created' })
+        return { success: false, data: error.response.data }
       })
   }
 

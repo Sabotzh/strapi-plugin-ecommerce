@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import validateCategories from '../../../utils/validate';
+import validate from '../../../utils/validate';
 import InputSlug from '../../../components/InputSlug';
 import Wysiwyg from '../../../components/Wysiwyg/Wysiwyg';
 import InputImage from '../../../components/InputImage';
@@ -22,7 +22,7 @@ import { Textarea } from '@strapi/design-system/Textarea';
 import { ToggleCheckbox } from '@strapi/design-system/ToggleCheckbox';
 
 
-const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
+const Edit = ({ rowData, onClose, updateRowData, tableData }) => {
   const [ name, setName ] = useState(rowData.name);
   const [ selectParent, setSelectParent ] = useState(rowData.parentCategory?.id);
   const [ published, setPublished ] = useState(!!rowData.publishedAt);
@@ -34,47 +34,49 @@ const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
   const [ metaDescription, setMetaDescription ] = useState(rowData.metaDescription);
   const [ image, setImage ] = useState(rowData.image);
 
+  const notification = useNotification()
   const [ errors, setErrors ] = useState({});
   const [ loader, setLoader ] = useState(false)
 
-  const notification = useNotification()
-
   const submitButtonHandler = async() => {
-    const {success, validateErrors} = validateCategories({
-      name,
-      shortDescription,
-      description,
-      metaTitle,
-      metaKeywords,
-      metaDescription
-    }, errors, setErrors)
-
-    if (success) {
-      setLoader(true)
-      await updateRowData(rowData.id, {
+    const {success, validateErrors} = validate(
+      {
         name,
-        image,
-        parentCategory: selectParent,
-        slug,
         shortDescription,
         description,
         metaTitle,
-        metaDescription,
         metaKeywords,
-        publishedAt: published,
+        metaDescription
       })
-        .then((res) => {
-          setLoader(false)
-          if (res) closeHandler()
-        })
-    } else {
+
+    if (!success) {
       notification({ type: 'warning', message: 'Fill in all required fields' })
       setErrors(validateErrors)
+      return
     }
+
+    setLoader(true)
+    await updateRowData(rowData.id, {
+      name,
+      image,
+      parentCategory: selectParent,
+      slug,
+      shortDescription,
+      description,
+      metaTitle,
+      metaDescription,
+      metaKeywords,
+      publishedAt: published,
+    })
+      .then((res) => {
+        setLoader(false)
+        if (!res.success) return setErrors(res.data);
+        onClose()
+      })
   }
 
   return (
-    <ModalLayout onClose={closeHandler} labelledBy="Edit">
+    <ModalLayout onClose={onClose} labelledBy="Edit">
       <ModalHeader>
         <Stack horizontal size={2}>
           <CollectionType/>
@@ -110,6 +112,7 @@ const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
                   relationName={ name }
                   id={ rowData.id }
                   url={ 'categories/create-slug' }
+                  error={ errors.slug }
                 />
               </GridItem>
               <GridItem col={12}>
@@ -207,7 +210,7 @@ const Edit = ({ rowData, closeHandler, updateRowData, tableData }) => {
           </Box>
         </ModalBody>
         <ModalFooter
-          startActions={<Button onClick={ closeHandler } variant="tertiary"> Cancel </Button>}
+          startActions={<Button onClick={ onClose } variant="tertiary"> Cancel </Button>}
           endActions={<Button onClick={ submitButtonHandler }> Finish </Button>}
         />
       </PopupLoader>

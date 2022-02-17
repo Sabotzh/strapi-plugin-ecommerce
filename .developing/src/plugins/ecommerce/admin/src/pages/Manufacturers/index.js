@@ -49,7 +49,7 @@ const ManufacturerPage = () => {
   const create = async(data) => {
     return await axios({
       method: 'post',
-      url: 'http://localhost:1337/api/ecommerce/manufacturer',
+      url: `${strapi.backendURL}/api/ecommerce/manufacturer`,
       data
     })
       .then(async (res) => {
@@ -57,27 +57,27 @@ const ManufacturerPage = () => {
           ? await publish(res.data.id, true)
           : await unPublish(res.data.id, true)
         await getData()
-        return true
+        return { success: true }
       })
       .catch((error) => {
-        notification({ type: 'warning', message: error.response.data })
-        return false
+        notification({ type: 'warning', message: 'Manufacturer not created' })
+        return { success: false, data: error.response.data }
       })
   }
 
   const update = async(id, data) => {
     return await axios({
       method: 'put',
-      url: `http://localhost:1337/api/ecommerce/manufacturer/${id}`,
+      url: `${strapi.backendURL}/api/ecommerce/manufacturer/${id}`,
       data
     })
       .then(async () => {
         await getData()
-        return true
+        return { success: true }
       })
       .catch(error => {
-        notification({ type: 'warning', message: error.response.data })
-        return false
+        notification({ type: 'warning', message: 'Manufacturer not updated' })
+        return { success: false, data: error.response.data }
       })
   }
 

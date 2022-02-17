@@ -1,40 +1,42 @@
 const slugify = require('slugify');
 const strapiForbiddenFields = require('../_utils/strapiForbiddenFieldsForUpdate');
-const randomIntFromInterval = require('../../utils/randomIntFromInterval');
+const validator = require('../_utils/validator');
+const validateFields = require('../_utils/manufacturersValidateFileds');
 
 module.exports = ({ strapi }) => async (ctx) => {
   const data = ctx.request.body;
 
-  if (!data.name) {
-    ctx.status = 400;
-    ctx.body = `Field "name" required`;
-    return
-  }
-
-  const manufacturerWithTheSameName = await strapi
-    .query('plugin::ecommerce.manufacturer')
-    .findOne({ where: { name: data.name }});
-  if (manufacturerWithTheSameName) {
-    ctx.status = 400;
-    ctx.body = `Field "name" must be unique`
-    return
-  }
-
-  const forbiddenFields = [ ...strapiForbiddenFields ];
-  for (const forbiddenField of forbiddenFields) {
+  for (const forbiddenField of strapiForbiddenFields) {
     delete data[forbiddenField];
   }
 
-  if (data.slug) {
-    data.slug = slugify(data.slug)
-  } else {
-    data.slug = slugify(data.name)
+  const error = validator.require(validateFields(data))
+
+  if (data.name) {
+    const manufacturerWithTheSameName = await strapi
+      .query('plugin::ecommerce.manufacturer')
+      .findOne({ where: { name: data.name }});
+    if (manufacturerWithTheSameName) {
+      error.validateErrors = { ...error.validateErrors, name: `This field must be unique` }
+      error.success = false
+    }
   }
-  const manufacturerWithTheSameSlug = await strapi
-    .query('plugin::ecommerce.manufacturer')
-    .findOne({ where: { slug: data.slug } });
-  if (manufacturerWithTheSameSlug) {
-    data.slug = data.slug + '-' + randomIntFromInterval(1000, 9999);
+
+  if (data.slug) {
+    data.slug = slugify(data.slug).toLowerCase()
+    const manufacturerWithTheSameSlug = await strapi
+      .query('plugin::ecommerce.manufacturer')
+      .findOne({ where: { slug: data.slug } });
+    if (manufacturerWithTheSameSlug) {
+      error.validateErrors = { ...error.validateErrors, slug: `This field must be unique` }
+      error.success = false
+    }
+  }
+
+  if (!error.success) {
+    ctx.status = 400;
+    ctx.body = error.validateErrors
+    return
   }
 
   ctx.body = await strapi

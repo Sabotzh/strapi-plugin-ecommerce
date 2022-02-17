@@ -55,25 +55,27 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
     setErrors({});
 
     const requireValidateResult = validate({
-      name, sku, price, shortDescription, description, metaTitle, metaKeywords, metaDescription
+      name, slug, sku, price, shortDescription, description, metaTitle, metaKeywords, metaDescription
     });
-
     const numberValidateResult = numberValidate({ price, quantity, minQuantity, discount })
 
-    if (requireValidateResult.success && numberValidateResult.success) {
-      setLoader(true)
-      onCreate({
-        name, slug, sku, categories, price, dateAvailable, quantity, minQuantity, status, discount, description,
-        shortDescription, image, metaDescription, metaTitle, metaKeywords, publishedAt: published, manufacturer
-      })
-        .then((res) => {
-          setLoader(false)
-          if (res) onClose()
-        })
-    } else {
+    if (!requireValidateResult.success && !numberValidateResult.success) {
       notification({ type: 'warning', message: 'Fill in all fields' })
-      setErrors(Object.assign(numberValidateResult.validateErrors, requireValidateResult.validateErrors));
+      setErrors({ ...numberValidateResult.validateErrors, ...requireValidateResult.validateErrors});
+      return
     }
+
+    setLoader(true)
+    onCreate({
+      name, slug, sku, categories, price, dateAvailable, quantity, minQuantity, status, discount, description,
+      shortDescription, image, metaDescription, metaTitle, metaKeywords, publishedAt: published, manufacturer
+    })
+      .then((res) => {
+        setLoader(false)
+        console.log(res.data)
+        if (!res.success) return setErrors(res.data);
+        onClose()
+      })
   }
 
   return (
@@ -111,6 +113,7 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
                   relationName={ name }
                   id={ -1 }
                   url={ 'products/create-slug' }
+                  error={ errors.slug }
                 />
               </GridItem>
               <GridItem col={12}>

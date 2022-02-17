@@ -75,23 +75,23 @@ const CategoriesPage = () => {
   const update = async (id, data) => {
     return await axios({
       method: 'put',
-      url: `${strapi.backendURL}/ecommerce/categories/${id}`,
+      url: `${strapi.backendURL}/api/ecommerce/categories/${id}`,
       data
     })
       .then(async () => {
         await getData()
-        return true
+        return { success: true }
       })
       .catch(error => {
-        notification({ type: 'warning', message: error.response.data })
-        return false
+        notification({ type: 'warning', message: 'Category not updated' })
+        return { success: false, data: error.response.data }
       });
   }
 
   const create = async (data) => {
     return await axios({
       method: 'post',
-      url: `${strapi.backendURL}/ecommerce/categories`,
+      url: `${strapi.backendURL}/api/ecommerce/categories`,
       data
     })
       .then(async (res) => {
@@ -99,11 +99,11 @@ const CategoriesPage = () => {
           ? await publish(res.data.id, true)
           : await unPublish(res.data.id, true)
         await getData()
-        return true
+        return { success: true }
       })
       .catch((error) => {
-        notification({ type: 'warning', message: error.response.data })
-        return false
+        notification({ type: 'warning', message: 'Category not created' })
+        return { success: false, data: error.response.data }
       })
   }
 

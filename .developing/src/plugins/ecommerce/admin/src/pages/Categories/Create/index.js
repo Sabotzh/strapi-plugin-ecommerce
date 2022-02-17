@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import Wysiwyg from "../../../components/Wysiwyg/Wysiwyg";
-import validateCategories from "../../../utils/validate";
-import InputImage from "../../../components/InputImage"
-import getTrad from "../../../utils/getTrad";
+import Wysiwyg from '../../../components/Wysiwyg/Wysiwyg';
+import validate from '../../../utils/validate';
+import InputImage from '../../../components/InputImage';
+import getTrad from '../../../utils/getTrad';
 import PopupLoader from '../../../components/PopupLoader';
 import InputSlug from '../../../components/InputSlug';
 
@@ -11,16 +11,16 @@ import CollectionType from '@strapi/icons/CollectionType';
 import { useIntl } from 'react-intl';
 import { useNotification } from '@strapi/helper-plugin';
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
-import { Box } from "@strapi/design-system/Box";
-import { Stack } from "@strapi/design-system/Stack";
+import { Box } from '@strapi/design-system/Box';
+import { Stack } from '@strapi/design-system/Stack';
 import { Breadcrumbs, Crumb } from '@strapi/design-system/Breadcrumbs';
-import { Typography } from "@strapi/design-system/Typography";
-import { Divider } from "@strapi/design-system/Divider";
-import { Grid, GridItem } from "@strapi/design-system/Grid";
-import { TextInput } from "@strapi/design-system/TextInput";
-import { Option, Select } from "@strapi/design-system/Select";
+import { Typography } from '@strapi/design-system/Typography';
+import { Divider } from '@strapi/design-system/Divider';
+import { Grid, GridItem } from '@strapi/design-system/Grid';
+import { TextInput } from '@strapi/design-system/TextInput';
+import { Option, Select } from '@strapi/design-system/Select';
 import { ToggleCheckbox } from '@strapi/design-system/ToggleCheckbox';
-import { Button } from "@strapi/design-system/Button";
+import { Button } from '@strapi/design-system/Button';
 import { Textarea } from '@strapi/design-system/Textarea';
 
 
@@ -92,32 +92,34 @@ const Create = ({ data, onCreate, onClose }) => {
   const [ loader, setLoader ] = useState(false)
 
   const submitButtonHandler = async () => {
-    let { success, validateErrors } = validateCategories(
-      { name, shortDescription, description, metaTitle, metaKeywords, metaDescription },
-      errors, setErrors);
+    let { success, validateErrors } = validate(
+      { name, slug, shortDescription, description, metaTitle, metaKeywords, metaDescription }
+    );
 
-    if (success) {
-      setLoader(true)
-      onCreate({
-        name,
-        parentCategory: selectParent,
-        slug,
-        image,
-        shortDescription,
-        description,
-        metaTitle,
-        metaDescription,
-        metaKeywords,
-        publishedAt: published,
-      })
-        .then((res) => {
-          setLoader(false)
-          if (res) onClose()
-        })
-    } else {
-      notification({ type: 'warning', message: 'Fill in all required fields' })
+    if (!success) {
+      notification({ type: 'warning', message: 'Fill in all required fields' });
       setErrors(validateErrors);
+      return
     }
+
+    setLoader(true)
+    await onCreate({
+      name,
+      parentCategory: selectParent,
+      slug,
+      image,
+      shortDescription,
+      description,
+      metaTitle,
+      metaDescription,
+      metaKeywords,
+      publishedAt: published,
+    })
+      .then((res) => {
+        setLoader(false)
+        if (!res.success) return setErrors(res.data);
+        onClose()
+      })
   }
 
   return (
@@ -171,6 +173,7 @@ const Create = ({ data, onCreate, onClose }) => {
                   relationName={ name }
                   id={ -1 }
                   url={ 'categories/create-slug' }
+                  error={ errors.slug }
                 />
               </GridItem>
               <GridItem col={12}>
