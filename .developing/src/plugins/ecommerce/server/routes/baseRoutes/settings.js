@@ -2,31 +2,31 @@ module.exports = [
   {
     method: 'POST',
     path: '/settings',
-    handler: 'setting.create',
+    handler: 'settings.create',
     config: {},
   },
   {
     method: 'GET',
     path: '/settings',
-    handler: 'setting.find',
+    handler: 'settings.find',
     config: {},
   },
   {
     method: 'GET',
-    path: '/settings/:slug',
-    handler: 'setting.findOneByKey',
+    path: '/settings/:key',
+    handler: 'settings.findOneByKey',
     config: {},
   },
   {
     method: 'PUT',
-    path: '/products/:key',
-    handler: 'products.update',
+    path: '/settings/:key',
+    handler: 'settings.update',
     config: {},
   },
   {
     method: 'DELETE',
-    path: '/products/:key',
-    handler: 'products.remove',
+    path: '/settings/:key',
+    handler: 'settings.remove',
     config: {},
   }
 ];
