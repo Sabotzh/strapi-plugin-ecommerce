@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 import { useFocusWhenNavigate } from '@strapi/helper-plugin';
 import { HeaderLayout, Layout, ContentLayout } from '@strapi/design-system/Layout';
 import { Box } from '@strapi/design-system/Box';
-import { Stack } from '@strap/design-system/Stack';
+import { Stack } from '@strapi/design-system/Stack';
 import { Typography } from '@strapi/design-system/Typography';
 import { TextInput } from '@strapi/design-system/TextInput';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
