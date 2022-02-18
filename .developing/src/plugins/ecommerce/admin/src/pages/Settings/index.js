@@ -1,4 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+import getTrad from '../../utils/getTrad';
+
 
 import { useIntl } from 'react-intl';
 import { useFocusWhenNavigate } from '@strapi/helper-plugin';
@@ -9,19 +13,35 @@ import { Typography } from '@strapi/design-system/Typography';
 import { TextInput } from '@strapi/design-system/TextInput';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
 import { Button } from '@strapi/design-system/Button';
+import { useNotification } from '@strapi/helper-plugin';
 import Key from '@strapi/icons/Key';
 
-import getTrad from '../../utils/getTrad';
 
 const SettingsPage = () => {
   const [ token, setToken] = useState('');
-
+  const notification = useNotification();
   useFocusWhenNavigate();
 
-  const submit = () => {
+  const submit = async () => {
     if (!token) return
-    console.log(token)
+    const { data } = await axios({
+      method: 'put',
+      url: `${strapi.backendURL}/api/ecommerce/settings/token`,
+      data: { value: token }
+    })
+    if (data) {
+      notification({ type: 'success', message: 'Token updated' })
+      setToken(data.value)
+    }
   }
+
+  const getToken = async () => {
+    const { data } = await axios.get(`${strapi.backendURL}/api/ecommerce/settings/token`)
+    if (data) setToken(data.value)
+  }
+  useEffect(() => {
+    getToken()
+  }, [])
 
   const { formatMessage } = useIntl();
   const title = formatMessage({

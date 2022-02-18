@@ -7,6 +7,7 @@ module.exports = ({ strapi }) => async (ctx) => {
     ctx.body = 'Field "value" is undefined'
   }
 
+
   ctx.body = await strapi
     .query('plugin::ecommerce.setting')
     .update({ where: { key }, data: { value: data.value } });
