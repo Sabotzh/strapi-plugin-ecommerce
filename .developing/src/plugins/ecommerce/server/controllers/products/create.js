@@ -1,43 +1,43 @@
 const slugify = require('slugify');
-const randomIntFromInterval = require('../../utils/randomIntFromInterval');
+const validateFields = require('../_utils/productsValidateFields');
+const validator = require('../_utils/validator');
+const strapiForbiddenFields = require('../_utils/strapiForbiddenFieldsForUpdate');
 
 module.exports = ({ strapi }) => async (ctx) => {
   const data = ctx.request.body;
 
-  if (!data.name) {
-    ctx.status = 400;
-    ctx.body = `Field "name" required`;
-    return;
+  for (const forbiddenField of strapiForbiddenFields) {
+    delete data[forbiddenField];
   }
 
-  const productWithTheSameName = await strapi
-    .query('plugin::ecommerce.product')
-    .findOne({ where: { name: data.name }});
-  if (productWithTheSameName) {
-    ctx.status = 400;
-    ctx.body = `Field "name" must be unique`
-    return
+  const validateRequires = validator.require(validateFields(data).required)
+  const validateNumbers = validator.numbers(validateFields(data).numbers)
+
+  if (data.name) {
+    const productWithTheSameName = await strapi
+      .query('plugin::ecommerce.product')
+      .findOne({ where: { name: data.name }});
+    if (productWithTheSameName) {
+      validateRequires.validateErrors = { ...validateRequires.validateErrors, name: `This field must be unique` }
+      validateRequires.success = false
+    }
   }
-
-  console.log(data)
-
-  delete data.id;
-  delete data.categoryLevel;
-  delete data.createdAt;
-  delete data.updatedAt;
-  delete data.publishedAt;
 
   if (data.slug) {
-    data.slug = slugify(data.slug);
-  } else {
-    data.slug = slugify(data.name);
+    data.slug = slugify(data.slug).toLowerCase()
+    const productWithTheSameSlug = await strapi
+      .query('plugin::ecommerce.product')
+      .findOne({ where: { slug: data.slug } });
+    if (productWithTheSameSlug) {
+      validateRequires.validateErrors = { ...validateRequires.validateErrors, slug: `This field must be unique` }
+      validateRequires.success = false
+    }
   }
 
-  const productsWithTheSameSlug = await strapi
-    .query('plugin::ecommerce.product')
-    .findOne({ where: { slug: data.slug } });
-  if (productsWithTheSameSlug) {
-    data.slug = data.slug + '-' + randomIntFromInterval(1000, 9999);
+  if (!validateRequires.success || !validateNumbers.success) {
+    ctx.status = 400;
+    ctx.body = { ...validateNumbers.validateErrors, ...validateRequires.validateErrors }
+    return
   }
 
   ctx.body = await strapi

@@ -8,7 +8,6 @@ import TableLoader from '../../components/TableLoader';
 import TableEmptyModal from '../../components/TableEmptyModal';
 
 import Plus from '@strapi/icons/Plus';
-const qs = require('qs');
 import { useIntl } from 'react-intl';
 import { useFocusWhenNavigate } from '@strapi/helper-plugin';
 import { HeaderLayout, ContentLayout } from '@strapi/design-system/Layout';
@@ -18,15 +17,16 @@ import { Typography } from '@strapi/design-system/Typography';
 import { VisuallyHidden } from "@strapi/design-system/VisuallyHidden";
 import { Stack } from '@strapi/design-system/Stack';
 import { request, useNotification } from '@strapi/helper-plugin';
+const qs = require('qs');
 
 
 const ManufacturerPage = () => {
   useFocusWhenNavigate();
 
-  const [ data, setData ] = useState([])
-  const [ createVisible, setCreateVisible ] = useState(false)
-  const [ loader, setLoader ] = useState(true)
-  const notification = useNotification()
+  const [ data, setData ] = useState([]);
+  const [ createVisible, setCreateVisible ] = useState(false);
+  const [ loader, setLoader ] = useState(true);
+  const notification = useNotification();
 
   const { formatMessage } = useIntl();
   const title = formatMessage({
@@ -49,7 +49,7 @@ const ManufacturerPage = () => {
   const create = async(data) => {
     return await axios({
       method: 'post',
-      url: 'http://localhost:1337/api/ecommerce/manufacturer',
+      url: `${strapi.backendURL}/api/ecommerce/manufacturer`,
       data
     })
       .then(async (res) => {
@@ -57,27 +57,29 @@ const ManufacturerPage = () => {
           ? await publish(res.data.id, true)
           : await unPublish(res.data.id, true)
         await getData()
-        return true
+        notification({ type: 'success', message: 'Manufacturer created' });
+        return { success: true }
       })
       .catch((error) => {
-        notification({ type: 'warning', message: error.response.data })
-        return false
+        notification({ type: 'warning', message: 'Manufacturer not created' })
+        return { success: false, data: error.response.data }
       })
   }
 
   const update = async(id, data) => {
     return await axios({
       method: 'put',
-      url: `http://localhost:1337/api/ecommerce/manufacturer/${id}`,
+      url: `${strapi.backendURL}/api/ecommerce/manufacturer/${id}`,
       data
     })
       .then(async () => {
-        await getData()
-        return true
+        await getData();
+        notification({ type: 'success', message: 'Manufacturer updated' });
+        return { success: true };
       })
       .catch(error => {
-        notification({ type: 'warning', message: error.response.data })
-        return false
+        notification({ type: 'warning', message: 'Manufacturer not updated' });
+        return { success: false, data: error.response.data };
       })
   }
 

@@ -77,4 +77,4 @@ export const InputActions = ({ asset, onAddAsset, onDeleteAsset, onEditAsset }) 
       </Stack>
     </Flex>
   )
-}
+};

@@ -1,7 +1,10 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
+
+import getTrad from '../../../utils/getTrad';
+import { rawFileToAsset } from '../../../utils/rawFileToAsset';
+
 import { Box } from '@strapi/design-system/Box';
 import { Flex } from '@strapi/design-system/Flex';
 import { Typography } from '@strapi/design-system/Typography';
@@ -10,8 +13,7 @@ import { ModalFooter } from '@strapi/design-system/ModalLayout';
 import { Button } from '@strapi/design-system/Button';
 import PicturePlus from '@strapi/icons/PicturePlus';
 import { useIntl } from 'react-intl';
-import getTrad from '../../../utils/getTrad';
-import { rawFileToAsset } from '../../../utils/rawFileToAsset';
+
 
 const Wrapper = styled(Flex)`
   flex-direction: column;
@@ -143,10 +145,4 @@ export const FromComputerForm = ({ onClose, onAddAssets, trackedLocation }) => {
 
 FromComputerForm.defaultProps = {
   trackedLocation: undefined,
-};
-
-FromComputerForm.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  onAddAssets: PropTypes.func.isRequired,
-  trackedLocation: PropTypes.string,
 };

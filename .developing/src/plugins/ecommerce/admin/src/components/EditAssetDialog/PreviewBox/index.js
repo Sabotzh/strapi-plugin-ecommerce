@@ -1,6 +1,5 @@
 import React from 'react';
 
-import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { Stack } from '@strapi/design-system/Stack';
 import { Box } from '@strapi/design-system/Box';
@@ -97,11 +96,4 @@ PreviewBox.defaultProps = {
   replacementFile: undefined,
   trackedLocation: undefined,
   canCopyLink: true
-};
-
-PreviewBox.propTypes = {
-  replacementFile: PropTypes.instanceOf(File),
-  asset: PropTypes.func.isRequired,
-  onDeleteAsset: PropTypes.func.isRequired,
-  canCopyLink: PropTypes.bool
 };

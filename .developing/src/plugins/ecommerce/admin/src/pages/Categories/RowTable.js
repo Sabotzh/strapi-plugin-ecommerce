@@ -26,7 +26,7 @@ const RowTable = ({ rowData, data, onUpdate, onDelete, onPublish, onUnPublish })
     <>
       { visibleEdit &&
         <Edit
-          closeHandler = { () => setVisibleEdit(false) }
+          onClose = { () => setVisibleEdit(false) }
           rowData = { rowData }
           tableData = { data }
           updateRowData = { (id, data) => onUpdate(id, data) }
@@ -61,12 +61,12 @@ const RowTable = ({ rowData, data, onUpdate, onDelete, onPublish, onUnPublish })
       <Td><Typography textColor="neutral800">{ rowData.id }</Typography></Td>
       <Td>
         { rowData.image?.url
-          ? <Avatar src={rowData.image?.url} alt={data.name}/>
+          ? <Avatar src={rowData.image?.url} alt={rowData.name}/>
           : <Initials>{ rowData.name.split(' ').map((word, i) => i < 2 ? word[0]: '').join('') }</Initials> }
       </Td>
       <Td><Typography textColor="neutral800">{ rowData.name }</Typography></Td>
       <Td><Typography textColor="neutral800">{ rowData.slug }</Typography></Td>
-      <Td><Typography textColor="neutral800">{ rowData.parentCategory?.name }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ rowData.parentCategory?.name || '-' }</Typography></Td>
       <Td><Typography textColor="neutral800">
         <Flex justifyContent={'center'}>
           { rowData.categoryLevel }

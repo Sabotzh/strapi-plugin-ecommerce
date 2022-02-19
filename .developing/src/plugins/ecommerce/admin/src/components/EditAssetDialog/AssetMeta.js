@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { Box } from '@strapi/design-system/Box';
 import { Stack } from '@strapi/design-system/Stack';
@@ -75,11 +74,4 @@ export const AssetMeta = ({ size, date, dimension, extension }) => {
       </Grid>
     </Box>
   );
-};
-
-AssetMeta.propTypes = {
-  size: PropTypes.string.isRequired,
-  date: PropTypes.string.isRequired,
-  dimension: PropTypes.string.isRequired,
-  extension: PropTypes.string.isRequired,
 };

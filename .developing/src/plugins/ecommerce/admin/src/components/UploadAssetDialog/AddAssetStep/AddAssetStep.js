@@ -1,14 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+
+import getTrad from '../../../utils/getTrad';
+import { FromUrlForm } from './FromUrlForm';
+import { FromComputerForm } from './FromComputerForm';
+
 import { ModalHeader } from '@strapi/design-system/ModalLayout';
 import { Typography } from '@strapi/design-system/Typography';
 import { Divider } from '@strapi/design-system/Divider';
 import { Box } from '@strapi/design-system/Box';
 import { useIntl } from 'react-intl';
 import { Tabs, Tab, TabGroup, TabPanels, TabPanel } from '@strapi/design-system/Tabs';
-import { FromUrlForm } from './FromUrlForm';
-import { FromComputerForm } from './FromComputerForm';
-import getTrad from '../../../utils/getTrad';
+
 
 export const AddAssetStep = ({ onClose, onAddAsset }) => {
   const { formatMessage } = useIntl();
@@ -66,9 +68,4 @@ export const AddAssetStep = ({ onClose, onAddAsset }) => {
       </TabGroup>
     </>
   );
-};
-
-AddAssetStep.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  onAddAsset: PropTypes.func.isRequired,
 };

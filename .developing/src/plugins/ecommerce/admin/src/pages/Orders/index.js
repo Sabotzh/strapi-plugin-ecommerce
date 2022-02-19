@@ -1,74 +1,72 @@
-import React, {useState} from 'react';
-
-import { useIntl } from 'react-intl';
-
-import { useFocusWhenNavigate } from '@strapi/helper-plugin';
-import { HeaderLayout, ContentLayout } from '@strapi/design-system/Layout';
+import React, { useState, useEffect} from 'react';
+import axios from 'axios';
 
 import getTrad from '../../utils/getTrad';
+import RowTable from './RowTable';
+import TableLoader from '../../components/TableLoader';
+import TableEmptyModal from '../../components/TableEmptyModal';
+
+import { useIntl } from 'react-intl';
+import { useNotification } from '@strapi/helper-plugin';
+import { useFocusWhenNavigate } from '@strapi/helper-plugin';
+import { HeaderLayout, ContentLayout } from '@strapi/design-system/Layout';
 import { Table, Tbody, Th, Thead, Tr } from "@strapi/design-system/Table";
 import { Typography } from '@strapi/design-system/Typography';
 import { Stack } from '@strapi/design-system/Stack'
-import RowTable from './RowTable';
 import { Option, Select } from '@strapi/design-system/Select';
+const qs = require('qs');
+
 
 const OrdersPage = () => {
   useFocusWhenNavigate();
 
-  const [ tableData, setTableData ] = useState([
-    {
-      id: 'D0E1',
-      time: 'Dec 18, 2021',
-      address: 'Address A',
-      phone: '2324523414',
-      method: 'COD',
-      amount: '$75.00',
-      status: 'pending',
-    },
-    {
-      id: '0B1D',
-      time: 'Dec 18, 2021',
-      address: 'Address B',
-      phone: '87985675',
-      method: 'COD',
-      amount: '$183.00',
-      status: 'delivered',
-    },
-    {
-      id: '7865',
-      time: 'Dec 18, 2021',
-      address: 'Address C',
-      phone: '23247897414',
-      method: 'COD',
-      amount: '$186.00',
-      status: 'pending',
-    },
-    {
-      id: '7825',
-      time: 'Dec 19, 2021',
-      address: 'Address D',
-      phone: '280014523123',
-      method: 'COD',
-      amount: '$132.00',
-      status: 'processing',
-    }
-  ]);
+  const [ data, setData ] = useState([]);
   const [ sortBy, setSortBy ] = useState();
+  const [ loader, setLoader ] = useState(true);
+  const notification = useNotification()
 
-  const tableDataUpdate = (updatedRow, idUpdatedRow) => {
-    const updatedTableData = tableData.map(row => {
-      if (row.id === idUpdatedRow) {
-        return updatedRow;
-      }
-      return row;
-    });
-    setTableData(updatedTableData);
+  const getData = async () => {
+    const query = qs.stringify(
+      { orderBy: { id: 'asc' }, populate: ['customer'] },
+      { encodeValuesOnly: true }
+    );
+    const { data } = await axios.get(`${strapi.backendURL}/api/ecommerce/orders?${query}`)
+    setData(data)
+    setLoader(false)
+  }
+  useEffect(() => {
+    getData()
+  }, [])
+
+  const changeStatus = async (id, status) => {
+    return await axios({
+      method: 'put',
+      url: `${strapi.backendURL}/api/ecommerce/orders/status/${id}`,
+      data: { status }
+    })
+      .then(async (res) => {
+        await getData();
+        notification({ type: 'success', message: 'Status changed' });
+        return res;
+      })
+      .catch(error => {
+        notification({ type: 'warning', message: 'Status not changed' });
+        return error;
+      })
   }
 
   const sortData = (sortCategory) => {
     setSortBy(sortCategory);
-    sortCategory = sortCategory.toLowerCase();
-    setTableData(tableData.sort((a, b) => {
+
+    if (!sortCategory) {
+      setData(data.sort((a, b) => {
+        return a.id - b.id
+      }))
+      return
+    }
+
+    sortCategory = sortCategory.toUpperCase();
+    setData(data.sort((a, b) => {
       if (a.status === sortCategory && b.status === sortCategory) return 0;
       if (a.status === sortCategory && b.status !== sortCategory) return -1;
       return 1;
@@ -98,7 +96,7 @@ const OrdersPage = () => {
                 placeholder={'Sort by status'}
                 value={ sortBy }
                 onChange={ sortData }
-                onClear={ () => setSortBy(null) }
+                onClear={ sortData }
               >
                 { ['Pending', 'Delivered', 'Processing'].map((entry, id) => <Option value={entry} key={id}>{ entry }</Option>) }
               </Select>
@@ -118,14 +116,22 @@ const OrdersPage = () => {
               </Thead>
               <Tbody>
                 {
-                  tableData.map(entry =>
-                    <Tr key={entry.id}>
-                      <RowTable
-                        rowData = { entry }
-                        updateRowData = { tableDataUpdate }
-                      />
-                    </Tr>
-                  )
+                  loader && <TableLoader col={8}/>
+                }
+                {
+                  !loader &&
+                    data.map(entry =>
+                      <Tr key={entry.id}>
+                        <RowTable
+                          data = { entry }
+                          onStatusChange = { changeStatus }
+                        />
+                      </Tr>
+                    )
+                }
+                {
+                  !(data.length) && !loader &&
+                  <TableEmptyModal col={9}/>
                 }
               </Tbody>
             </Table>

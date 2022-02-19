@@ -11,10 +11,9 @@ const validateLength = (value, min, max, onError) => {
   }
 }
 
-export default (objElems) => {
+module.exports.require = (objElems) => {
   let validateErrors = {};
   let success = true;
-
   const onError = () => {
     success = false
   }
@@ -27,7 +26,6 @@ export default (objElems) => {
 
   Object.entries(objElems).forEach(([key, value]) => {
     if (typeof value === 'string') value = value.trim();
-
     if (!value) {
       validateErrors = { ...validateErrors, [key]: 'This value is required.'};
       success = false;
@@ -37,7 +35,7 @@ export default (objElems) => {
   return { success, validateErrors };
 }
 
-export const numberValidate = (objElems) => {
+module.exports.numbers = (objElems) => {
   let validateErrors = {};
   let success = true;
   Object.entries(objElems).forEach(([key, value]) => {
@@ -46,7 +44,7 @@ export const numberValidate = (objElems) => {
     try {
       value = Number(value)
     } catch {
-      validateErrors = { ...validateErrors, [key]: 'This is not a number.'};
+      validateErrors = { ...validateErrors, [key]: 'The value is not a number.'};
       success = false;
       return
     }

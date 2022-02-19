@@ -139,7 +139,7 @@ const RowTable = ({ data, onUpdate, onDelete, categories, manufacturers, onPubli
             </ActionWrapper>)}
         </Flex>
       </Td>
-      <Td><Typography textColor="neutral800">{ data.manufacturer?.name }</Typography></Td>
+      <Td><Typography textColor="neutral800">{ data.manufacturer?.name || '-' }</Typography></Td>
       <Td><Typography textColor="neutral800" fontWeight="bold">$ { data.price }</Typography></Td>
       <Td><Typography textColor="neutral800">{ data.quantity || 0 }</Typography></Td>
       <Td><BadgeStyled color={ badgeColor } backgroundColor={ badgeBackgroundColor }>{ status() }</BadgeStyled></Td>

@@ -13,7 +13,6 @@ const Filter = ({ filterValues, unSortedData, updateData, refFilter }) => {
     runFilter() {
       if (!price && !category) return false
       filter(unSortedData, updateData, category, price)
-      console.log(updateData)
       return true
     }
   }))

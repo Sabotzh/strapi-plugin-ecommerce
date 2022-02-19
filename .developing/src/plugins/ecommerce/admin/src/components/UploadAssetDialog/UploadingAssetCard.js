@@ -1,6 +1,10 @@
 import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
+
+import getTrad from "../../utils/getTrad";
+import { useUpload } from '../../hooks/useUpload';
+import { UploadProgress } from '../UploadProgress';
+
 import {
   Card,
   CardBody,
@@ -13,9 +17,7 @@ import {
 import { Typography } from '@strapi/design-system/Typography';
 import { Stack } from '@strapi/design-system/Stack';
 import { useIntl } from 'react-intl';
-import getTrad from "../../utils/getTrad";
-import { useUpload } from '../../hooks/useUpload';
-import { UploadProgress } from '../UploadProgress';
+
 
 const UploadProgressWrapper = styled.div`
   height: ${88 / 16}rem;
@@ -90,11 +92,4 @@ export const UploadingAssetCard = ({ asset, onCancel, onStatusChange, addUploade
 
 UploadingAssetCard.defaultProps = {
   addUploadedFiles: undefined,
-};
-
-UploadingAssetCard.propTypes = {
-  addUploadedFiles: PropTypes.func,
-  asset: PropTypes.object.isRequired,
-  onCancel: PropTypes.func.isRequired,
-  onStatusChange: PropTypes.func.isRequired,
 };

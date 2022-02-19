@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { ModalLayout } from '@strapi/design-system/ModalLayout';
-import { useIntl } from 'react-intl';
+
 import { AddAssetStep } from './AddAssetStep/AddAssetStep';
 import { PendingAssetStep } from './PendingAssetStep/PendingAssetStep';
 import { EditAssetDialog } from '../EditAssetDialog';
+
+import { ModalLayout } from '@strapi/design-system/ModalLayout';
+import { useIntl } from 'react-intl';
 
 const Steps = {
   AddAsset: 'AddAsset',
@@ -128,11 +129,4 @@ export const UploadAssetDialog = ({
 UploadAssetDialog.defaultProps = {
   addUploadedFiles: undefined,
   initialAssetsToAdd: undefined,
-};
-
-UploadAssetDialog.propTypes = {
-  addUploadedFiles: PropTypes.func,
-  initialAssetsToAdd: PropTypes.object,
-  onClose: PropTypes.func.isRequired,
-  updateAssets: PropTypes.func.isRequired,
 };

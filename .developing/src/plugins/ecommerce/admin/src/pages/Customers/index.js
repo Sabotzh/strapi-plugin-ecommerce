@@ -34,7 +34,6 @@ const ProductsPage = () => {
   const getData = async () => {
     await request(`/ecommerce/customers/admin-panel`)
       .then((res) => {
-        console.log(res)
         setData(res.filter(el => !el.isShadow))
         setUnsortedData(res)
         setLoader(false)
@@ -54,10 +53,11 @@ const ProductsPage = () => {
     })
       .then(async () => {
         await getData()
+        notification({ type: 'success', message: 'Customer updated' });
         return true
       })
-      .catch(error => {
-        notification({ type: 'warning', message: error.response.data })
+      .catch(() => {
+        notification({ type: 'success', message: 'Customer not updated' });
         return false
       });
   }

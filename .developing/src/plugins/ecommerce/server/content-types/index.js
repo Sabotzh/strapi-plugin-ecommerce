@@ -5,6 +5,7 @@ const category = require('./category');
 const manufacturer = require('./manufacturer');
 const product = require('./product');
 const order = require('./order');
+const setting = require('./setting');
 
 
 module.exports = {
@@ -15,4 +16,5 @@ module.exports = {
   'manufacturer': { schema: manufacturer },
   'product': { schema: product },
   'order': { schema: order },
+  'setting': { schema: setting },
 };

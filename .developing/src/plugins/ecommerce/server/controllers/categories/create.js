@@ -1,40 +1,43 @@
 const slugify = require('slugify');
 const strapiForbiddenFields = require('../_utils/strapiForbiddenFieldsForUpdate');
-const randomIntFromInterval = require('../../utils/randomIntFromInterval');
+const validateFields = require('../_utils/categoriesValidateFields');
+const validator = require('../_utils/validator');
 
 module.exports = ({ strapi }) => async (ctx) => {
   const data = ctx.request.body;
-
-  if (!data.name) {
-    ctx.status = 400;
-    ctx.body = `Field "name" required`;
-    return
-  }
-
-  const categoryWithTheSameName = await strapi
-    .query('plugin::ecommerce.category')
-    .findOne({ where: { name: data.name }});
-  if (categoryWithTheSameName) {
-    ctx.status = 400;
-    ctx.body = `Field "name" must be unique`
-    return
-  }
 
   const forbiddenFields = [ ...strapiForbiddenFields, 'category_level', 'categoryLevel' ];
   for (const forbiddenField of forbiddenFields) {
     delete data[forbiddenField];
   }
 
-  if (data.slug) {
-    data.slug = slugify(data.slug)
-  } else {
-    data.slug = slugify(data.name)
+  const error = validator.require(validateFields(data))
+
+  if (data.name) {
+    const categoryWithTheSameName = await strapi
+      .query('plugin::ecommerce.category')
+      .findOne({ where: { name: data.name }});
+    if (categoryWithTheSameName) {
+      error.validateErrors = { ...error.validateErrors, name: `This field must be unique` }
+      error.success = false
+    }
   }
-  const categoryWithTheSameSlug = await strapi
-    .query('plugin::ecommerce.category')
-    .findOne({ where: { slug: data.slug } });
-  if (categoryWithTheSameSlug) {
-    data.slug = data.slug + '-' + randomIntFromInterval(1000, 9999);
+
+  if (data.slug) {
+    data.slug = slugify(data.slug).toLowerCase()
+    const categoryWithTheSameSlug = await strapi
+      .query('plugin::ecommerce.category')
+      .findOne({ where: { slug: data.slug } });
+    if (categoryWithTheSameSlug) {
+      error.validateErrors = { ...error.validateErrors, slug: `This field must be unique` }
+      error.success = false
+    }
+  }
+
+  if (!error.success) {
+    ctx.status = 400;
+    ctx.body = error.validateErrors
+    return
   }
 
   if (data.parentCategory) {

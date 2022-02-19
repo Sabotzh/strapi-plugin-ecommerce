@@ -5,6 +5,7 @@ const orders = require('./orders');
 const categories = require('./categories');
 const products = require('./products');
 const manufacturer = require('./manufacturer');
+const settings = require('./settings');
 
 module.exports = {
   customer,
@@ -14,4 +15,5 @@ module.exports = {
   categories,
   products,
   manufacturer,
+  settings,
 };

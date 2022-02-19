@@ -1,18 +1,20 @@
-import React, { useRef, useState } from 'react';
-import PropTypes from 'prop-types';
-import { useIntl } from 'react-intl';
-import { TextInput } from '@strapi/design-system/TextInput';
-import { getFileExtension, Form, request } from '@strapi/helper-plugin';
-import { Stack } from '@strapi/design-system/Stack';
-import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
-import { Typography } from "@strapi/design-system/Typography";
-import { Grid, GridItem } from '@strapi/design-system/Grid';
-import { Button } from '@strapi/design-system/Button';
+import React, { useState } from 'react';
+
 import { PreviewBox } from "./PreviewBox";
 import { AssetMeta } from "./AssetMeta";
 import getTrad from "../../utils/getTrad";
 import validateCategories from "../../utils/validate";
 import formatBytes from "../../utils/formatBytes";
+
+import { useIntl } from 'react-intl';
+import { TextInput } from '@strapi/design-system/TextInput';
+import { getFileExtension } from '@strapi/helper-plugin';
+import { Stack } from '@strapi/design-system/Stack';
+import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
+import { Typography } from "@strapi/design-system/Typography";
+import { Grid, GridItem } from '@strapi/design-system/Grid';
+import { Button } from '@strapi/design-system/Button';
+
 
 export const EditAssetDialog = ({ asset, onClose, onDeleteAsset, canCopyLink }) => {
   const [ name, setName ] = useState(asset.name)
@@ -27,12 +29,12 @@ export const EditAssetDialog = ({ asset, onClose, onDeleteAsset, canCopyLink }) 
     );
 
     const updateImage = async(data) => {
-      console.log('UPDATED')
-      console.log(
-        'alternativeText:', asset.alternativeText,
-        'caption:', asset.caption,
-        'name:', asset.name
-      )
+      // console.log('UPDATED')
+      // console.log(
+      //   'alternativeText:', asset.alternativeText,
+      //   'caption:', asset.caption,
+      //   'name:', asset.name
+      // )
       // await request(`/upload/files?id=${asset.id}`,{
       //   method: 'POST',
       //   body: data
@@ -158,11 +160,3 @@ EditAssetDialog.defaultProps = {
   onDeleteAsset: undefined,
   canCopyLink: true,
 };
-
-EditAssetDialog.propTypes = {
-  asset: PropTypes.object.isRequired,
-  onClose: PropTypes.func.isRequired,
-  onDeleteAsset: PropTypes.func,
-  canCopyLink: PropTypes.bool
-};
-

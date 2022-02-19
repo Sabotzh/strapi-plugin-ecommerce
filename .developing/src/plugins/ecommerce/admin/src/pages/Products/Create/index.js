@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
-import Wysiwyg from "../../../components/Wysiwyg/Wysiwyg";
-import InputImage from "../../../components/InputImage";
-import validate from '../../../utils/validate';
+import Wysiwyg from '../../../components/Wysiwyg/Wysiwyg';
+import InputImage from '../../../components/InputImage';
+import validate, { numberValidate } from '../../../utils/validate';
 import PopupLoader from '../../../components/PopupLoader';
-import ImportSlug from '../../../components/InputSlug';
+import InputSlug from '../../../components/InputSlug';
 
 import CollectionType from '@strapi/icons/CollectionType';
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
@@ -26,18 +26,18 @@ import { ToggleCheckbox } from '@strapi/design-system/ToggleCheckbox';
 
 const statusArr = [ 'SELLING', 'ON_ORDER', 'UNAVAILABLE' ];
 
-const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
+const Create = ({ onClose, onCreate, allCategories, allManufacturers }) => {
   const [ name, setName ] = useState('');
   const [ slug, setSlug ] = useState('');
   const [ sku, setSku ] = useState('');
   const [ categories, setCategories ] = useState([]);
-  const [ price, setPrice ] = useState();
+  const [ price, setPrice ] = useState(0);
   const [ dateAvailable, setDateAvailable ] = useState();
   const [ manufacturer, setManufacturer ] = useState();
-  const [ quantity, setQuantity ] = useState();
-  const [ minQuantity, setMinQuantity ] = useState();
+  const [ quantity, setQuantity ] = useState(0);
+  const [ minQuantity, setMinQuantity ] = useState(0);
   const [ status, setStatus ] = useState(statusArr[0]);
-  const [ discount, setDiscount ] = useState();
+  const [ discount, setDiscount ] = useState(0);
   const [ published, setPublished ] = useState(false);
   const [ description, setDescription ] = useState('');
   const [ shortDescription, setShortDescription ] = useState('');
@@ -46,31 +46,34 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
   const [ metaKeywords, setMetaKeywords ] = useState('');
   const [ metaDescription, setMetaDescription ] = useState('');
 
-  const notification = useNotification()
+  const notification = useNotification();
   const [ errors, setErrors] = useState({});
-  const [ loader, setLoader ] = useState(false)
+  const [ loader, setLoader ] = useState(false);
 
   const submitButtonHandler = async() => {
     setErrors({});
 
-    let { success, validateErrors } = validate({
-      name, sku, price, shortDescription, description, metaTitle, metaKeywords, metaDescription
+    const requireValidateResult = validate({
+      name, slug, sku, price, shortDescription, description, metaTitle, metaKeywords, metaDescription
     });
+    const numberValidateResult = numberValidate({ price, quantity, minQuantity, discount })
 
-    if (success) {
-      setLoader(true)
-      onCreate({
-        name, slug, sku, categories, price, dateAvailable, quantity, minQuantity, status, discount, description,
-        shortDescription, image, metaDescription, metaTitle, metaKeywords, publishedAt: published, manufacturer
-      })
-        .then((res) => {
-          setLoader(false)
-          if (res) onClose()
-        })
-    } else {
+    if (!requireValidateResult.success && !numberValidateResult.success) {
       notification({ type: 'warning', message: 'Fill in all fields' })
-      setErrors(validateErrors);
+      setErrors({ ...numberValidateResult.validateErrors, ...requireValidateResult.validateErrors});
+      return
     }
+
+    setLoader(true)
+    onCreate({
+      name, slug, sku, categories, price, dateAvailable, quantity, minQuantity, status, discount, description,
+      shortDescription, image, metaDescription, metaTitle, metaKeywords, publishedAt: published, manufacturer
+    })
+      .then((res) => {
+        setLoader(false)
+        if (!res.success) return setErrors(res.data);
+        onClose()
+      })
   }
 
   return (
@@ -94,14 +97,12 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
                   label="Name"
                   name="name"
                   value={ name }
-                  onChange={ e => {
-                    setName(e.target.value)
-                  }}
+                  onChange={ e => setName(e.target.value) }
                   error={ errors.name }
                 />
               </GridItem>
               <GridItem col={6}>
-                <ImportSlug
+                <InputSlug
                   placeholder='Slug'
                   label='Slug'
                   name='Slug'
@@ -110,6 +111,7 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
                   relationName={ name }
                   id={ -1 }
                   url={ 'products/create-slug' }
+                  error={ errors.slug }
                 />
               </GridItem>
               <GridItem col={12}>
@@ -117,7 +119,8 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
                   label={'Image'}
                   selectedAsset={image}
                   deleteSelectedAsset={() => setImage(null)}
-                  onFinish ={(image) => setImage(...image)}/>
+                  onFinish={(image) => setImage(...image)}
+                />
               </GridItem>
               <GridItem col={12}>
                 <Textarea
@@ -175,7 +178,7 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
                   name="price"
                   label="Price"
                   value={price}
-                  onValueChange={value => setPrice(value)}
+                  onValueChange={ setPrice }
                   error={ errors.price }
                 />
               </GridItem>
@@ -184,7 +187,8 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
                   name="discount"
                   label="Discount %"
                   value={discount}
-                  onValueChange={ e => setDiscount(e.target.value) }
+                  onValueChange={ setDiscount }
+                  error={ errors.discount }
                 />
               </GridItem>
               <GridItem col={6}>
@@ -207,6 +211,7 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
                   label="Quantity"
                   value={quantity}
                   onValueChange={value => setQuantity(value)}
+                  error={ errors.quantity }
                 />
               </GridItem>
               <GridItem col={3}>
@@ -215,6 +220,7 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
                   label="Min_Quantity"
                   value={ minQuantity }
                   onValueChange={value => setMinQuantity(value)}
+                  error={ errors.minQuantity }
                 />
               </GridItem>
               <GridItem col={12}>
@@ -273,4 +279,4 @@ const Edit = ({ onClose, onCreate, allCategories, allManufacturers }) => {
   );
 };
 
-export default Edit;
+export default Create;
