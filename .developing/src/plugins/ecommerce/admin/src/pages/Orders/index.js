@@ -14,6 +14,7 @@ import { Table, Tbody, Th, Thead, Tr } from "@strapi/design-system/Table";
 import { Typography } from '@strapi/design-system/Typography';
 import { Stack } from '@strapi/design-system/Stack'
 import { Option, Select } from '@strapi/design-system/Select';
+import Translation from "../../components/Translation";
 const qs = require('qs');
 
 
@@ -83,17 +84,14 @@ const OrdersPage = () => {
     <>
       <main>
         <HeaderLayout
-          title={title}
-          subtitle={formatMessage({
-            id: getTrad('orders.description'),
-            defaultMessage: 'Configure the ecommerce plugin',
-          })}
+          title={ <Translation id={'orders.title'} defaultMessage={'Orders'}/> }
+          subtitle={ <Translation id={'orders.description'} defaultMessage={'Configure the ecommerce plugin'}/> }
         />
         <ContentLayout>
           <Stack size={7}>
             <Stack horizontal size={3}>
               <Select
-                placeholder={'Sort by status'}
+                placeholder={ <Translation id={'orders.filter.title'} defaultMessage={'Sort by status'}/> }
                 value={ sortBy }
                 onChange={ sortData }
                 onClear={ sortData }

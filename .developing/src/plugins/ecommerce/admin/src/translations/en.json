@@ -41,7 +41,7 @@
   "categories.table.header.categoryLevel": "Category Level",
   "categories.table.header.shortDescription": "Short Description",
   "categories.table.header.published": "Published",
-  "categories.sort.title": "Sort by category",
+  "categories.sort.title": "Filter by category",
   "categories.button.add": "Add Category",
   "manufacturers.table.header.image": "Image",
   "manufacturers.table.header.name": "Name",
@@ -61,6 +61,8 @@
   "products.table.header.published": "Published",
   "products.button.add": "Add Product",
   "products.filter.title": "Filter by category",
-  "products.sort.title": "Sort by price"
+  "products.sort.title": "Sort by price",
+  "orders.table.changeStatus": "Change status",
+  "orders.filter.title": "Filter by status"
 }
 

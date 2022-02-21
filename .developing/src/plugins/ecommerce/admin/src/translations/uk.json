@@ -41,7 +41,7 @@
   "categories.table.header.categoryLevel": "Рівень категорії",
   "categories.table.header.shortDescription": "Короткий опис",
   "categories.table.header.published": "Опубліковано",
-  "categories.sort.title": "Фільтрувати за категоріями",
+  "categories.sort.title": "Фільтрувати за категорією",
   "categories.button.addCategory": "Додати категорію",
   "manufacturers.table.header.image": "Зображення",
   "manufacturers.table.header.name": "Назва",
@@ -61,5 +61,7 @@
   "products.table.header.published": "Опубліковано",
   "products.button.add": "Додати товар",
   "products.filter.title": "Фільтрувати за категоріями",
-  "products.sort.title": "Сортувати за ціною"
+  "products.sort.title": "Сортувати за ціною",
+  "orders.table.changeStatus": "Змінити статус",
+  "orders.filter.title": "Сортувати за статусом"
 }
