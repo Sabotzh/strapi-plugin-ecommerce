@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 const qs = require('qs');
 
-import getTrad from '../../utils/getTrad';
+import Translation from '../../components/Translation';
 import Create from './Create';
 import RowTable from './RowTable';
 import TableLoader from '../../components/TableLoader';
 import TableEmptyModal from '../../components/TableEmptyModal';
 
 import Plus from '@strapi/icons/Plus';
-import { useIntl } from 'react-intl';
 import { request, useFocusWhenNavigate, useNotification } from '@strapi/helper-plugin';
 import { ContentLayout, HeaderLayout } from '@strapi/design-system/Layout';
 import { Stack } from '@strapi/design-system/Stack';
@@ -24,12 +23,6 @@ import { Flex } from '@strapi/design-system/Flex';
 
 const CategoriesPage = () => {
   useFocusWhenNavigate();
-
-  const { formatMessage } = useIntl();
-  const title = formatMessage({
-    id: getTrad('categories.title'),
-    defaultMessage: 'Categories',
-  });
 
   const [ data, setData] = useState([]);
   const [ unsortedData, setUnsortedData ] = useState([]);
@@ -159,14 +152,11 @@ const CategoriesPage = () => {
             startIcon={ <Plus/> }
             onClick={ () => setCreateVisible(true) }
           >
-            Add category
+            { <Translation id={'categories.button.add'} defaultMessage={'Add Category'}/> }
           </Button>
         }
-        title={title}
-        subtitle={formatMessage({
-          id: getTrad('categories.description'),
-          defaultMessage: 'Configure the ecommerce plugin',
-        })}
+        title={ <Translation id={'categories.title'} defaultMessage={'Categories'}/> }
+        subtitle={ <Translation id={'categories.description'} defaultMessage={'Configure the ecommerce plugin'}/> }
       />
       { createVisible &&
         <Create
@@ -181,14 +171,11 @@ const CategoriesPage = () => {
             <Grid>
               <GridItem col={3}>
                 <Select
-                  placeholder={formatMessage({
-                    id: getTrad('categories.sort.title'),
-                    defaultMessage: 'Filter by category',
-                  })}
+                  placeholder={ <Translation id={'categories.sort.title'} defaultMessage={'Filter by category'}/> }
                   value={ sortBy }
                   onChange={ sortHandler }
                   onClear={ sortHandler }
-                  >
+                >
                   { categories.map((entry, id) => <Option value={ entry } key={id}>{ entry }</Option>) }
                 </Select>
               </GridItem>
@@ -200,74 +187,39 @@ const CategoriesPage = () => {
                 <Th><Typography variant="sigma">ID</Typography></Th>
                 <Th>
                   <Typography variant="sigma">
-                    {
-                      formatMessage({
-                        id: getTrad('categories.table.header.image'),
-                        defaultMessage: 'Image',
-                      })
-                    }
+                    { <Translation id={'categories.table.header.image'} defaultMessage={'Image'}/> }
                   </Typography>
                 </Th>
                 <Th>
                   <Typography variant="sigma">
-                    {
-                      formatMessage({
-                        id: getTrad('categories.table.header.name'),
-                        defaultMessage: 'Name',
-                      })
-                    }
+                    { <Translation id={'categories.table.header.name'} defaultMessage={'Name'}/> }
                   </Typography>
                 </Th>
                 <Th>
                   <Typography variant="sigma">
-                    {
-                      formatMessage({
-                        id: getTrad('categories.table.header.slug'),
-                        defaultMessage: 'Slug',
-                      })
-                    }
+                    { <Translation id={'categories.table.header.slug'} defaultMessage={'Slug'}/> }
                   </Typography>
                 </Th>
                 <Th>
                   <Typography variant="sigma">
-                    {
-                      formatMessage({
-                        id: getTrad('categories.table.header.parent'),
-                        defaultMessage: 'Parent',
-                      })
-                    }
+                    { <Translation id={'categories.table.header.parent'} defaultMessage={'Parent'}/> }
                   </Typography>
                 </Th>
                 <Th>
                   <Flex justifyContent={'center'}>
                     <Typography variant="sigma">
-                      {
-                        formatMessage({
-                          id: getTrad('categories.table.header.categoryLevel'),
-                          defaultMessage: 'Category Level',
-                        })
-                      }
+                      { <Translation id={'categories.table.header.categoryLevel'} defaultMessage={'Category Level'}/> }
                     </Typography>
                   </Flex>
                 </Th>
                 <Th>
                   <Typography variant="sigma">
-                    {
-                      formatMessage({
-                        id: getTrad('categories.table.header.shortDescription'),
-                        defaultMessage: 'Short Description',
-                      })
-                    }
+                    { <Translation id={'categories.table.header.shortDescription'} defaultMessage={'Short Description'}/> }
                   </Typography>
                 </Th>
                 <Th>
                   <Typography variant="sigma">
-                    {
-                      formatMessage({
-                        id: getTrad('categories.table.header.published'),
-                        defaultMessage: 'Published',
-                      })
-                    }
+                    { <Translation id={'categories.table.header.published'} defaultMessage={'Published'}/> }
                   </Typography>
                 </Th>
                 <Th><VisuallyHidden>Actions</VisuallyHidden></Th>

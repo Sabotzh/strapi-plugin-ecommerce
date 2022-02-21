@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import Translation from '../../../components/Translation';
 import validate from '../../../utils/validate';
 import InputSlug from '../../../components/InputSlug';
 import Wysiwyg from '../../../components/Wysiwyg/Wysiwyg';
@@ -20,6 +21,7 @@ import { Option, Select } from "@strapi/design-system/Select";
 import { Button } from '@strapi/design-system/Button';
 import { Textarea } from '@strapi/design-system/Textarea';
 import { ToggleCheckbox } from '@strapi/design-system/ToggleCheckbox';
+import SeoModal from "../../../components/SeoModal";
 
 
 const Edit = ({ rowData, onClose, updateRowData, tableData }) => {
@@ -34,7 +36,7 @@ const Edit = ({ rowData, onClose, updateRowData, tableData }) => {
   const [ metaDescription, setMetaDescription ] = useState(rowData.metaDescription);
   const [ image, setImage ] = useState(rowData.image);
 
-  const notification = useNotification()
+  const notification = useNotification();
   const [ errors, setErrors ] = useState({});
   const [ loader, setLoader ] = useState(false)
 
@@ -76,36 +78,38 @@ const Edit = ({ rowData, onClose, updateRowData, tableData }) => {
   }
 
   return (
-    <ModalLayout onClose={onClose} labelledBy="Edit">
+    <ModalLayout onClose={ onClose } labelledBy='Edit'>
       <ModalHeader>
         <Stack horizontal size={2}>
           <CollectionType/>
-          <Breadcrumbs label="Category model, name field">
-            <Crumb>Categories</Crumb>
-            <Crumb>{rowData.name}</Crumb>
+          <Breadcrumbs label='Category model, name field'>
+            <Crumb><Translation id={'categories.title'} defaultMessage={'Categories'}/></Crumb>
+            <Crumb>{ rowData.name }</Crumb>
           </Breadcrumbs>
         </Stack>
       </ModalHeader>
-      <PopupLoader loader={loader}>
+      <PopupLoader loader={ loader }>
         <ModalBody>
-          <Box paddingTop={4} paddingBottom={3}><Typography variant={'beta'}>Edit {rowData.name}</Typography></Box>
+          <Box paddingTop={4} paddingBottom={3}>
+            <Typography variant={'beta'}>
+              <Translation id={'modal.input.title'} defaultMessage={'Base Data'}/>
+            </Typography>
+          </Box>
           <Divider/>
           <Box paddingTop={5}>
             <Grid gap={5}>
               <GridItem col={6}>
                 <TextInput
-                  placeholder='Name'
-                  label='Name'
+                  label={ <Translation id={'modal.input.label.name'} defaultMessage={'Name'}/> }
                   name='Name'
-                  value={name}
+                  value={ name }
                   onChange={e => setName(e.target.value)}
-                  error={errors.name}
+                  error={ errors.name }
                 />
               </GridItem>
               <GridItem col={6}>
                 <InputSlug
-                  placeholder='Slug'
-                  label='Slug'
+                  label={ <Translation id={'modal.input.label.slug'} defaultMessage={'Slug'}/> }
                   name='Slug'
                   value={ slug }
                   onChange={ setSlug }
@@ -117,101 +121,82 @@ const Edit = ({ rowData, onClose, updateRowData, tableData }) => {
               </GridItem>
               <GridItem col={12}>
                 <InputImage
-                  label='Image'
-                  selectedAsset={image}
-                  deleteSelectedAsset={() => setImage(null)}
-                  onFinish={(image) => setImage(...image)}
+                  label={ <Translation id={'modal.input.label.image'} defaultMessage={'Image'}/> }
+                  selectedAsset={ image }
+                  deleteSelectedAsset={ () => setImage(null) }
+                  onFinish={ (image) => setImage(...image) }
                 />
               </GridItem>
               <GridItem col={12}>
                 <Textarea
-                  error={errors.shortDescription}
-                  label="Short description"
+                  error={ errors.shortDescription }
+                  label={ <Translation id={'modal.input.label.shortDescription'} defaultMessage={'Short Description'}/> }
                   name="shortDescription"
-                  onChange={e => setShortDescription(e.target.value)}
+                  onChange={ e => setShortDescription(e.target.value) }
                 >
-                  {shortDescription}
+                  { shortDescription }
                 </Textarea>
               </GridItem>
               <GridItem col={6}>
                 <Select
-                  label='Parent'
-                  placeholder='Parent'
-                  name='Parent'
-                  value={selectParent}
-                  onChange={setSelectParent}
-                  onClear={() => setSelectParent(null)}
+                  label={ <Translation id={'modal.input.label.parent'} defaultMessage={'Parent'}/> }
+                  placeholder={ <Translation id={'modal.input.label.parent'} defaultMessage={'Parent'}/> }
+                  name='parent'
+                  value={ selectParent }
+                  onChange={ setSelectParent }
+                  onClear={ () => setSelectParent(null) }
                 >
-                  {tableData.map((entry) => {
-                    return <Option value={entry.id} key={entry.id}>{entry.name}</Option>
-                  })}
+                  {
+                    tableData.map((entry) => {
+                      return <Option value={entry.id} key={entry.id}>{entry.name}</Option>
+                    })
+                  }
                 </Select>
               </GridItem>
               <GridItem col={6}>
                 <Stack size={1}>
-                  <Typography fontWeight={'bold'} variant={'pi'}>{'Published'}</Typography>
+                  <Typography fontWeight={'bold'} variant={'pi'}>
+                    { <Translation id={'modal.input.label.published'} defaultMessage={'Published'}/> }
+                  </Typography>
                   <ToggleCheckbox
-                    onLabel={'On'}
-                    offLabel={'Off'}
-                    checked={published}
-                    onChange={() => {
-                      setPublished(!published)
-                    }}
+                    onLabel={ 'On' }
+                    offLabel={ 'Off' }
+                    checked={ published }
+                    onChange={ () => setPublished(!published) }
                   >
-                    {'Published'}
+                    { <Translation id={'modal.input.label.published'} defaultMessage={'Published'}/> }
                   </ToggleCheckbox>
                 </Stack>
               </GridItem>
               <GridItem col={12}>
                 <Wysiwyg
-                  disabled={false}
-                  label={'Description'}
+                  disabled={ false }
+                  label={ <Translation id={'modal.input.label.description'} defaultMessage={'Description'}/> }
                   value={description}
-                  name="rich-text"
+                  name='rich-text'
                   onChange={e => setDescription(e.target.value)}
                   error={errors.description}
                 />
               </GridItem>
             </Grid>
-            <Box paddingTop={9} paddingBottom={3}><Typography variant={'beta'}>SEO</Typography></Box>
-            <Divider/>
-            <Box paddingTop={5}>
-              <Grid gap={5}>
-                <GridItem col={6}>
-                  <TextInput
-                    label="Meta_title"
-                    name="metaTitle"
-                    value={metaTitle}
-                    onChange={e => setMetaTitle(e.target.value)}
-                    error={errors.metaTitle}
-                  />
-                </GridItem>
-                <GridItem col={6}>
-                  <TextInput
-                    label="Meta_keywords"
-                    name="metaKeywords"
-                    value={metaKeywords}
-                    onChange={e => setMetaKeywords(e.target.value)}
-                    error={errors.metaKeywords}
-                  />
-                </GridItem>
-                <GridItem col={12}>
-                  <Textarea
-                    error={errors.metaDescription}
-                    label="Meta_description"
-                    name="metaDescription"
-                    onChange={e => setMetaDescription(e.target.value)}
-                  >
-                    { metaDescription }
-                  </Textarea>
-                </GridItem>
-              </Grid>
-            </Box>
+            <SeoModal
+              metaTitle={ metaTitle }
+              setMetaTitle={ setMetaTitle }
+              metaKeywords={ metaKeywords }
+              setMetaKeywords={ setMetaKeywords }
+              metaDescription={ metaDescription }
+              setMetaDescription={ setMetaDescription }
+              errors={ errors }
+            />
           </Box>
         </ModalBody>
         <ModalFooter
-          startActions={<Button onClick={ onClose } variant="tertiary"> Cancel </Button>}
-          endActions={<Button onClick={ submitButtonHandler }> Finish </Button>}
+          startActions={<Button onClick={ onClose } variant="tertiary">
+            { <Translation id={'modal.input.label.cancel'} defaultMessage={'Cancel'}/> }
+          </Button>}
+          endActions={<Button onClick={ submitButtonHandler }>
+            { <Translation id={'modal.input.label.finish'} defaultMessage={'Finish'}/> }
+          </Button>}
         />
       </PopupLoader>
     </ModalLayout>

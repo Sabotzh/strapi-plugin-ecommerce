@@ -1,20 +1,13 @@
 import React, { useState } from 'react';
-import Edit from './Edit';
 
-import Pencil from '@strapi/icons/Pencil';
-import Trash from '@strapi/icons/Trash';
-import ExclamationMarkCircle from '@strapi/icons/ExclamationMarkCircle';
+import Edit from './Edit';
+import TableRowButtons from '../../components/TableRowButtons';
+import DialogDelete from '../../components/DialogDelete';
 
 import { Td } from '@strapi/design-system/Table';
 import { Typography } from '@strapi/design-system/Typography';
 import { Avatar, Initials } from '@strapi/design-system/Avatar';
 import { Switch } from '@strapi/design-system/Switch';
-import { Flex } from '@strapi/design-system/Flex';
-import { IconButton } from '@strapi/design-system/IconButton';
-import { Box } from '@strapi/design-system/Box';
-import { Dialog, DialogBody, DialogFooter } from '@strapi/design-system/Dialog';
-import { Stack } from '@strapi/design-system/Stack';
-import { Button } from '@strapi/design-system/Button';
 
 
 const RowTable = ({ data, onUpdate, onDelete, onPublish, onUnPublish }) => {
@@ -31,31 +24,11 @@ const RowTable = ({ data, onUpdate, onDelete, onPublish, onUnPublish }) => {
           onUpdateData = { onUpdate }
         />
       }
-      <Dialog onClose={ () => setVisibleDelete(false) } title="Confirmation" isOpen={ visibleDelete }>
-        <DialogBody icon={<ExclamationMarkCircle />}>
-          <Stack size={2}>
-            <Flex justifyContent="center">
-              <Typography id="confirm-description">Are you sure you want to delete this?</Typography>
-            </Flex>
-          </Stack>
-        </DialogBody>
-        <DialogFooter
-          startAction = {
-            <Button onClick= { () => setVisibleDelete(false) } variant="tertiary">Cancel</Button>
-          }
-          endAction = {
-            <Button onClick={ () => {
-              setVisibleDelete(false)
-              onDelete(data.id)
-            }}
-            variant="danger-light"
-            startIcon={<Trash/>}
-            >
-              Confirm
-            </Button>
-          }
-        />
-      </Dialog>
+      <DialogDelete
+        onClose={ () => setVisibleDelete(false) }
+        onDelete={ () => onDelete(data.id) }
+        isOpen={ visibleDelete }
+      />
       <Td><Typography textColor="neutral800">{ data.id }</Typography></Td>
       <Td>
         { data.image?.url
@@ -80,17 +53,10 @@ const RowTable = ({ data, onUpdate, onDelete, onPublish, onUnPublish }) => {
         />
       </Td>
       <Td>
-        <Flex>
-          <IconButton onClick={ () => setVisibleEdit(true) } label="Edit" noBorder icon = { <Pencil /> }/>
-          <Box paddingLeft={1}>
-            <IconButton
-              label="Delete"
-              noBorder
-              icon={ <Trash/> }
-              onClick={ () => setVisibleDelete(true) }
-            />
-          </Box>
-        </Flex>
+        <TableRowButtons
+          onEdit={ () => setVisibleEdit(true) }
+          onDelete={ () => setVisibleDelete(true) }
+        />
       </Td>
     </>
   );

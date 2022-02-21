@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 
+import Translation from '../../../components/Translation';
 import Wysiwyg from '../../../components/Wysiwyg/Wysiwyg';
 import validate from '../../../utils/validate';
 import InputImage from '../../../components/InputImage';
-import getTrad from '../../../utils/getTrad';
 import PopupLoader from '../../../components/PopupLoader';
 import InputSlug from '../../../components/InputSlug';
 
 import CollectionType from '@strapi/icons/CollectionType';
-import { useIntl } from 'react-intl';
 import { useNotification } from '@strapi/helper-plugin';
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
 import { Box } from '@strapi/design-system/Box';
@@ -22,60 +21,10 @@ import { Option, Select } from '@strapi/design-system/Select';
 import { ToggleCheckbox } from '@strapi/design-system/ToggleCheckbox';
 import { Button } from '@strapi/design-system/Button';
 import { Textarea } from '@strapi/design-system/Textarea';
+import SeoModal from "../../../components/SeoModal";
 
 
 const Create = ({ data, onCreate, onClose }) => {
-  const { formatMessage } = useIntl();
-
-  const nameLabel = formatMessage({
-    id: getTrad('modal.input.label.name'),
-    defaultMessage: 'Name',
-  });
-  const parentLabel = formatMessage({
-    id: getTrad('modal.input.label.parent'),
-    defaultMessage: 'Parent',
-  });
-  const slugLabel = formatMessage({
-    id: getTrad('modal.input.label.slug'),
-    defaultMessage: 'Slug',
-  });
-  const publishedLabel = formatMessage({
-    id: getTrad('modal.input.label.published'),
-    defaultMessage: 'Published',
-  });
-  const shortDescriptionLabel = formatMessage({
-    id: getTrad('modal.input.label.shortDescription'),
-    defaultMessage: 'Short Description',
-  });
-  const descriptionLabel = formatMessage({
-    id: getTrad('modal.input.label.description'),
-    defaultMessage: 'Description',
-  });
-  const metaTitleLabel = formatMessage({
-    id: getTrad('modal.input.label.metaTitle'),
-    defaultMessage: 'Meta Title',
-  });
-  const metaKeywordsLabel = formatMessage({
-    id: getTrad('modal.input.label.metaKeywords'),
-    defaultMessage: 'Meta Keywords',
-  });
-  const metaDescriptionLabel = formatMessage({
-    id: getTrad('modal.input.label.metaDescription'),
-    defaultMessage: 'Meta Description',
-  });
-  const imageLabel = formatMessage({
-    id: getTrad('modal.input.label.image'),
-    defaultMessage: 'Image',
-  });
-  const cancelTitle = formatMessage({
-    id: getTrad('modal.input.button.cancel'),
-    defaultMessage: 'Cancel',
-  });
-  const finishTitle = formatMessage({
-    id: getTrad('modal.input.button.finish'),
-    defaultMessage: 'Finish',
-  });
-
   const [ name, setName ] = useState('');
   const [ selectParent, setSelectParent ] = useState(null);
   const [ slug, setSlug ] = useState('');
@@ -129,12 +78,7 @@ const Create = ({ data, onCreate, onClose }) => {
           <CollectionType/>
           <Breadcrumbs label="Category model, name field">
             <Crumb>
-              {
-                formatMessage({
-                  id: getTrad('category.title'),
-                  defaultMessage: 'Categories',
-                })
-              }
+              <Translation id={'categories.title'} defaultMessage={'Categories'}/>
             </Crumb>
           </Breadcrumbs>
         </Stack>
@@ -143,12 +87,7 @@ const Create = ({ data, onCreate, onClose }) => {
         <ModalBody>
           <Box paddingTop={4} paddingBottom={3}>
             <Typography variant={'beta'}>
-              {
-                formatMessage({
-                  id: getTrad('modal.input.title'),
-                  defaultMessage: 'Base Data',
-                })
-              }
+              <Translation id={'modal.input.title'} defaultMessage={'Base Data'}/>
             </Typography>
           </Box>
           <Divider/>
@@ -156,7 +95,7 @@ const Create = ({ data, onCreate, onClose }) => {
             <Grid gap={5}>
               <GridItem col={6}>
                 <TextInput
-                  label={ nameLabel }
+                  label={ <Translation id={'modal.input.label.name'} defaultMessage={'Name'}/> }
                   name="name"
                   value={ name }
                   onChange={ e => setName(e.target.value) }
@@ -165,8 +104,7 @@ const Create = ({ data, onCreate, onClose }) => {
               </GridItem>
               <GridItem col={6}>
                 <InputSlug
-                  placeholder='Slug'
-                  label='Slug'
+                  label={ <Translation id={'modal.input.label.slug'} defaultMessage={'Slug'}/> }
                   name='Slug'
                   value={ slug }
                   onChange={ setSlug }
@@ -178,7 +116,7 @@ const Create = ({ data, onCreate, onClose }) => {
               </GridItem>
               <GridItem col={12}>
                 <InputImage
-                  label={ imageLabel }
+                  label={ <Translation id={'modal.input.label.image'} defaultMessage={'Image'}/> }
                   selectedAsset={ image }
                   deleteSelectedAsset={ () => setImage(null) }
                   onFinish={ (image) => setImage(...image) }
@@ -187,7 +125,7 @@ const Create = ({ data, onCreate, onClose }) => {
               <GridItem col={12}>
                 <Textarea
                   error={ errors.shortDescription }
-                  label={ shortDescriptionLabel }
+                  label={ <Translation id={'modal.input.label.shortDescription'} defaultMessage={'Short Description'}/> }
                   name="shortDescription"
                   onChange={e => setShortDescription(e.target.value)}
                 >
@@ -196,35 +134,39 @@ const Create = ({ data, onCreate, onClose }) => {
               </GridItem>
               <GridItem col={6}>
                 <Select
-                  label={ parentLabel }
-                  placeholder={ parentLabel }
+                  label={ <Translation id={'modal.input.label.parent'} defaultMessage={'Parent'}/> }
+                  placeholder={ <Translation id={'modal.input.label.parent'} defaultMessage={'Parent'}/> }
                   name='parent'
                   value={ selectParent }
                   onChange={ setSelectParent }
                   onClear={ () => setSelectParent(null) }
                 >
-                  { data.map((entry) => {
-                    return <Option value={ entry.id } key={entry.id}>{ entry.name }</Option>
-                  })}
+                  {
+                    data.map((entry) => {
+                      return <Option value={ entry.id } key={entry.id}>{ entry.name }</Option>
+                    })
+                  }
                 </Select>
               </GridItem>
               <GridItem col={6}>
                 <Stack size={1}>
-                  <Typography fontWeight={'bold'} variant={'pi'}>{ publishedLabel }</Typography>
+                  <Typography fontWeight={'bold'} variant={'pi'}>
+                    { <Translation id={'modal.input.label.published'} defaultMessage={'Published'}/> }
+                  </Typography>
                   <ToggleCheckbox
                     onLabel={'On'}
                     offLabel={'Off'}
                     checked={ published }
                     onChange={() => { setPublished(!published) }}
                   >
-                    { publishedLabel }
+                    { <Translation id={'modal.input.label.published'} defaultMessage={'Published'}/> }
                   </ToggleCheckbox>
                 </Stack>
               </GridItem>
               <GridItem col={12}>
                 <Wysiwyg
                   disabled={ false }
-                  label={ descriptionLabel }
+                  label={ <Translation id={'modal.input.label.description'} defaultMessage={'Description'}/> }
                   value={ description }
                   name="rich-text"
                   onChange={ e => setDescription(e.target.value) }
@@ -233,43 +175,23 @@ const Create = ({ data, onCreate, onClose }) => {
               </GridItem>
             </Grid>
           </Box>
-          <Box paddingTop={9} paddingBottom={3}><Typography variant={'beta'}>SEO</Typography></Box>
-          <Divider/>
-          <Box paddingTop={5}>
-            <Grid gap={5}>
-              <GridItem col={6}>
-                <TextInput
-                  label={ metaTitleLabel }
-                  name="metaTitle"
-                  value={ metaTitle }
-                  onChange={ e => setMetaTitle(e.target.value) }
-                  error={ errors.metaTitle }
-                />
-              </GridItem>
-              <GridItem col={6}>
-                <TextInput
-                  label={ metaKeywordsLabel }
-                  name="metaKeywords"
-                  value={ metaKeywords }
-                  onChange={ e => setMetaKeywords(e.target.value) }
-                  error={ errors.metaKeywords }
-                />
-              </GridItem>
-              <GridItem col={12}>
-                <Textarea
-                  error={ errors.metaDescription }
-                  label={ metaDescriptionLabel }
-                  name="metaDescription"
-                  onChange={e => setMetaDescription(e.target.value)}>
-                  { metaDescription }
-                </Textarea>
-              </GridItem>
-            </Grid>
-          </Box>
+          <SeoModal
+            metaTitle={ metaTitle }
+            setMetaTitle={ setMetaTitle }
+            metaKeywords={ metaKeywords }
+            setMetaKeywords={ setMetaKeywords }
+            metaDescription={ metaDescription }
+            setMetaDescription={ setMetaDescription }
+            errors={ errors }
+          />
         </ModalBody>
         <ModalFooter
-          startActions = { <Button onClick = { () => onClose() } variant="tertiary">{ cancelTitle }</Button> }
-          endActions = { <Button onClick = { submitButtonHandler }>{ finishTitle }</Button> }
+          startActions = { <Button onClick = { () => onClose() } variant="tertiary">
+            { <Translation id={'modal.input.label.cancel'} defaultMessage={'Cancel'}/> }
+          </Button> }
+          endActions = { <Button onClick = { submitButtonHandler }>
+            { <Translation id={'modal.input.label.finish'} defaultMessage={'Finish'}/> }
+          </Button> }
         />
       </PopupLoader>
     </ModalLayout>

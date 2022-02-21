@@ -1,9 +1,9 @@
 import React, { useState, useImperativeHandle  } from 'react';
-
-import { GridItem } from '@strapi/design-system/Grid';
-
 import Select from "../../../components/Select";
 import filter from "./filter"
+import Translation from '../../../components/Translation';
+import { GridItem } from '@strapi/design-system/Grid';
+
 
 const Filter = ({ filterValues, unSortedData, updateData, refFilter }) => {
   const [ category, setCategory ] = useState('');
@@ -21,7 +21,7 @@ const Filter = ({ filterValues, unSortedData, updateData, refFilter }) => {
     <>
       <GridItem col={3}>
         <Select
-          placeholder={ 'Filter by category' }
+          placeholder={ <Translation id={'products.filter.title'} defaultMessage={'Filter by category'}/> }
           value={ category }
           values={ filterValues[0] }
           onChange={ (value) => {
@@ -36,7 +36,7 @@ const Filter = ({ filterValues, unSortedData, updateData, refFilter }) => {
       </GridItem>
       <GridItem col={2}>
         <Select
-          placeholder={ 'Sort by price' }
+          placeholder={ <Translation id={'products.sort.title'} defaultMessage={'Sort by price'}/> }
           value={ price }
           values={ filterValues[1] }
           onChange={ (value) => {

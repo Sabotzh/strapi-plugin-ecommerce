@@ -18,6 +18,7 @@ import { VisuallyHidden } from "@strapi/design-system/VisuallyHidden";
 import { Stack } from '@strapi/design-system/Stack';
 import { Button } from '@strapi/design-system/Button';
 import { Grid } from '@strapi/design-system/Grid';
+import Translation from "../../components/Translation";
 
 
 const ProductsPage = () => {
@@ -151,17 +152,11 @@ const ProductsPage = () => {
             startIcon={ <Plus/> }
             onClick={ () => setCreateVisible(true) }
           >
-            Add product
+            { <Translation id={'products.button.add'} defaultMessage={'Add Product'}/> }
           </Button>
         }
-        title={formatMessage({
-          id: getTrad('products.title'),
-          defaultMessage: 'Products',
-        })}
-        subtitle={formatMessage({
-          id: getTrad('products.description'),
-          defaultMessage: 'Configure the ecommerce plugin',
-        })}
+        title={ <Translation id={'products.title'} defaultMessage={'Products'}/> }
+        subtitle=<Translation id={'products.description'} defaultMessage={'Configure the ecommerce plugin'}/>
       />
       { createVisible &&
         <Create
@@ -185,17 +180,59 @@ const ProductsPage = () => {
             <Thead>
               <Tr>
                 <Th><Typography variant="sigma">ID</Typography></Th>
-                <Th><Typography variant="sigma">Image</Typography></Th>
-                <Th><Typography variant="sigma">Product name</Typography></Th>
-                <Th><Typography variant="sigma">Slug</Typography></Th>
-                <Th><Typography variant="sigma">SKU</Typography></Th>
-                <Th><Typography variant="sigma">Category</Typography></Th>
-                <Th><Typography variant="sigma">Manufacturer</Typography></Th>
-                <Th><Typography variant="sigma">Price</Typography></Th>
-                <Th><Typography variant="sigma">Quantity</Typography></Th>
-                <Th><Typography variant="sigma">Status</Typography></Th>
-                <Th><Typography variant="sigma">Discount</Typography></Th>
-                <Th><Typography variant="sigma">Published</Typography></Th>
+                <Th>
+                  <Typography variant="sigma">
+                    <Translation id={'products.table.header.image'} defaultMessage={'image'}/>
+                  </Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">
+                    <Translation id={'products.table.header.name'} defaultMessage={'Product name'}/>
+                  </Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">
+                    <Translation id={'products.table.header.slug'} defaultMessage={'Slug'}/>
+                  </Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">SKU</Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">
+                    <Translation id={'products.table.header.category'} defaultMessage={'Category'}/>
+                  </Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">
+                    <Translation id={'products.table.header.manufacturer'} defaultMessage={'Manufacturer'}/>
+                  </Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">
+                    <Translation id={'products.table.header.price'} defaultMessage={'Price'}/>
+                  </Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">
+                    <Translation id={'products.table.header.quantity'} defaultMessage={'Quantity'}/>
+                  </Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">
+                    <Translation id={'products.table.header.status'} defaultMessage={'Status'}/>
+                  </Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">
+                    <Translation id={'products.table.header.discount'} defaultMessage={'Discount'}/>
+                  </Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">
+                    <Translation id={'products.table.header.published'} defaultMessage={'Published'}/>
+                  </Typography>
+                </Th>
                 <Th><VisuallyHidden>Actions</VisuallyHidden></Th>
               </Tr>
             </Thead>

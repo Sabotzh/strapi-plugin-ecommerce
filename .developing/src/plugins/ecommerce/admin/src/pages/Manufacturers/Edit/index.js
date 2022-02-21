@@ -4,11 +4,11 @@ import InputSlug from '../../../components/InputSlug'
 import validate from '../../../utils/validate';
 import Wysiwyg from '../../../components/Wysiwyg/Wysiwyg';
 import InputImage from '../../../components/InputImage';
-import getTrad from '../../../utils/getTrad';
 import PopupLoader from '../../../components/PopupLoader';
+import Translation from '../../../components/Translation';
+import SeoModal from '../../../components/SeoModal';
 
 import CollectionType from '@strapi/icons/CollectionType';
-import { useIntl } from 'react-intl';
 import { ModalLayout, ModalBody, ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
 import { useNotification } from '@strapi/helper-plugin';
 import { Box } from '@strapi/design-system/Box';
@@ -24,12 +24,11 @@ import { ToggleCheckbox } from '@strapi/design-system/ToggleCheckbox';
 
 
 const Edit = ({ data, onClose, onUpdateData }) => {
-  const { formatMessage } = useIntl();
   const [ name, setName ] = useState(data.name);
   const [ slug, setSlug ] = useState(data.slug);
   const [ shortDescription, setShortDescription ] = useState(data.shortDescription);
   const [ description, setDescription ] = useState(data.description);
-  const [ published, setPublished ] = useState(data.publishedAt);
+  const [ published, setPublished ] = useState(!!data.publishedAt);
   const [ image, setImage ] = useState(data.image);
   const [ metaTitle, setMetaTitle ] = useState(data.metaTitle);
   const [ metaKeywords, setMetaKeywords ] = useState(data.metaKeywords);
@@ -75,11 +74,7 @@ const Edit = ({ data, onClose, onUpdateData }) => {
           <CollectionType/>
           <Breadcrumbs label="Category model, name field">
             <Crumb>
-              {
-              formatMessage({
-              id: getTrad('menu.manufacturers.name'),
-              defaultMessage: 'Manufacturers',
-            })}
+              <Translation id={'manufacturers.title'} defaultMessage={'Manufacturers'}/>
             </Crumb>
             <Crumb>{ data.name }</Crumb>
           </Breadcrumbs>
@@ -87,14 +82,17 @@ const Edit = ({ data, onClose, onUpdateData }) => {
       </ModalHeader>
       <PopupLoader loader={loader}>
         <ModalBody>
-          <Box paddingTop={4} paddingBottom={3}><Typography variant={'beta'}>Edit {data.name}</Typography></Box>
+          <Box paddingTop={4} paddingBottom={3}>
+            <Typography variant={'beta'}>
+              <Translation id={'modal.input.title'} defaultMessage={'Base Data'}/>
+            </Typography>
+          </Box>
           <Divider/>
           <Box paddingTop={5}>
             <Grid gap={5}>
               <GridItem col={6}>
                 <TextInput
-                  placeholder='Name'
-                  label='Name'
+                  label={ <Translation id={'modal.input.label.name'} defaultMessage={'Name'}/> }
                   name='Name'
                   value={ name }
                   onChange={ e => setName(e.target.value) }
@@ -103,8 +101,7 @@ const Edit = ({ data, onClose, onUpdateData }) => {
               </GridItem>
               <GridItem col={6}>
                 <InputSlug
-                  placeholder='Slug'
-                  label='Slug'
+                  label={ <Translation id={'modal.input.label.slug'} defaultMessage={'Slug'}/> }
                   name='Slug'
                   value={ slug }
                   onChange={ setSlug }
@@ -116,18 +113,19 @@ const Edit = ({ data, onClose, onUpdateData }) => {
               </GridItem>
               <GridItem col={12}>
                 <InputImage
-                  label={'Image'}
+                  label={ <Translation id={'modal.input.label.image'} defaultMessage={'Image'}/> }
                   error={''}
-                  selectedAsset={image}
-                  deleteSelectedAsset={() => setImage(null)}
-                  onFinish ={(image) => setImage(...image)}/>
+                  selectedAsset={ image }
+                  deleteSelectedAsset={ () => setImage(null) }
+                  onFinish ={ (image) => setImage(...image) }
+                />
               </GridItem>
               <GridItem col={12}>
                 <Textarea
                   error={ errors.shortDescription }
-                  label="Short description"
+                  label={ <Translation id={'modal.input.label.shortDescription'} defaultMessage={'Short Description'}/> }
                   name="shortDescription"
-                  onChange={e => setShortDescription(e.target.value)}
+                  onChange={ e => setShortDescription(e.target.value) }
                 >
                   { shortDescription }
                 </Textarea>
@@ -135,7 +133,7 @@ const Edit = ({ data, onClose, onUpdateData }) => {
               <GridItem col={12}>
                 <Wysiwyg
                   disabled={ false }
-                  label={ 'Description' }
+                  label={ <Translation id={'modal.input.label.description'} defaultMessage={'Description'}/> }
                   value={ description }
                   name="rich-text"
                   onChange={ e => setDescription(e.target.value) }
@@ -144,47 +142,38 @@ const Edit = ({ data, onClose, onUpdateData }) => {
               </GridItem>
               <GridItem col={6}>
                 <Stack size={1}>
-                  <Typography fontWeight={'bold'} variant={'pi'}>Published</Typography>
-                  <ToggleCheckbox onLabel={'On'} offLabel={'Off'} checked={ published } onChange={() => {setPublished(!published)}}>
-                    Published
+                  <Typography fontWeight={'bold'} variant={'pi'}>
+                    { <Translation id={'modal.input.label.published'} defaultMessage={'Published'}/> }
+                  </Typography>
+                  <ToggleCheckbox
+                    onLabel={'On'}
+                    offLabel={'Off'}
+                    checked={ published }
+                    onChange={ () => setPublished(!published) }
+                  >
+                    { <Translation id={'modal.input.label.published'} defaultMessage={'Published'}/> }
                   </ToggleCheckbox>
                 </Stack>
               </GridItem>
             </Grid>
-            <Box paddingTop={9} paddingBottom={3}><Typography variant={'beta'}>SEO</Typography></Box>
-            <Divider/>
-            <Box paddingTop={5}>
-              <Grid gap={5}>
-                <GridItem col={6}>
-                  <TextInput
-                    label="Meta_title"
-                    name="metaTitle"
-                    value={ metaTitle }
-                    onChange={ e => setMetaTitle(e.target.value) }
-                    error={ errors.metaTitle }
-                  />
-                </GridItem>
-                <GridItem col={6}>
-                  <TextInput
-                    label="Meta_keywords"
-                    name="metaKeywords"
-                    value={ metaKeywords }
-                    onChange={ e => setMetaKeywords(e.target.value) }
-                    error={ errors.metaKeywords }
-                  />
-                </GridItem>
-                <GridItem col={12}>
-                  <Textarea error={ errors.metaDescription } label="Meta_description" name="metaDescription" onChange={e => setMetaDescription(e.target.value)}>
-                    { metaDescription }
-                  </Textarea>
-                </GridItem>
-              </Grid>
-            </Box>
+            <SeoModal
+              metaTitle={ metaTitle }
+              setMetaTitle={ setMetaTitle }
+              metaKeywords={ metaKeywords }
+              setMetaKeywords={ setMetaKeywords }
+              metaDescription={ metaDescription }
+              setMetaDescription={ setMetaDescription }
+              errors={ errors }
+            />
           </Box>
         </ModalBody>
         <ModalFooter
-          startActions = { <Button onClick = { () => onClose() } variant="tertiary"> Cancel </Button> }
-          endActions = { <Button onClick = { submitButtonHandler }> Finish </Button> }
+          startActions = { <Button onClick = { () => onClose() } variant="tertiary">
+            { <Translation id={'modal.input.label.cancel'} defaultMessage={'Cancel'}/> }
+          </Button> }
+          endActions = { <Button onClick = { submitButtonHandler }>
+            { <Translation id={'modal.input.label.finish'} defaultMessage={'Finish'}/> }
+          </Button> }
         />
       </PopupLoader>
     </ModalLayout>

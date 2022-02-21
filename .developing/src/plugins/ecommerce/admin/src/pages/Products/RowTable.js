@@ -1,11 +1,9 @@
-import React from 'react';
-import Pencil from '@strapi/icons/Pencil';
-import Trash from '@strapi/icons/Trash';
+import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
-import ExclamationMarkCircle from '@strapi/icons/ExclamationMarkCircle';
 
-import { useState, useRef } from 'react';
 import Edit from './Edit';
+import TableRowButtons from '../../components/TableRowButtons';
+import DialogDelete from '../../components/DialogDelete';
 
 import { Td } from '@strapi/design-system/Table';
 import { Typography } from '@strapi/design-system/Typography';
@@ -17,9 +15,6 @@ import { Box } from '@strapi/design-system/Box';
 import { Popover } from '@strapi/design-system/Popover';
 import { Badge } from '@strapi/design-system/Badge';
 import { SortIcon } from '@strapi/helper-plugin';
-import { Dialog, DialogBody, DialogFooter } from '@strapi/design-system/Dialog';
-import { Stack } from '@strapi/design-system/Stack';
-import { Button } from '@strapi/design-system/Button';
 
 
 const BadgeStyled = styled(Typography)`
@@ -43,9 +38,9 @@ const ActionWrapper = styled.span`
 
 const RowTable = ({ data, onUpdate, onDelete, categories, manufacturers, onPublish, onUnPublish }) => {
   const [ toggleSwitch, setToggleSwitch ] = useState(!!data.publishedAt);
-  const [ editVisible, setEditVisible ] = useState(false);
+  const [ visibleEdit, setVisibleEdit ] = useState(false);
   const [ categoriesVisible, setCategoriesVisible ] = useState(false);
-  const [ deleteVisible, setDeleteVisible ] = useState(false);
+  const [ visibleDelete, setVisibleDelete ] = useState(false);
 
   const buttonRef = useRef();
   const handleTogglePopover = () => setCategoriesVisible(prev => !prev);
@@ -78,32 +73,20 @@ const RowTable = ({ data, onUpdate, onDelete, categories, manufacturers, onPubli
 
   return (
     <>
-      { editVisible &&
+      { visibleEdit &&
         <Edit
-          onClose = { () => setEditVisible(false) }
+          onClose = { () => setVisibleEdit(false) }
           data = { data }
           allCategories = { categories }
           allManufacturers = { manufacturers }
           onUpdate = { onUpdate }
         />
       }
-      <Dialog onClose={ () => setDeleteVisible(false) } title="Confirmation" isOpen={ deleteVisible }>
-        <DialogBody icon={<ExclamationMarkCircle />}>
-          <Stack size={2}>
-            <Flex justifyContent="center">
-              <Typography id="confirm-description">Are you sure you want to delete this?</Typography>
-            </Flex>
-          </Stack>
-        </DialogBody>
-        <DialogFooter
-          startAction = {
-            <Button onClick= { () => setDeleteVisible(false) } variant="tertiary">Cancel</Button>
-          }
-          endAction = {
-            <Button onClick={ () => onDelete(data.id) } variant="danger-light" startIcon={<Trash/>}>Confirm</Button>
-          }
-        />
-      </Dialog>
+      <DialogDelete
+        onClose={ () => setVisibleDelete(false) }
+        onDelete={ () => onDelete(data.id) }
+        isOpen={ visibleDelete }
+      />
       <Td><Typography textColor="neutral800">{ data.id }</Typography></Td>
       <Td>
         { data.image?.url
@@ -129,11 +112,15 @@ const RowTable = ({ data, onUpdate, onDelete, categories, manufacturers, onPubli
               { categoriesVisible && (
                 <Popover source={ buttonRef } spacing={16} centered>
                   <ul style={{ width: '150px' }}>
-                    { data.categories.map((el, id) => {
-                      return (
-                      <Box key={id} padding={3} as="li">
-                        <Typography textColor="neutral800">{ el.name }</Typography>
-                      </Box>)})}
+                    {
+                      data.categories.map((el, id) => {
+                        return (
+                          <Box key={id} padding={3} as="li">
+                            <Typography textColor="neutral800">{ el.name }</Typography>
+                          </Box>
+                        )
+                      })
+                    }
                   </ul>
                 </Popover>)}
             </ActionWrapper>)}
@@ -157,17 +144,10 @@ const RowTable = ({ data, onUpdate, onDelete, categories, manufacturers, onPubli
         />
       </Td>
       <Td>
-        <Flex>
-          <IconButton onClick={ () => setEditVisible(true) } label="Edit" noBorder icon = { <Pencil /> }/>
-          <Box paddingLeft={1}>
-            <IconButton
-              label="Delete"
-              noBorder
-              icon={ <Trash/> }
-              onClick={ () => setDeleteVisible(true) }
-            />
-          </Box>
-        </Flex>
+        <TableRowButtons
+          onEdit={ () => setVisibleEdit(true) }
+          onDelete={ () => setVisibleDelete(true) }
+        />
       </Td>
     </>
   );

@@ -5,6 +5,8 @@ import validateCategories from '../../../utils/validate';
 import InputImage from '../../../components/InputImage';
 import PopupLoader from '../../../components/PopupLoader';
 import InputSlug from '../../../components/InputSlug';
+import Translation from '../../../components/Translation';
+import SeoModal from '../../../components/SeoModal';
 
 import CollectionType from '@strapi/icons/CollectionType';
 import { useNotification } from '@strapi/helper-plugin';
@@ -72,20 +74,25 @@ const Create = ({ onCreate, onClose }) => {
         <Stack horizontal size={2}>
           <CollectionType/>
           <Breadcrumbs label="Manufacturers model, name field">
-            <Crumb>Manufacturers</Crumb>
+            <Crumb>
+              <Translation id={'manufacturers.title'} defaultMessage={'Manufacturers'}/>
+            </Crumb>
           </Breadcrumbs>
         </Stack>
       </ModalHeader>
       <PopupLoader loader={loader}>
         <ModalBody>
-          <Box paddingTop={4} paddingBottom={3}><Typography variant={'beta'}>Base data</Typography></Box>
+          <Box paddingTop={4} paddingBottom={3}>
+            <Typography variant={'beta'}>
+              <Translation id={'modal.input.title'} defaultMessage={'Base Data'}/>
+            </Typography>
+          </Box>
           <Divider/>
           <Box paddingTop={5}>
             <Grid gap={5}>
               <GridItem col={6}>
                 <TextInput
-                  placeholder="Name"
-                  label="Name"
+                  label={ <Translation id={'modal.input.label.name'} defaultMessage={'Name'}/> }
                   name="name"
                   value={ name }
                   onChange={ e => setName(e.target.value) }
@@ -94,8 +101,7 @@ const Create = ({ onCreate, onClose }) => {
               </GridItem>
               <GridItem col={6}>
                 <InputSlug
-                  placeholder='Slug'
-                  label='Slug'
+                  label={ <Translation id={'modal.input.label.slug'} defaultMessage={'Slug'}/> }
                   name='Slug'
                   value={ slug }
                   onChange={ setSlug }
@@ -107,7 +113,7 @@ const Create = ({ onCreate, onClose }) => {
               </GridItem>
               <GridItem col={12}>
                 <InputImage
-                  label={'Image'}
+                  label={ <Translation id={'modal.input.label.image'} defaultMessage={'Image'}/> }
                   selectedAsset={ image }
                   deleteSelectedAsset={ () => setImage(null) }
                   onFinish ={ (image) => setImage(...image) }
@@ -116,7 +122,7 @@ const Create = ({ onCreate, onClose }) => {
               <GridItem col={12}>
                 <Textarea
                   error={ errors.shortDescription }
-                  label="Short description"
+                  label={ <Translation id={'modal.input.label.shortDescription'} defaultMessage={'Short Description'}/> }
                   name="shortDescription"
                   onChange={e => setShortDescription(e.target.value)}
                 >
@@ -126,7 +132,7 @@ const Create = ({ onCreate, onClose }) => {
               <GridItem col={12}>
                 <Wysiwyg
                   disabled={ false }
-                  label={ 'Description' }
+                  label={ <Translation id={'modal.input.label.description'} defaultMessage={'Description'}/> }
                   value={ description }
                   name="rich-text"
                   onChange={ e => setDescription(e.target.value) }
@@ -135,43 +141,30 @@ const Create = ({ onCreate, onClose }) => {
               </GridItem>
               <GridItem col={6}>
                 <Stack size={1}>
-                  <Typography fontWeight={'bold'} variant={'pi'}>Published</Typography>
-                  <ToggleCheckbox onLabel={'On'} offLabel={'Off'} checked={ published } onChange={() => {setPublished(!published)}}>
-                    Published
+                  <Typography fontWeight={'bold'} variant={'pi'}>
+                    { <Translation id={'modal.input.label.published'} defaultMessage={'Published'}/> }
+                  </Typography>
+                  <ToggleCheckbox
+                    onLabel={'On'}
+                    offLabel={'Off'}
+                    checked={ published }
+                    onChange={ () => setPublished(!published) }
+                  >
+                    { <Translation id={'modal.input.label.published'} defaultMessage={'Published'}/> }
                   </ToggleCheckbox>
                 </Stack>
               </GridItem>
             </Grid>
           </Box>
-          <Box paddingTop={9} paddingBottom={3}><Typography variant={'beta'}>SEO</Typography></Box>
-          <Divider/>
-          <Box paddingTop={5}>
-            <Grid gap={5}>
-              <GridItem col={6}>
-                <TextInput
-                  label="Meta_title"
-                  name="metaTitle"
-                  value={ metaTitle }
-                  onChange={ e => setMetaTitle(e.target.value) }
-                  error={ errors.metaTitle }
-                />
-              </GridItem>
-              <GridItem col={6}>
-                <TextInput
-                  label="Meta_keywords"
-                  name="metaKeywords"
-                  value={ metaKeywords }
-                  onChange={ e => setMetaKeywords(e.target.value) }
-                  error={ errors.metaKeywords }
-                />
-              </GridItem>
-              <GridItem col={12}>
-                <Textarea error={ errors.metaDescription } label="Meta_description" name="metaDescription" onChange={e => setMetaDescription(e.target.value)}>
-                  { metaDescription }
-                </Textarea>
-              </GridItem>
-            </Grid>
-          </Box>
+          <SeoModal
+            metaTitle={ metaTitle }
+            setMetaTitle={ setMetaTitle }
+            metaKeywords={ metaKeywords }
+            setMetaKeywords={ setMetaKeywords }
+            metaDescription={ metaDescription }
+            setMetaDescription={ setMetaDescription }
+            errors={ errors }
+          />
         </ModalBody>
         <ModalFooter
           startActions = { <Button onClick = { () => onClose() } variant="tertiary"> Cancel </Button> }

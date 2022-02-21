@@ -3,12 +3,12 @@ import axios from "axios";
 
 import RowTable from './RowTable';
 import Create from './Create'
-import getTrad from '../../utils/getTrad';
 import TableLoader from '../../components/TableLoader';
 import TableEmptyModal from '../../components/TableEmptyModal';
+import Translation from '../../components/Translation';
+const qs = require('qs');
 
 import Plus from '@strapi/icons/Plus';
-import { useIntl } from 'react-intl';
 import { useFocusWhenNavigate } from '@strapi/helper-plugin';
 import { HeaderLayout, ContentLayout } from '@strapi/design-system/Layout';
 import { Button } from '@strapi/design-system/Button';
@@ -17,7 +17,6 @@ import { Typography } from '@strapi/design-system/Typography';
 import { VisuallyHidden } from "@strapi/design-system/VisuallyHidden";
 import { Stack } from '@strapi/design-system/Stack';
 import { request, useNotification } from '@strapi/helper-plugin';
-const qs = require('qs');
 
 
 const ManufacturerPage = () => {
@@ -27,12 +26,6 @@ const ManufacturerPage = () => {
   const [ createVisible, setCreateVisible ] = useState(false);
   const [ loader, setLoader ] = useState(true);
   const notification = useNotification();
-
-  const { formatMessage } = useIntl();
-  const title = formatMessage({
-    id: getTrad('manufacturer.title'),
-    defaultMessage: 'Manufacturers',
-  });
 
   const getData = async () => {
     const query = qs.stringify(
@@ -134,14 +127,11 @@ const ManufacturerPage = () => {
               startIcon={ <Plus/> }
               onClick={ () => setCreateVisible(true) }
             >
-              Add manufacturer
+              { <Translation id={'manufacturers.button.add'} defaultMessage={'Add manufacturer'}/> }
             </Button>
           }
-          title={title}
-          subtitle={formatMessage({
-            id: getTrad('manufacturer.description'),
-            defaultMessage: 'Configure the ecommerce plugin',
-          })}
+          title={ <Translation id={'manufacturers.title'} defaultMessage={'Manufacturers'}/> }
+          subtitle={ <Translation id={'manufacturers.description'} defaultMessage={'Configure the ecommerce plugin'}/> }
         />
         { createVisible && (
           <Create
@@ -156,11 +146,31 @@ const ManufacturerPage = () => {
               <Thead>
                 <Tr>
                   <Th><Typography variant="sigma">ID</Typography></Th>
-                  <Th><Typography variant="sigma">Image</Typography></Th>
-                  <Th><Typography variant="sigma">Name</Typography></Th>
-                  <Th><Typography variant="sigma">Slug</Typography></Th>
-                  <Th><Typography variant="sigma">Short Description</Typography></Th>
-                  <Th><Typography variant="sigma">Published</Typography></Th>
+                  <Th>
+                    <Typography variant="sigma">
+                      { <Translation id={'manufacturers.table.header.image'} defaultMessage={'Image'}/> }
+                    </Typography>
+                  </Th>
+                  <Th>
+                    <Typography variant="sigma">
+                      { <Translation id={'manufacturers.table.header.name'} defaultMessage={'Name'}/> }
+                    </Typography>
+                  </Th>
+                  <Th>
+                    <Typography variant="sigma">
+                      { <Translation id={'manufacturers.table.header.slug'} defaultMessage={'Slug'}/> }
+                    </Typography>
+                  </Th>
+                  <Th>
+                    <Typography variant="sigma">
+                      { <Translation id={'manufacturers.table.header.shortDescription'} defaultMessage={'Short Description'}/> }
+                    </Typography>
+                  </Th>
+                  <Th>
+                    <Typography variant="sigma">
+                      { <Translation id={'manufacturers.table.header.published'} defaultMessage={'Published'}/> }
+                    </Typography>
+                  </Th>
                   <Th><VisuallyHidden>Actions</VisuallyHidden></Th>
                 </Tr>
               </Thead>
