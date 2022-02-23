@@ -1,5 +1,5 @@
 import convert from 'xml-js';
-import opencartFormatToOurFormat from "./opencartFormatToOurFormat";
+import opencartFormatToOurFormat from '../formats/opencartFormatToOurFormat';
 
 export default async(file) => {
   const getArrayElements = (elements) => {
@@ -28,6 +28,5 @@ export default async(file) => {
     })
     productsData.push(productData)
   }))
-  console.dir(productsData)
   return productsData
 }

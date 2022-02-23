@@ -59,4 +59,10 @@ module.exports = [
     handler: 'categories.createSlug',
     config: {},
   },
+  {
+    method: 'POST',
+    path: '/categories/get-create',
+    handler: 'categories.getOrCreate',
+    config: {},
+  },
 ];
