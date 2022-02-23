@@ -36,7 +36,7 @@ const OpaqueBox = styled(Box)`
   cursor: pointer;
 `;
 
-export const FromComputerForm = ({ onClose, onAddAssets, trackedLocation }) => {
+export const FromComputerForm = ({ onClose, onAddAssets, trackedLocation, onlyOne }) => {
   const { formatMessage } = useIntl();
   const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef(null);
@@ -107,7 +107,7 @@ export const FromComputerForm = ({ onClose, onAddAssets, trackedLocation }) => {
                   top={0}
                   width="100%"
                   type="file"
-                  multiple
+                  multiple = { !onlyOne }
                   name="files"
                   tabIndex={-1}
                   ref={inputRef}

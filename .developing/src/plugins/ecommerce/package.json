@@ -19,6 +19,7 @@
   "dependencies": {
     "axios": "^0.24.0",
     "jsonwebtoken": "^8.5.1",
-    "slugify": "^1.6.5"
+    "slugify": "^1.6.5",
+    "xml-js": "^1.6.11"
   }
 }

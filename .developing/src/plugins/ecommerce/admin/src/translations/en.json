@@ -60,6 +60,8 @@
   "products.table.header.discount": "Discount",
   "products.table.header.published": "Published",
   "products.button.add": "Add Product",
+  "products.button.export": "Export",
+  "products.button.import": "Import",
   "products.filter.title": "Filter by category",
   "products.sort.title": "Sort by price",
   "orders.table.changeStatus": "Change status",

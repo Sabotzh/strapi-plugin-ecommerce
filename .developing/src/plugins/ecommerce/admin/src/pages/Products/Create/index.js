@@ -107,7 +107,7 @@ const Create = ({ onClose, onCreate, allCategories, allManufacturers }) => {
               <GridItem col={6}>
                 <TextInput
                   label={ <Translation id={'modal.input.label.name'} defaultMessage={'Name'}/> }
-                  name="name"
+                  name='name'
                   value={ name }
                   onChange={ e => setName(e.target.value) }
                   error={ errors.name }

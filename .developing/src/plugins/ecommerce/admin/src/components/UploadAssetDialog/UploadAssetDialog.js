@@ -16,7 +16,6 @@ export const UploadAssetDialog = ({
   initialAssetsToAdd,
   onClose,
   addUploadedFiles,
-  trackedLocation,
   updateAssets
 }) => {
   const { formatMessage } = useIntl();
@@ -94,7 +93,6 @@ export const UploadAssetDialog = ({
         <AddAssetStep
           onClose={onClose}
           onAddAsset={handleAddToPendingAssets}
-          trackedLocation={trackedLocation}
         />
       )}
 

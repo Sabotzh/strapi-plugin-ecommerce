@@ -12,7 +12,7 @@ import { useIntl } from 'react-intl';
 import { Tabs, Tab, TabGroup, TabPanels, TabPanel } from '@strapi/design-system/Tabs';
 
 
-export const AddAssetStep = ({ onClose, onAddAsset }) => {
+export const AddAssetStep = ({ onClose, onAddAsset, onlyOne }) => {
   const { formatMessage } = useIntl();
 
   return (
@@ -56,6 +56,7 @@ export const AddAssetStep = ({ onClose, onAddAsset }) => {
             <FromComputerForm
               onClose={onClose}
               onAddAssets={onAddAsset}
+              onlyOne={onlyOne}
             />
           </TabPanel>
           <TabPanel>

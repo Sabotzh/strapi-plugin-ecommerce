@@ -60,6 +60,8 @@
   "products.table.header.discount": "Знижка",
   "products.table.header.published": "Опубліковано",
   "products.button.add": "Додати товар",
+  "products.button.export": "Експортувати",
+  "products.button.import": "Імпортувати",
   "products.filter.title": "Фільтрувати за категоріями",
   "products.sort.title": "Сортувати за ціною",
   "orders.table.changeStatus": "Змінити статус",

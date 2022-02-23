@@ -17,7 +17,6 @@ export const FromUrlForm = ({ onClose, onAddAsset }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(undefined);
   const { formatMessage } = useIntl();
-  const { trackUsage } = useTracking();
 
   const handleSubmit = async ({ urls }) => {
     setLoading(true);

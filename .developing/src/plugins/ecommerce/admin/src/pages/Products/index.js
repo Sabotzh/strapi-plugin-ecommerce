@@ -1,35 +1,36 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from "axios";
 
-import getTrad from '../../utils/getTrad';
 import RowTable from './RowTable';
 import Create from './Create';
 import Filter from './Filter';
 import TableLoader from '../../components/TableLoader'
 import TableEmptyModal from '../../components/TableEmptyModal';
+import Translation from '../../components/Translation';
+import Import from '../../components/Import';
 
 import Plus from '@strapi/icons/Plus';
-import { useIntl } from 'react-intl';
+import Upload from '@strapi/icons/Upload';
+import Download from '@strapi/icons/Download';
 import { request, useNotification  } from '@strapi/helper-plugin';
 import { HeaderLayout, ContentLayout } from '@strapi/design-system/Layout';
-import { Table, Thead, Tbody, Tr, Th, Td } from '@strapi/design-system/Table';
+import { Table, Thead, Tbody, Tr, Th } from '@strapi/design-system/Table';
 import { Typography } from '@strapi/design-system/Typography';
 import { VisuallyHidden } from "@strapi/design-system/VisuallyHidden";
 import { Stack } from '@strapi/design-system/Stack';
 import { Button } from '@strapi/design-system/Button';
 import { Grid } from '@strapi/design-system/Grid';
-import Translation from "../../components/Translation";
 
 
 const ProductsPage = () => {
   const [ createVisible, setCreateVisible ] = useState(false);
+  const [ importVisible, setImportVisible ] = useState(false)
   const [ unSortedData, setUnSortedData ] = useState([]);
   const [ categories, setCategories ] = useState([]);
   const [ manufacturers, setManufacturers ] = useState([]);
   const [ loader, setLoader ] = useState(true);
   const [ data, setData ] = useState([]);
   const notification = useNotification();
-  const { formatMessage } = useIntl();
   const filter = useRef();
 
   const getData = async () => {
@@ -145,19 +146,38 @@ const ProductsPage = () => {
   }
 
   return (
-    <main style={{position: 'relative'}}>
+    <main style={{ position: 'relative' }}>
       <HeaderLayout
         primaryAction={
-          <Button
-            startIcon={ <Plus/> }
-            onClick={ () => setCreateVisible(true) }
-          >
-            { <Translation id={'products.button.add'} defaultMessage={'Add Product'}/> }
-          </Button>
+          <Stack horizontal size={3}>
+            <Button
+              startIcon={ <Download/> }
+              onClick={ () => setImportVisible(true) }
+            >
+              <Translation id={'products.button.export'} defaultMessage={'Export'}/>
+            </Button>
+            <Button
+              startIcon={ <Upload/> }
+              onClick={ () => setImportVisible(true) }
+            >
+              <Translation id={'products.button.import'} defaultMessage={'Import'}/>
+            </Button>
+            <Button
+              startIcon={ <Plus/> }
+              onClick={ () => setCreateVisible(true) }
+            >
+              <Translation id={'products.button.add'} defaultMessage={'Add Product'}/>
+            </Button>
+          </Stack>
         }
         title={ <Translation id={'products.title'} defaultMessage={'Products'}/> }
         subtitle=<Translation id={'products.description'} defaultMessage={'Configure the ecommerce plugin'}/>
       />
+      { importVisible &&
+        <Import
+          onClose={ () => setImportVisible(false) }
+        />
+      }
       { createVisible &&
         <Create
           onClose={ () => setCreateVisible(false) }
