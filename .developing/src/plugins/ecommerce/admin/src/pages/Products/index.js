@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from "axios";
+import axios from 'axios';
 
 import RowTable from './RowTable';
 import Create from './Create';
@@ -42,7 +42,6 @@ const ProductsPage = () => {
 
     await request(`/ecommerce/products?${query}`)
       .then((res) => {
-        console.log(res)
         setData(res)
         setUnSortedData(res)
         if (filter.current.runFilter(data)) {
@@ -61,7 +60,6 @@ const ProductsPage = () => {
   const getManufacturers = async () => {
     await request(`/ecommerce/manufacturer`)
       .then((res) => {
-        console.log(res)
         setManufacturers(res)
       });
   }

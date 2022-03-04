@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from "axios";
 
 import xmlParser from '../../utils/parsers/xml';
 import DetailImport from './DetailImport';
@@ -6,7 +7,6 @@ import { AddAssetStep } from '../UploadAssetDialog/AddAssetStep/AddAssetStep';
 
 import { ModalLayout } from '@strapi/design-system/ModalLayout';
 import { useNotification } from '@strapi/helper-plugin';
-import axios from "axios";
 import { urlsToAssets } from "../../utils/urlsToAssets";
 
 

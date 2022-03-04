@@ -1,5 +1,6 @@
 const strapiForbiddenFields = require("../_utils/strapiForbiddenFieldsForUpdate");
 const randomIntFromInterval = require('../../utils/randomIntFromInterval');
+const slugify = require("slugify");
 
 module.exports = ({ strapi }) => async (ctx) => {
   const data = ctx.request.body;
@@ -10,12 +11,12 @@ module.exports = ({ strapi }) => async (ctx) => {
   }
 
   const getSlug = async (name) => {
-    const slug = name.toLowerCase().split(' ').join('-');
+    const slug = slugify(name).toLowerCase()
     const parentCategory = await strapi
       .query('plugin::ecommerce.category')
       .findOne({ where: { slug }});
     if (parentCategory) {
-      return name + '-' + randomIntFromInterval(1000, 9999)
+      return slug + '-' + randomIntFromInterval(1000, 9999)
     }
     return slug
   }
@@ -39,29 +40,20 @@ module.exports = ({ strapi }) => async (ctx) => {
     .query('plugin::ecommerce.category')
     .findOne({ where: { name: data.name }, populate: ['parentCategory'] });
   if (categoryWithTheSameName) {
-    if (data.parentCategory !== categoryWithTheSameName.parentCategory?.id) {
-      categoryWithTheSameName.parentCategory = data.parentCategory
-      console.log(categoryWithTheSameName)
-      const categoryLevel = await getCategoryLevel(categoryWithTheSameName)
-      const category = await strapi
-        .query('plugin::ecommerce.category')
-        .update({ where: { id: categoryWithTheSameName.id }, data: { parentCategory: data.parentCategory, categoryLevel } });
-      ctx.body = {
-        category,
-        message: 'Category parent changed'
-      };
-      return
-    }
+    categoryWithTheSameName.parentCategory = data.parentCategory
+    const categoryLevel = await getCategoryLevel(categoryWithTheSameName)
+    const category = await strapi
+      .query('plugin::ecommerce.category')
+      .update({ where: { id: categoryWithTheSameName.id }, data: { parentCategory: data.parentCategory, categoryLevel } });
     ctx.body = {
-      category: categoryWithTheSameName,
-      message: 'Category existed'
+      category,
+      message: 'Category parent changed'
     };
     return
   }
 
   data.categoryLevel = await getCategoryLevel(data)
   data.slug = await getSlug(data.name)
-
   const category = await strapi
     .query('plugin::ecommerce.category')
     .create({ data });
