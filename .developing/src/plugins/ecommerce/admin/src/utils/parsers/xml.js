@@ -12,7 +12,7 @@ export default async(file) => {
     })
   const products = JSON.parse(convert.xml2json(xml, { compact: false, spaces: 2 }))
   const productsData = []
-  products.elements[0].elements.forEach((product => {
+  products.elements[0].elements.forEach(product => {
     let productData = {}
     product.elements.forEach(attribute => {
       const allowedKeys = Object.keys(opencartFormatToOurFormat)
@@ -27,6 +27,6 @@ export default async(file) => {
       }
     })
     productsData.push(productData)
-  }))
+  })
   return productsData
 }

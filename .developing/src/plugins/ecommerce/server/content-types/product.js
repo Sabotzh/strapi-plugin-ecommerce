@@ -62,7 +62,7 @@ module.exports = {
       configurable: false,
     },
     price: {
-      type: 'integer',
+      type: 'float',
       configurable: false,
     },
     quantity: {

@@ -4,7 +4,8 @@
   "info": {
     "singularName": "plural-test",
     "pluralName": "plural-tests",
-    "displayName": "plural-test"
+    "displayName": "plural-test",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
@@ -24,7 +25,7 @@
       "type": "password"
     },
     "number": {
-      "type": "integer"
+      "type": "float"
     },
     "enum": {
       "type": "enumeration",
@@ -37,13 +38,14 @@
       "type": "date"
     },
     "media": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "images",
         "files",
         "videos"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
     },
     "boolean": {
       "type": "boolean"
@@ -64,6 +66,9 @@
     "uid": {
       "type": "uid",
       "targetField": "stringgg"
+    },
+    "float": {
+      "type": "float"
     }
   }
 }

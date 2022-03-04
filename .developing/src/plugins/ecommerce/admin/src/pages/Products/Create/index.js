@@ -192,6 +192,7 @@ const Create = ({ onClose, onCreate, allCategories, allManufacturers }) => {
                   name="price"
                   label={ <Translation id={'modal.input.label.price'} defaultMessage={'Price'}/> }
                   value={price}
+                  step={0.01}
                   onValueChange={ setPrice }
                   error={ errors.price }
                 />

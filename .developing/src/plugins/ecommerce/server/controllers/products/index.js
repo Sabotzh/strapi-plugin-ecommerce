@@ -6,7 +6,8 @@ const findOne = require('./findOne');
 const findOneBySlug = require('./findOneBySlug');
 const publish = require('./publish');
 const unPublish = require('./unPublish');
-const createSlug = require('./createSlug')
+const createSlug = require('./createSlug');
+const getOrCreate = require('./getOrCreate');
 
 module.exports = (globalCtx) => ({
   create: create(globalCtx),
@@ -18,4 +19,5 @@ module.exports = (globalCtx) => ({
   publish: publish(globalCtx),
   unPublish: unPublish(globalCtx),
   createSlug: createSlug(globalCtx),
+  getOrCreate: getOrCreate(globalCtx),
 });

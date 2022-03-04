@@ -7,13 +7,14 @@ import { AddAssetStep } from '../UploadAssetDialog/AddAssetStep/AddAssetStep';
 import { ModalLayout } from '@strapi/design-system/ModalLayout';
 import { useNotification } from '@strapi/helper-plugin';
 import axios from "axios";
+import { urlsToAssets } from "../../utils/urlsToAssets";
 
 
 const Import = ({ onClose }) => {
   const [ file, setFile ] = useState(null)
   const notification = useNotification();
 
-  const fetch = (data, url) => {
+  const post = (data, url) => {
     return axios({
       method: 'post',
       url: `${strapi.backendURL}/api/ecommerce/${url}`,
@@ -23,41 +24,59 @@ const Import = ({ onClose }) => {
         return res.data
       });
   }
-  // for (const familyCategory of category.split(' > ')) {
-  //   const contents = await fs.readFile(file, 'utf8');
-  //   console.log(contents);
-  // }
+
   const createCategoryRelations = async(categories) => {
     let parentId
     for (let categoryName of categories.split('>')) {
       categoryName = categoryName.trim();
       if (!parentId) {
-        const response = await fetch({ name: categoryName.replace("&amp;", "&") },'categories/get-create')
+        const response = await post({ name: categoryName.replace("&amp;", "&") },'categories/get-create')
         parentId = response['category'].id
         continue
       }
-      const response = await fetch(
+      const response = await post(
         { name: categoryName.replace("&amp;", "&"), parentCategory: parentId },
         'categories/get-create'
       )
       parentId = response['category'].id
     }
+    return parentId
   }
 
   const getOrCreateCategory = async (categories) => {
-    for (const category of categories) {
-      if (category.split('>').length > 1) {
-        await createCategoryRelations(category)
+    const categoriesIds = []
+    for (const categoryName of categories) {
+      if (categoryName.split('>').length > 1) {
+        categoriesIds.push(await createCategoryRelations(categoryName))
         continue
       }
-      await fetch({ name: category.replace("&amp;", "&") }, 'categories/get-create')
+      const { category } = await post({ name: categoryName.replace("&amp;", "&") }, 'categories/get-create')
+      categoriesIds.push(category.id)
     }
+    return categoriesIds
+  }
+
+  const getOrCreateManufacturer = async (manufacturerName) => {
+    const { manufacturer } = await post({ name: manufacturerName }, 'manufacturer/get-create')
+    return manufacturer.id
   }
 
   const createProducts = async (products) => {
     for (const product of products) {
-      //console.log(product)
-      if (product.categories) await getOrCreateCategory(product.categories)
+      if (!product.name) continue
+
+      let manufacturerId = null
+      let categoriesIds = null
+      if (product.categories) categoriesIds = await getOrCreateCategory(product.categories)
+      if (product.manufacturer && product.manufacturer !== '-') {
+        manufacturerId = await getOrCreateManufacturer(product.manufacturer)
+      }
+
+      product.price = product.price[0] === '$' ? product.price.slice(1) : product.price
+      // 'https://i.pinimg.com/originals/56/7a/4c/567a4cc9870f8d8e3d03362732760e2c.jpg'
+      // product.image = await urlsToAssets([product.image]) || null
+      product.image = null
+      post({ ...product, categories: categoriesIds, manufacturer: manufacturerId }, 'products/get-create')
     }
   }
 
@@ -65,7 +84,7 @@ const Import = ({ onClose }) => {
     if (file.ext === 'xml') {
       const products = await xmlParser(file)
       await createProducts(products)
-      //json.elements.forEach(el => console.log(el))
+
       setFile(file)
       return
     }

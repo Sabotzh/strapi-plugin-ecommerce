@@ -42,6 +42,7 @@ const ProductsPage = () => {
 
     await request(`/ecommerce/products?${query}`)
       .then((res) => {
+        console.log(res)
         setData(res)
         setUnSortedData(res)
         if (filter.current.runFilter(data)) {

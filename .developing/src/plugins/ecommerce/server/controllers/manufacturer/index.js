@@ -5,7 +5,7 @@ const remove = require('./remove');
 const publish = require('./publish');
 const unPublish = require('./unPublish');
 const createSlug = require('./createSlug');
-
+const getOrCreate = require('./getOrCreate');
 
 module.exports = (globalCtx) => ({
   find: find(globalCtx),
@@ -15,4 +15,5 @@ module.exports = (globalCtx) => ({
   publish: publish(globalCtx),
   unPublish: unPublish(globalCtx),
   createSlug: createSlug(globalCtx),
+  getOrCreate: getOrCreate(globalCtx),
 });

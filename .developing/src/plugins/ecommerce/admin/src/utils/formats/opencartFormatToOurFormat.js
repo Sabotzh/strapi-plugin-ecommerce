@@ -22,5 +22,4 @@ export default {
   meta_keywords: 'metaKeywords',
   meta_keyword: 'metaKeywords',
   date_available: 'dateAvailable',
-  status: 'statusF'
 }

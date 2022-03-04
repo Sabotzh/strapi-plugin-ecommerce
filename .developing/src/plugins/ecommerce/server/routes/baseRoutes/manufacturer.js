@@ -41,4 +41,10 @@ module.exports = [
     handler: 'manufacturer.createSlug',
     config: {},
   },
+  {
+    method: 'POST',
+    path: '/manufacturer/get-create',
+    handler: 'manufacturer.getOrCreate',
+    config: {},
+  },
 ];

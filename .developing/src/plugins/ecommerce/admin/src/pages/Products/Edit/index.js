@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import PopupLoader from '../../../components/PopupLoader';
 import InputImage from '../../../components/InputImage';
 import Wysiwyg from '../../../components/Wysiwyg/Wysiwyg';
-import validate, {numberValidate} from '../../../utils/validate';
+import validate, { numberValidate } from '../../../utils/validate';
 import InputSlug from '../../../components/InputSlug';
 import Translation from '../../../components/Translation';
 import SeoModal from '../../../components/SeoModal';
@@ -36,7 +36,7 @@ const Edit = ({ data, onClose, onUpdate, allCategories, allManufacturers }) => {
   const [ image, setImage ] = useState(data.image);
   const [ sku, setSku ] = useState(data.sku);
   const [ categories, setCategories ] = useState(data.categories.map(el => el.id));
-  const [ price, setPrice ] = useState(data.price || undefined);
+  const [ price, setPrice ] = useState(undefined);
   const [ dateAvailable, setDateAvailable ] = useState(null);//data.dateAvailable
   const [ published, setPublished ] = useState(!!data.publishedAt);
   const [ manufacturer, setManufacturer ] = useState(data.manufacturer?.id);
@@ -49,7 +49,6 @@ const Edit = ({ data, onClose, onUpdate, allCategories, allManufacturers }) => {
   const [ metaTitle, setMetaTitle ] = useState(data.metaTitle);
   const [ metaKeywords, setMetaKeywords ] = useState(data.metaKeywords);
   const [ metaDescription, setMetaDescription ] = useState(data.metaDescription);
-
   const notification = useNotification();
   const { formatMessage } = useIntl();
 
@@ -195,8 +194,9 @@ const Edit = ({ data, onClose, onUpdate, allCategories, allManufacturers }) => {
                 <NumberInput
                   name="price"
                   label={ <Translation id={'modal.input.label.price'} defaultMessage={'Price'}/> }
+                  placeholder={ data.price }
                   value={ price }
-                  onValueChange={ value => setPrice(value) }
+                  onValueChange={ setPrice }
                   error={ errors.price }
                 />
               </GridItem>
