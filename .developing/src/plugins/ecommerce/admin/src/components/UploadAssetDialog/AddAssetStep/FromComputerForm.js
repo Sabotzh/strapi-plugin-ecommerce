@@ -36,7 +36,7 @@ const OpaqueBox = styled(Box)`
   cursor: pointer;
 `;
 
-export const FromComputerForm = ({ onClose, onAddAssets, trackedLocation, onlyOne }) => {
+export const FromComputerForm = ({ onClose, onAddAssets, trackedLocation, onlyOne, picture, title }) => {
   const { formatMessage } = useIntl();
   const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef(null);
@@ -86,15 +86,17 @@ export const FromComputerForm = ({ onClose, onAddAssets, trackedLocation, onlyOn
             <Flex justifyContent="center">
               <Wrapper>
                 <IconWrapper>
-                  <PicturePlus aria-hidden />
+                  { picture || <PicturePlus aria-hidden/> }
                 </IconWrapper>
 
                 <Box paddingTop={3} paddingBottom={5}>
                   <Typography variant="delta" textColor="neutral600" as="span">
-                    {formatMessage({
-                      id: getTrad('input.label'),
-                      defaultMessage: 'Drag & Drop here or',
-                    })}
+                    {
+                      title || formatMessage({
+                        id: getTrad('input.label'),
+                        defaultMessage: 'Drag & Drop here or',
+                      })
+                    }
                   </Typography>
                 </Box>
 

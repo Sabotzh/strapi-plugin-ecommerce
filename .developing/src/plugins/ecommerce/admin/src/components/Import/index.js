@@ -1,17 +1,26 @@
 import React, { useState } from 'react';
-import axios from "axios";
+import axios from 'axios';
 
+import getTrad from '../../utils/getTrad';
+import { FromComputerForm } from '../UploadAssetDialog/AddAssetStep/FromComputerForm';
 import xmlParser from '../../utils/parsers/xml';
 import DetailImport from './DetailImport';
-import { AddAssetStep } from '../UploadAssetDialog/AddAssetStep/AddAssetStep';
 
+import File from '@strapi/icons/File';
+import { ProgressBar } from '@strapi/design-system/ProgressBar';
+import { ModalHeader } from '@strapi/design-system/ModalLayout';
+import { Typography } from '@strapi/design-system/Typography';
+import { useIntl } from 'react-intl';
 import { ModalLayout } from '@strapi/design-system/ModalLayout';
 import { useNotification } from '@strapi/helper-plugin';
-import { urlsToAssets } from "../../utils/urlsToAssets";
 
 
 const Import = ({ onClose }) => {
   const [ file, setFile ] = useState(null)
+  const [ loading, setLoading ] = useState(true)
+  const [ loader, setLoader ] = useState(0)
+
+  const { formatMessage } = useIntl();
   const notification = useNotification();
 
   const post = (data, url) => {
@@ -62,11 +71,16 @@ const Import = ({ onClose }) => {
   }
 
   const createProducts = async (products) => {
+    const loaderStep =  100 / products.length
     for (const product of products) {
-      if (!product.name) continue
+      if (!product.name) {
+        setLoader(prev => prev + loaderStep)
+        continue
+      }
 
       let manufacturerId = null
       let categoriesIds = null
+
       if (product.categories) categoriesIds = await getOrCreateCategory(product.categories)
       if (product.manufacturer && product.manufacturer !== '-') {
         manufacturerId = await getOrCreateManufacturer(product.manufacturer)
@@ -77,15 +91,18 @@ const Import = ({ onClose }) => {
       // product.image = await urlsToAssets([product.image]) || null
       product.image = null
       post({ ...product, categories: categoriesIds, manufacturer: manufacturerId }, 'products/get-create')
+        .then(() => {
+          setLoader(prev => prev + loaderStep)
+        })
     }
   }
 
   const convertHandler = async(file) => {
     if (file.ext === 'xml') {
+      setFile(file)
       const products = await xmlParser(file)
       await createProducts(products)
-
-      setFile(file)
+      setLoading(false)
       return
     }
     notification({ type: 'warning', message: 'Invalid extension' });
@@ -94,15 +111,30 @@ const Import = ({ onClose }) => {
   return (
     <ModalLayout onClose={ onClose } labelledBy='ImportLayout'>
       {
-        !file &&
-          <AddAssetStep
-            onClose={ onClose }
-            onAddAsset={ asset => convertHandler(asset[0]) }
-            onlyOne={true}
-          />
+        loading &&
+          <>
+            <ModalHeader>
+              <Typography fontWeight="bold" textColor="neutral800" as="h2" id="title">
+                {formatMessage({
+                  id: getTrad('header.actions.import'),
+                  defaultMessage: 'Import',
+                })}
+              </Typography>
+            </ModalHeader>
+            <FromComputerForm
+              title={'Drag & Drop .xml here or'}
+              picture={ <File/> }
+              onClose={onClose}
+              onAddAssets={asset => convertHandler(asset[0])}
+              onlyOne={true}
+            />
+              <ProgressBar style={{width: '100%'}} value={loader} size="S">
+                {`${loader}/100%`}
+              </ProgressBar>
+          </>
       }
       {
-        file &&
+        !loading &&
           <DetailImport
             file={ file }
             onClose={() => setFile(false)}
