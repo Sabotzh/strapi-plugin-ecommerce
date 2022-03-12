@@ -2,23 +2,33 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 import getTrad from '../../utils/getTrad';
-import { FromComputerForm } from '../UploadAssetDialog/AddAssetStep/FromComputerForm';
 import xmlParser from '../../utils/parsers/xml';
+import xlsxParser from '../../utils/parsers/xlsx';
 import DetailImport from './DetailImport';
+import AssetCard from './AssetCard';
+import { FromComputerForm } from '../UploadAssetDialog/AddAssetStep/FromComputerForm';
 
 import File from '@strapi/icons/File';
 import { ProgressBar } from '@strapi/design-system/ProgressBar';
-import { ModalHeader } from '@strapi/design-system/ModalLayout';
+import { ModalHeader, ModalLayout, ModalFooter } from '@strapi/design-system/ModalLayout';
 import { Typography } from '@strapi/design-system/Typography';
+import { Button } from '@strapi/design-system/Button';
+import { Box } from '@strapi/design-system/Box';
+import { Divider } from '@strapi/design-system/Divider';
+import { Flex } from '@strapi/design-system/Flex';
 import { useIntl } from 'react-intl';
-import { ModalLayout } from '@strapi/design-system/ModalLayout';
 import { useNotification } from '@strapi/helper-plugin';
+import { Tabs, Tab, TabGroup, TabPanels, TabPanel } from '@strapi/design-system/Tabs';
+import { Grid, GridItem } from '@strapi/design-system/Grid';
 
 
 const Import = ({ onClose }) => {
   const [ file, setFile ] = useState(null)
   const [ loading, setLoading ] = useState(true)
   const [ loader, setLoader ] = useState(0)
+
+  const [ fileXLSXCategories, setFileXLSXCategories ] = useState(null)
+  const [ fileXLSXProducts, setFileXLSXProducts ] = useState(null)
 
   const { formatMessage } = useIntl();
   const notification = useNotification();
@@ -97,8 +107,15 @@ const Import = ({ onClose }) => {
     }
   }
 
-  const convertHandler = async(file) => {
-    if (file.ext === 'xml') {
+  const convertHandler = async(file, ext) => {
+    if (ext === 'xlsx') {
+      if (file.ext === 'xlsx' || file.ext === 'xls') {
+        const products = await xlsxParser(file)
+        console.log(products)
+        return
+      }
+    }
+    if (ext === 'xml' && file.ext === 'xml') {
       setFile(file)
       const products = await xmlParser(file)
       await createProducts(products)
@@ -121,16 +138,97 @@ const Import = ({ onClose }) => {
                 })}
               </Typography>
             </ModalHeader>
-            <FromComputerForm
-              title={'Drag & Drop .xml here or'}
-              picture={ <File/> }
-              onClose={onClose}
-              onAddAssets={asset => convertHandler(asset[0])}
-              onlyOne={true}
-            />
-              <ProgressBar style={{width: '100%'}} value={loader} size="S">
-                {`${loader}/100%`}
-              </ProgressBar>
+            <TabGroup
+              label={formatMessage({
+                id: getTrad('CHANGE-ID'),
+                defaultMessage: 'How do you want to upload your assets?',
+              })}
+              variant="simple"
+            >
+              <Flex paddingLeft={8} paddingRight={8} paddingTop={6} justifyContent="space-between">
+                <Tabs>
+                  <Tab>
+                    {formatMessage({
+                      id: getTrad('modal.nav.browse'),
+                      defaultMessage: 'XML',
+                    })}
+                  </Tab>
+                  <Tab>
+                    {formatMessage({
+                      id: getTrad('CHANGE-ID'),
+                      defaultMessage: 'XLS | XLSX',
+                    })}
+                  </Tab>
+                </Tabs>
+              </Flex>
+              <Divider />
+              <TabPanels>
+                <TabPanel>
+                  <FromComputerForm
+                    title={'Drag & Drop here or'}
+                    picture={ <File/> }
+                    onClose={onClose}
+                    onAddAssets={asset => convertHandler(asset[0], 'xml')}
+                    onlyOne={true}
+                  />
+                  <ModalFooter
+                    startActions={
+                      <Button onClick={onClose} variant="tertiary">
+                        {formatMessage({ id: 'app.components.Button.cancel', defaultMessage: 'Cancel' })}
+                      </Button>
+                    }
+                  />
+                </TabPanel>
+                <TabPanel>
+                  <Grid gap={1}>
+                    <GridItem col={6}>
+                      {
+                        !fileXLSXProducts
+                          ? <FromComputerForm
+                          title={'Drag & Drop products here or'}
+                          picture={<File/>}
+                          onClose={onClose}
+                          onAddAssets={asset => setFileXLSXProducts(asset[0])}
+                          onlyOne={true}
+                        />
+                          : <AssetCard/>
+                      }
+                    </GridItem>
+                    <GridItem col={6}>
+                      <FromComputerForm
+                        title={'Drag & Drop categories here or'}
+                        picture={ <File/> }
+                        onClose={onClose}
+                        onAddAssets={asset => setFileXLSXCategories(asset[0])}
+                        onlyOne={true}
+                      />
+                    </GridItem>
+                  </Grid>
+                  <ModalFooter
+                    startActions={
+                      <Button onClick={onClose} variant="tertiary">
+                        {formatMessage({ id: 'CHANGE-ID', defaultMessage: 'Cancel' })}
+                      </Button>
+                    }
+                    endActions={
+                      <Button
+                        onClick={ () => convertHandler(
+                          { products: fileXLSXProducts, categories: fileXLSXCategories },
+                          'xml'
+                        )}
+                        variant="tertiary"
+                        disabled={!(fileXLSXProducts && fileXLSXCategories)}
+                      >
+                        {formatMessage({ id: 'CHANGE-ID', defaultMessage: 'Import' })}
+                      </Button>
+                    }
+                  />
+                </TabPanel>
+              </TabPanels>
+            </TabGroup>
+            <ProgressBar style={{width: '100%'}} value={loader} size="S">
+              {`${loader}/100%`}
+            </ProgressBar>
           </>
       }
       {

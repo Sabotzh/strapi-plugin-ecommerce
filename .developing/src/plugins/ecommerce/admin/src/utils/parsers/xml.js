@@ -1,5 +1,5 @@
 import convert from 'xml-js';
-import opencartFormatToOurFormat from '../formats/opencartFormatToOurFormat';
+import xml2json from '../formats/xml2json';
 
 export default async(file) => {
   const getArrayElements = (elements) => {
@@ -15,10 +15,10 @@ export default async(file) => {
   products.elements[0].elements.forEach(product => {
     let productData = {}
     product.elements.forEach(attribute => {
-      const allowedKeys = Object.keys(opencartFormatToOurFormat)
+      const allowedKeys = Object.keys(xml2json)
       if (!attribute.name) return
       if (allowedKeys.includes(attribute.name.toLowerCase())) {
-        const keyDataObj = opencartFormatToOurFormat[attribute.name.toLowerCase()]
+        const keyDataObj = xml2json[attribute.name.toLowerCase()]
         if (!attribute.elements) return productData = { ...productData, [keyDataObj]: undefined }
         if (attribute.elements.length > 1) {
           return productData = {...productData, [keyDataObj]: getArrayElements(attribute.elements)}

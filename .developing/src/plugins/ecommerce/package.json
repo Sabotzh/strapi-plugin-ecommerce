@@ -19,6 +19,7 @@
   "dependencies": {
     "axios": "^0.24.0",
     "jsonwebtoken": "^8.5.1",
+    "read-excel-file": "^5.2.28",
     "slugify": "^1.6.5",
     "xml-js": "^1.6.11"
   }

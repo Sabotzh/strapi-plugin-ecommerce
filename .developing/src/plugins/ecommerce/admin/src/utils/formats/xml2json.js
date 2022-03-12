@@ -1,7 +1,7 @@
 export default {
   name: 'name',
   description: 'description',
-  model: 'model',
+  //model: 'model',
   sku: 'sku',
   minimum_quantity: 'minQuantity',
   minimum: 'minQuantity',

@@ -7,12 +7,13 @@ import { Button } from '@strapi/design-system/Button';
 import { Divider } from '@strapi/design-system/Divider';
 import { Badge } from '@strapi/design-system/Badge';
 import { Loader } from '@strapi/design-system/Loader';
+import { Tabs, Tab, TabGroup, TabPanels, TabPanel } from '@strapi/design-system/Tabs';
 import { useSelectionState, AnErrorOccurred } from '@strapi/helper-plugin';
+
 import getTrad from '../../utils/getTrad';
 import { DialogTitle } from './DialogTitle';
 import { DialogFooter } from './DialogFooter';
 import { ImageList } from './ImageList';
-import { Tabs, Tab, TabGroup, TabPanels, TabPanel } from '@strapi/design-system/Tabs';
 
 const AssetDialog = ({
   onClose,
@@ -132,10 +133,13 @@ const AssetDialog = ({
           </TabPanel>
         </TabPanels>
       </TabGroup>
-      <DialogFooter onClose={onClose} onFinish={() => {
-        onClose()
-        onFinish(selectedAssets)
-      }}/>
+      <DialogFooter
+        onClose={onClose}
+        onFinish={() => {
+          onClose()
+          onFinish(selectedAssets)
+        }}
+      />
     </ModalLayout>
   );
 }

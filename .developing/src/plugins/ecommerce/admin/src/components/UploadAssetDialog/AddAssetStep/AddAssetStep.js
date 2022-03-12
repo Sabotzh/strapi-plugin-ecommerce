@@ -4,10 +4,11 @@ import getTrad from '../../../utils/getTrad';
 import { FromUrlForm } from './FromUrlForm';
 import { FromComputerForm } from './FromComputerForm';
 
-import { ModalHeader } from '@strapi/design-system/ModalLayout';
+import { ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
 import { Typography } from '@strapi/design-system/Typography';
 import { Divider } from '@strapi/design-system/Divider';
 import { Box } from '@strapi/design-system/Box';
+import { Button } from '@strapi/design-system/Button';
 import { useIntl } from 'react-intl';
 import { Tabs, Tab, TabGroup, TabPanels, TabPanel } from '@strapi/design-system/Tabs';
 
@@ -54,9 +55,18 @@ export const AddAssetStep = ({ onClose, onAddAsset, onlyOne }) => {
         <TabPanels>
           <TabPanel>
             <FromComputerForm
-              onClose={onClose}
               onAddAssets={onAddAsset}
               onlyOne={onlyOne}
+            />
+            <ModalFooter
+              startActions={
+                <Button onClick={onClose} variant="tertiary">
+                  {formatMessage({
+                    id: 'app.components.Button.cancel',
+                    defaultMessage: 'cancel',
+                  })}
+                </Button>
+              }
             />
           </TabPanel>
           <TabPanel>

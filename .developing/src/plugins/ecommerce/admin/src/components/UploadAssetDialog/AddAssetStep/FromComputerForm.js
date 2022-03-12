@@ -36,7 +36,7 @@ const OpaqueBox = styled(Box)`
   cursor: pointer;
 `;
 
-export const FromComputerForm = ({ onClose, onAddAssets, trackedLocation, onlyOne, picture, title }) => {
+export const FromComputerForm = ({ onAddAssets, trackedLocation, onlyOne, picture, title }) => {
   const { formatMessage } = useIntl();
   const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef(null);
@@ -130,17 +130,6 @@ export const FromComputerForm = ({ onClose, onAddAssets, trackedLocation, onlyOn
           </MediaBox>
         </label>
       </Box>
-
-      <ModalFooter
-        startActions={
-          <Button onClick={onClose} variant="tertiary">
-            {formatMessage({
-              id: 'app.components.Button.cancel',
-              defaultMessage: 'cancel',
-            })}
-          </Button>
-        }
-      />
     </form>
   );
 };
