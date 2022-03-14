@@ -185,7 +185,7 @@ const Import = ({ onClose }) => {
                 <TabPanel>
                   <ModalBody>
                     <Grid gap={1}>
-                      <GridItem col={6}>
+                      <GridItem col={6} style={{ height: '100%' }}>
                         {
                           !fileXLSXProducts
                             ? <FromComputerForm
@@ -202,7 +202,7 @@ const Import = ({ onClose }) => {
                               />
                         }
                       </GridItem>
-                      <GridItem col={6}>
+                      <GridItem col={6} style={{ height: '100%' }}>
                         {
                           !fileXLSXCategories
                             ? <FromComputerForm
