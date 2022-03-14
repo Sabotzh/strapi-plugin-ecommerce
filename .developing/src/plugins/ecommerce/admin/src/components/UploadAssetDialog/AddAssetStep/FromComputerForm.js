@@ -9,7 +9,6 @@ import { Box } from '@strapi/design-system/Box';
 import { Flex } from '@strapi/design-system/Flex';
 import { Typography } from '@strapi/design-system/Typography';
 import { useTracking } from '@strapi/helper-plugin';
-import { ModalFooter } from '@strapi/design-system/ModalLayout';
 import { Button } from '@strapi/design-system/Button';
 import PicturePlus from '@strapi/icons/PicturePlus';
 import { useIntl } from 'react-intl';
@@ -20,10 +19,12 @@ const Wrapper = styled(Flex)`
 `;
 
 const IconWrapper = styled.div`
-  font-size: ${60 / 16}rem;
+  font-size: ${60 / 10}rem;
 
-  svg path {
-    fill: ${({ theme }) => theme.colors.primary600};
+  svg path, svg circle {
+    fill: ${({ theme, color }) => {
+      return color ? theme.colors[color] : theme.colors.primary600
+    }};
   }
 `;
 
@@ -36,7 +37,7 @@ const OpaqueBox = styled(Box)`
   cursor: pointer;
 `;
 
-export const FromComputerForm = ({ onAddAssets, trackedLocation, onlyOne, picture, title }) => {
+export const FromComputerForm = ({ onAddAssets, trackedLocation, onlyOne, picture, title, color }) => {
   const { formatMessage } = useIntl();
   const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef(null);
@@ -70,7 +71,7 @@ export const FromComputerForm = ({ onAddAssets, trackedLocation, onlyOne, pictur
 
   return (
     <form>
-      <Box paddingLeft={8} paddingRight={8} paddingTop={6} paddingBottom={6}>
+      <Box>
         <label>
           <MediaBox
             paddingTop={11}
@@ -85,7 +86,7 @@ export const FromComputerForm = ({ onAddAssets, trackedLocation, onlyOne, pictur
           >
             <Flex justifyContent="center">
               <Wrapper>
-                <IconWrapper>
+                <IconWrapper color={color}>
                   { picture || <PicturePlus aria-hidden/> }
                 </IconWrapper>
 

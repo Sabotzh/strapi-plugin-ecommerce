@@ -7,13 +7,14 @@ import xlsxParser from '../../utils/parsers/xlsx';
 import DetailImport from './DetailImport';
 import AssetCard from './AssetCard';
 import { FromComputerForm } from '../UploadAssetDialog/AddAssetStep/FromComputerForm';
+import Categories from '../Navigation/Icons/Categories';
+import Products from '../Navigation/Icons/Products';
 
 import File from '@strapi/icons/File';
 import { ProgressBar } from '@strapi/design-system/ProgressBar';
-import { ModalHeader, ModalLayout, ModalFooter } from '@strapi/design-system/ModalLayout';
+import { ModalHeader, ModalLayout, ModalFooter, ModalBody } from '@strapi/design-system/ModalLayout';
 import { Typography } from '@strapi/design-system/Typography';
 import { Button } from '@strapi/design-system/Button';
-import { Box } from '@strapi/design-system/Box';
 import { Divider } from '@strapi/design-system/Divider';
 import { Flex } from '@strapi/design-system/Flex';
 import { useIntl } from 'react-intl';
@@ -164,13 +165,15 @@ const Import = ({ onClose }) => {
               <Divider />
               <TabPanels>
                 <TabPanel>
-                  <FromComputerForm
-                    title={'Drag & Drop here or'}
-                    picture={ <File/> }
-                    onClose={onClose}
-                    onAddAssets={asset => convertHandler(asset[0], 'xml')}
-                    onlyOne={true}
-                  />
+                  <ModalBody>
+                    <FromComputerForm
+                      title={'Drag & Drop here or'}
+                      picture={ <File/> }
+                      onClose={onClose}
+                      onAddAssets={asset => convertHandler(asset[0], 'xml')}
+                      onlyOne={true}
+                    />
+                  </ModalBody>
                   <ModalFooter
                     startActions={
                       <Button onClick={onClose} variant="tertiary">
@@ -180,30 +183,46 @@ const Import = ({ onClose }) => {
                   />
                 </TabPanel>
                 <TabPanel>
-                  <Grid gap={1}>
-                    <GridItem col={6}>
-                      {
-                        !fileXLSXProducts
-                          ? <FromComputerForm
-                          title={'Drag & Drop products here or'}
-                          picture={<File/>}
-                          onClose={onClose}
-                          onAddAssets={asset => setFileXLSXProducts(asset[0])}
-                          onlyOne={true}
-                        />
-                          : <AssetCard/>
-                      }
-                    </GridItem>
-                    <GridItem col={6}>
-                      <FromComputerForm
-                        title={'Drag & Drop categories here or'}
-                        picture={ <File/> }
-                        onClose={onClose}
-                        onAddAssets={asset => setFileXLSXCategories(asset[0])}
-                        onlyOne={true}
-                      />
-                    </GridItem>
-                  </Grid>
+                  <ModalBody>
+                    <Grid gap={1}>
+                      <GridItem col={6}>
+                        {
+                          !fileXLSXProducts
+                            ? <FromComputerForm
+                              title={'Drag & Drop products here or'}
+                              picture={<Products/>}
+                              color={'neutral500'}
+                              onClose={onClose}
+                              onAddAssets={asset => setFileXLSXProducts(asset[0])}
+                              onlyOne={true}
+                            />
+                            : <AssetCard
+                                title={'Products'}
+                                image={<Products/>}
+                              />
+                        }
+                      </GridItem>
+                      <GridItem col={6}>
+                        {
+                          !fileXLSXCategories
+                            ? <FromComputerForm
+                              title={'Drag & Drop categories here or'}
+                              picture={ <Categories/> }
+                              color={'neutral500'}
+                              onClose={onClose}
+                              onAddAssets={asset => setFileXLSXCategories(asset[0])}
+                              onlyOne={true}
+                            />
+                            : <AssetCard
+                                title={'Categories'}
+                                image={<Categories/>}
+                              />
+                        }
+
+                      </GridItem>
+                    </Grid>
+                  </ModalBody>
+
                   <ModalFooter
                     startActions={
                       <Button onClick={onClose} variant="tertiary">

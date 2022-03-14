@@ -4,12 +4,11 @@ import { urlSchema } from '../../../utils/urlYupSchema';
 import getTrad from '../../../utils/getTrad';
 import { urlsToAssets } from '../../../utils/urlsToAssets';
 
-import { Box } from '@strapi/design-system/Box';
-import { ModalFooter } from '@strapi/design-system/ModalLayout';
+import { ModalFooter, ModalBody } from '@strapi/design-system/ModalLayout';
 import { Textarea } from '@strapi/design-system/Textarea';
 import { useIntl } from 'react-intl';
 import { Button } from '@strapi/design-system/Button';
-import { Form, useTracking } from '@strapi/helper-plugin';
+import { Form } from '@strapi/helper-plugin';
 import { Formik } from 'formik';
 
 
@@ -44,7 +43,7 @@ export const FromUrlForm = ({ onClose, onAddAsset }) => {
     >
       {({ values, errors, handleChange }) => (
         <Form noValidate>
-          <Box paddingLeft={8} paddingRight={8} paddingBottom={6} paddingTop={6}>
+          <ModalBody>
             <Textarea
               label={formatMessage({ id: getTrad('input.url.label'), defaultMessage: 'URL' })}
               name="urls"
@@ -62,7 +61,7 @@ export const FromUrlForm = ({ onClose, onAddAsset }) => {
             >
               {values.urls}
             </Textarea>
-          </Box>
+          </ModalBody>
 
           <ModalFooter
             startActions={

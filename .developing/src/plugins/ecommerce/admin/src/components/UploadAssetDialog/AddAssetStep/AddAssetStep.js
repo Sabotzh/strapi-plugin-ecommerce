@@ -4,7 +4,7 @@ import getTrad from '../../../utils/getTrad';
 import { FromUrlForm } from './FromUrlForm';
 import { FromComputerForm } from './FromComputerForm';
 
-import { ModalHeader, ModalFooter } from '@strapi/design-system/ModalLayout';
+import { ModalHeader, ModalFooter, ModalBody } from '@strapi/design-system/ModalLayout';
 import { Typography } from '@strapi/design-system/Typography';
 import { Divider } from '@strapi/design-system/Divider';
 import { Box } from '@strapi/design-system/Box';
@@ -54,10 +54,12 @@ export const AddAssetStep = ({ onClose, onAddAsset, onlyOne }) => {
         </Box>
         <TabPanels>
           <TabPanel>
-            <FromComputerForm
-              onAddAssets={onAddAsset}
-              onlyOne={onlyOne}
-            />
+            <ModalBody>
+              <FromComputerForm
+                onAddAssets={onAddAsset}
+                onlyOne={onlyOne}
+              />
+            </ModalBody>
             <ModalFooter
               startActions={
                 <Button onClick={onClose} variant="tertiary">
