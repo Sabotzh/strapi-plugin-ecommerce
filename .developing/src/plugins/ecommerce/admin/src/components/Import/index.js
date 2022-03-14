@@ -34,6 +34,10 @@ const Import = ({ onClose }) => {
   const { formatMessage } = useIntl();
   const notification = useNotification();
 
+  const invalidExtNotification = (message = '') => {
+    notification({ type: 'warning', message: message || 'Invalid extension' });
+  }
+
   const post = (data, url) => {
     return axios({
       method: 'post',
@@ -108,22 +112,25 @@ const Import = ({ onClose }) => {
     }
   }
 
-  const convertHandler = async(file, ext) => {
-    if (ext === 'xlsx') {
-      if (file.ext === 'xlsx' || file.ext === 'xls') {
-        const products = await xlsxParser(file)
-        console.log(products)
-        return
-      }
+  const convertXLSXHandler = async(file) => {
+    if (file.products.ext !== 'xlsx' && file.products.ext !== 'xls') {
+      return invalidExtNotification('Invalid products extension')
     }
-    if (ext === 'xml' && file.ext === 'xml') {
-      setFile(file)
-      const products = await xmlParser(file)
-      await createProducts(products)
-      setLoading(false)
-      return
+    if (file.categories.ext !== 'xlsx' && file.categories.ext !== 'xls') {
+      return invalidExtNotification('Invalid categories extension')
     }
-    notification({ type: 'warning', message: 'Invalid extension' });
+
+    const products = await xlsxParser(file.products, file.categories)
+    console.log(products)
+  }
+
+  const convertXMLHandler = async(file) => {
+    if (file.ext !== 'xml') return invalidExtNotification()
+
+    setFile(file)
+    const products = await xmlParser(file)
+    await createProducts(products)
+    setLoading(false)
   }
 
   return (
@@ -170,7 +177,7 @@ const Import = ({ onClose }) => {
                       title={'Drag & Drop here or'}
                       picture={ <File/> }
                       onClose={onClose}
-                      onAddAssets={asset => convertHandler(asset[0], 'xml')}
+                      onAddAssets={asset => convertXMLHandler(asset[0])}
                       onlyOne={true}
                     />
                   </ModalBody>
@@ -187,6 +194,24 @@ const Import = ({ onClose }) => {
                     <Grid gap={1}>
                       <GridItem col={6} style={{ height: '100%' }}>
                         {
+                          !fileXLSXCategories
+                            ? <FromComputerForm
+                              title={ 'Drag & Drop categories here or' }
+                              picture={ <Categories/> }
+                              color={ 'neutral500' }
+                              onClose={ onClose }
+                              onAddAssets={ asset => setFileXLSXCategories(asset[0]) }
+                              onlyOne={ true }
+                            />
+                            : <AssetCard
+                              title={ 'Categories' }
+                              image={ <Categories/> }
+                              cancel={() => setFileXLSXCategories(null)}
+                            />
+                        }
+                      </GridItem>
+                      <GridItem col={6} style={{ height: '100%' }}>
+                        {
                           !fileXLSXProducts
                             ? <FromComputerForm
                               title={'Drag & Drop products here or'}
@@ -197,28 +222,11 @@ const Import = ({ onClose }) => {
                               onlyOne={true}
                             />
                             : <AssetCard
-                                title={'Products'}
-                                image={<Products/>}
+                                title={ 'Products' }
+                                image={ <Products/> }
+                                cancel={ () => setFileXLSXProducts(null) }
                               />
                         }
-                      </GridItem>
-                      <GridItem col={6} style={{ height: '100%' }}>
-                        {
-                          !fileXLSXCategories
-                            ? <FromComputerForm
-                              title={'Drag & Drop categories here or'}
-                              picture={ <Categories/> }
-                              color={'neutral500'}
-                              onClose={onClose}
-                              onAddAssets={asset => setFileXLSXCategories(asset[0])}
-                              onlyOne={true}
-                            />
-                            : <AssetCard
-                                title={'Categories'}
-                                image={<Categories/>}
-                              />
-                        }
-
                       </GridItem>
                     </Grid>
                   </ModalBody>
@@ -231,9 +239,8 @@ const Import = ({ onClose }) => {
                     }
                     endActions={
                       <Button
-                        onClick={ () => convertHandler(
+                        onClick={ () => convertXLSXHandler(
                           { products: fileXLSXProducts, categories: fileXLSXCategories },
-                          'xml'
                         )}
                         variant="tertiary"
                         disabled={!(fileXLSXProducts && fileXLSXCategories)}

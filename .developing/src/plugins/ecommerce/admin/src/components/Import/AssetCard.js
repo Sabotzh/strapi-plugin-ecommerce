@@ -35,14 +35,14 @@ const ButtonCancel = styled(IconButton)`
   right: 10px;
 `
 
-const AssetCard = ({ title, image }) => {
+const AssetCard = ({ title, image, cancel }) => {
   return (
     <Card
       hasRadius
       borderColor={'neutral300'}
       background={'neutral100'}
     >
-      <ButtonCancel icon={<Cross/>} />
+      <ButtonCancel icon={<Cross/>} onClick={cancel} />
       <Wrapper>
         <IconWrapper>
           { image }
